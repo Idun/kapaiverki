@@ -1,5 +1,4 @@
 
-
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import type { AIConfig, Card, CombinedCards, CardType, NovelInfo, PromptTemplate, InspirationCategory, InspirationItem, UISettings, StoryArchiveItem, ChatMessage } from './types';
 import { DEFAULT_CARDS } from './constants';
@@ -170,6 +169,7 @@ const App: React.FC = () => {
             theme: 'light',
             editorFontFamily: 'sans-serif',
             editorFontSize: 16,
+            cardStyle: 'grid',
         };
         try {
             const saved = localStorage.getItem('uiSettings');
@@ -243,7 +243,7 @@ const App: React.FC = () => {
     useEffect(() => {
         try {
             localStorage.setItem('uiSettings', JSON.stringify(uiSettings));
-            // More concise way to handle class toggling for dark mode
+            // Apply theme to the root element for CSS targeting
             document.documentElement.classList.toggle('dark', uiSettings.theme === 'dark');
         } catch (error) {
             console.error("Failed to save UI settings to localStorage", error);
@@ -548,6 +548,7 @@ const App: React.FC = () => {
                         onCreateCard={handleCreateCard}
                         onUpdateCard={handleUpdateCard}
                         onDeleteCard={handleDeleteCard}
+                        uiSettings={uiSettings}
                     />
                 );
             case 'result':
@@ -608,6 +609,7 @@ const App: React.FC = () => {
                         onCreateCard={handleCreateCard}
                         onUpdateCard={handleUpdateCard}
                         onDeleteCard={handleDeleteCard}
+                        uiSettings={uiSettings}
                     />
                 );
         }

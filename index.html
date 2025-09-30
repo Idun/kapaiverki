@@ -204,6 +204,27 @@
         .animate-blob-bounce {
             animation: blob-bounce 8s infinite ease;
         }
+
+        /* Card Carousel Styles */
+        .card-carousel-viewport {
+            perspective: 1000px;
+            transform-style: preserve-3d;
+        }
+        .card-carousel-card {
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+            will-change: transform, opacity, z-index;
+            transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+        /* Animation for detail view changes */
+         @keyframes detail-fade-in {
+            from { opacity: 0.5; transform: scale(0.98) translateY(8px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        .animate-detail-fade-in {
+            animation: detail-fade-in 0.4s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+        }
+
     </style>
 <script type="importmap">
 {

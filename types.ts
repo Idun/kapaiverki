@@ -1,5 +1,7 @@
 
 
+
+
 import type { ReactElement, SVGProps } from 'react';
 
 export enum CardType {
@@ -77,6 +79,7 @@ export interface UISettings {
   theme: 'light' | 'dark';
   editorFontFamily: 'sans-serif' | 'serif' | 'monospace';
   editorFontSize: number;
+  cardStyle: 'grid' | 'carousel';
 }
 
 export interface ChatMessage {

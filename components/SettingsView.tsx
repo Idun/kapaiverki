@@ -1,5 +1,9 @@
 
 
+
+
+
+
 import React, { useState, useEffect } from 'react';
 import type { AIConfig, AIProvider, PromptTemplate, UISettings } from '../types';
 import { fetchModels } from '../services/aiService';
@@ -504,6 +508,26 @@ const SettingsView: React.FC<SettingsViewProps> = ({ currentConfig, onSave, curr
                                             }`}
                                         >
                                             黑暗
+                                        </button>
+                                    </div>
+                                </InputField>
+                                <InputField label="卡片样式切换" id="card-style-switcher">
+                                    <div className="flex gap-2 rounded-lg bg-gray-100 dark:bg-zinc-700 p-1">
+                                        <button
+                                            onClick={() => setUISettings(s => ({ ...s, cardStyle: 'grid' }))}
+                                            className={`w-full py-1.5 rounded-md text-sm font-medium transition-colors ${
+                                                uiSettings.cardStyle === 'grid' ? 'bg-white text-gray-800 shadow-sm dark:bg-zinc-900 dark:text-white' : 'text-gray-600 dark:text-zinc-300'
+                                            }`}
+                                        >
+                                            网格
+                                        </button>
+                                        <button
+                                            onClick={() => setUISettings(s => ({ ...s, cardStyle: 'carousel' }))}
+                                            className={`w-full py-1.5 rounded-md text-sm font-medium transition-colors ${
+                                                uiSettings.cardStyle === 'carousel' ? 'bg-white text-gray-800 shadow-sm dark:bg-zinc-900 dark:text-white' : 'text-gray-600 dark:text-zinc-300'
+                                            }`}
+                                        >
+                                            轮播
                                         </button>
                                     </div>
                                 </InputField>

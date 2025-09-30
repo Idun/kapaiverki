@@ -1,11 +1,11 @@
 
-
 import React, { useState, useMemo, useCallback, useEffect, useRef } from 'react';
-import type { Card, CombinedCards, AIConfig, CardType, NovelInfo } from '../types';
+import type { Card, CombinedCards, AIConfig, CardType, NovelInfo, UISettings } from '../types';
 import { CardType as CardTypeEnum } from '../types';
-import { DEFAULT_CARDS, CORE_CARD_TYPES, CARD_TYPE_NAMES, OPTIONAL_CARD_TYPES } from '../constants';
+import { CORE_CARD_TYPES, CARD_TYPE_NAMES, OPTIONAL_CARD_TYPES } from '../constants';
 import { fetchModels } from '../services/aiService';
 import CardComponent from './CardComponent';
+import CardCarousel from './CardCarousel';
 import CardSlot from './CardSlot';
 import Spinner from './Spinner';
 import CreateCardModal from './CreateCardModal';
@@ -25,6 +25,7 @@ interface WriterViewProps {
     onCreateCard: (cardData: Omit<Card, 'id' | 'icon' | 'isCustom'>) => void;
     onUpdateCard: (card: Card) => void;
     onDeleteCard: (cardId: string) => void;
+    uiSettings: UISettings;
 }
 
 const LENGTH_PRESETS: Record<string, string> = {
@@ -47,7 +48,7 @@ const getLengthCategory = (wordCount: string): string => {
 };
 
 
-const WriterView: React.FC<WriterViewProps> = ({ config, setConfig, onStartGeneration, combinedCards, onCardSelect, onClearCard, novelInfo, setNovelInfo, allCards, onCreateCard, onUpdateCard, onDeleteCard }) => {
+const WriterView: React.FC<WriterViewProps> = ({ config, setConfig, onStartGeneration, combinedCards, onCardSelect, onClearCard, novelInfo, setNovelInfo, allCards, onCreateCard, onUpdateCard, onDeleteCard, uiSettings }) => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [activeDragType, setActiveDragType] = useState<CardType | null>(null);
     const [activePanel, setActivePanel] = useState(0);
@@ -430,20 +431,30 @@ const WriterView: React.FC<WriterViewProps> = ({ config, setConfig, onStartGener
                                                             <PlusIcon className="w-4 h-4" />
                                                         </button>
                                                     </div>
-                                                    <div className="grid grid-cols-3 gap-3">
-                                                        {allCards.filter(card => card.type === type).map(card => (
-                                                            <CardComponent
-                                                                key={card.id}
-                                                                card={card}
-                                                                onClick={onCardSelect}
-                                                                isSelected={isCardSelected(card.id)}
-                                                                onDragStart={() => handleCardDragStart(card.type)}
-                                                                onDragEnd={() => setActiveDragType(null)}
-                                                                onEdit={handleOpenModalForEdit}
-                                                                onDelete={handleDeleteRequest}
-                                                            />
-                                                        ))}
-                                                    </div>
+                                                    {uiSettings.cardStyle === 'carousel' ? (
+                                                        <CardCarousel
+                                                            cards={allCards.filter(card => card.type === type)}
+                                                            onCardSelect={onCardSelect}
+                                                            isCardSelected={isCardSelected}
+                                                            onEdit={handleOpenModalForEdit}
+                                                            onDelete={handleDeleteRequest}
+                                                        />
+                                                    ) : (
+                                                        <div className="grid grid-cols-3 gap-3">
+                                                            {allCards.filter(card => card.type === type).map(card => (
+                                                                <CardComponent
+                                                                    key={card.id}
+                                                                    card={card}
+                                                                    onClick={onCardSelect}
+                                                                    isSelected={isCardSelected(card.id)}
+                                                                    onDragStart={() => handleCardDragStart(card.type)}
+                                                                    onDragEnd={() => setActiveDragType(null)}
+                                                                    onEdit={handleOpenModalForEdit}
+                                                                    onDelete={handleDeleteRequest}
+                                                                />
+                                                            ))}
+                                                        </div>
+                                                    )}
                                                 </div>
                                             ))}
                                         </div>
@@ -451,56 +462,36 @@ const WriterView: React.FC<WriterViewProps> = ({ config, setConfig, onStartGener
                                 </div>
                                 <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm flex flex-col dark:bg-zinc-800 dark:border-zinc-700 min-h-0">
                                     <div className="flex-grow overflow-y-auto -mr-2 pr-2 custom-scrollbar">
-                                        <div className="mb-8">
-                                            <h2 className="text-xl font-semibold mb-5 text-gray-700 dark:text-zinc-200">{CARD_TYPE_NAMES[CardTypeEnum.Structure]}</h2>
-                                            <div className="grid grid-cols-3 gap-3">
-                                                {allCards.filter(card => card.type === CardTypeEnum.Structure).map(card => (
-                                                    <CardComponent
-                                                        key={card.id}
-                                                        card={card}
-                                                        onClick={onCardSelect}
-                                                        isSelected={isCardSelected(card.id)}
-                                                        onDragStart={() => handleCardDragStart(card.type)}
-                                                        onDragEnd={() => setActiveDragType(null)}
-                                                        onEdit={handleOpenModalForEdit}
-                                                        onDelete={handleDeleteRequest}
-                                                    />
-                                                ))}
-                                            </div>
-                                        </div>
-                                        <div className="mb-8">
-                                            <h2 className="text-xl font-semibold mb-5 text-gray-700 dark:text-zinc-200">{CARD_TYPE_NAMES[CardTypeEnum.Technique]}</h2>
-                                            <div className="grid grid-cols-3 gap-3">
-                                                {allCards.filter(card => card.type === CardTypeEnum.Technique).map(card => (
-                                                    <CardComponent
-                                                        key={card.id}
-                                                        card={card}
-                                                        onClick={onCardSelect}
-                                                        isSelected={isCardSelected(card.id)}
-                                                        onDragStart={() => handleCardDragStart(card.type)}
-                                                        onDragEnd={() => setActiveDragType(null)}
-                                                        onEdit={handleOpenModalForEdit}
-                                                        onDelete={handleDeleteRequest}
-                                                    />
-                                                ))}
-                                            </div>
-                                        </div>
-                                        <div className="mb-8">
-                                            <h2 className="text-xl font-semibold mb-5 text-gray-700 dark:text-zinc-200">{CARD_TYPE_NAMES[CardTypeEnum.Ending]}</h2>
-                                            <div className="grid grid-cols-3 gap-3">
-                                                {allCards.filter(card => card.type === CardTypeEnum.Ending).map(card => (
-                                                    <CardComponent
-                                                        key={card.id}
-                                                        card={card}
-                                                        onClick={onCardSelect}
-                                                        isSelected={isCardSelected(card.id)}
-                                                        onDragStart={() => handleCardDragStart(card.type)}
-                                                        onDragEnd={() => setActiveDragType(null)}
-                                                        onEdit={handleOpenModalForEdit}
-                                                        onDelete={handleDeleteRequest}
-                                                    />
-                                                ))}
-                                            </div>
+                                        <div className="space-y-8">
+                                            {OPTIONAL_CARD_TYPES.filter(type => type !== CardTypeEnum.Inspiration).map(type => (
+                                                <div key={type}>
+                                                    <h2 className="text-xl font-semibold mb-5 text-gray-700 dark:text-zinc-200">{CARD_TYPE_NAMES[type]}</h2>
+                                                    {uiSettings.cardStyle === 'carousel' ? (
+                                                        <CardCarousel
+                                                            cards={allCards.filter(card => card.type === type)}
+                                                            onCardSelect={onCardSelect}
+                                                            isCardSelected={isCardSelected}
+                                                            onEdit={handleOpenModalForEdit}
+                                                            onDelete={handleDeleteRequest}
+                                                        />
+                                                    ) : (
+                                                        <div className="grid grid-cols-3 gap-3">
+                                                            {allCards.filter(card => card.type === type).map(card => (
+                                                                <CardComponent
+                                                                    key={card.id}
+                                                                    card={card}
+                                                                    onClick={onCardSelect}
+                                                                    isSelected={isCardSelected(card.id)}
+                                                                    onDragStart={() => handleCardDragStart(card.type)}
+                                                                    onDragEnd={() => setActiveDragType(null)}
+                                                                    onEdit={handleOpenModalForEdit}
+                                                                    onDelete={handleDeleteRequest}
+                                                                />
+                                                            ))}
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            ))}
                                         </div>
                                     </div>
                                 </div>
