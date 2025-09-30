@@ -365,7 +365,7 @@ const WriterView: React.FC<WriterViewProps> = ({ config, setConfig, onStartGener
                                     </div>
                                 </div>
                                 
-                                <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm flex flex-col dark:bg-zinc-800 dark:border-zinc-700">
+                                <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm flex flex-col overflow-hidden dark:bg-zinc-800 dark:border-zinc-700">
                                     <h2 className="text-xl font-semibold mb-5 text-gray-700 dark:text-zinc-200 flex-shrink-0">故事组合</h2>
                                     <div className="flex-grow overflow-y-auto custom-scrollbar -mr-4 pr-4">
                                         <div className="grid grid-cols-2 gap-4">
