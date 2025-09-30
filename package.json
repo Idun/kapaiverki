@@ -7,7 +7,7 @@
     "start": "serve",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d .",
-    "build": "echo 'No build step needed for this project structure.' && exit 0",
+    "build": "esbuild index.tsx --bundle --outfile=index.js --format=esm --jsx=automatic",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
@@ -19,6 +19,7 @@
   "author": "Idun",
   "license": "MIT",
   "devDependencies": {
+    "esbuild": "^0.21.4",
     "gh-pages": "^6.1.1",
     "serve": "^14.2.3"
   }
