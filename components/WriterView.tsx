@@ -88,13 +88,14 @@ const WriterView: React.FC<WriterViewProps> = ({ config, setConfig, onStartGener
             try {
                 const models = await fetchModels(config);
                 setModelList(models);
-            // FIX: The original error handling was correct but the comment was misleading. 
-            // This updated implementation is slightly more robust for different error types.
+            // FIX: Per the error report, a property was being accessed on an 'unknown' type.
+            // The 'error' variable in a catch block is of type 'unknown'. To safely access
+            // properties like 'message', we must first perform a type check.
             } catch (error) {
                 if (error instanceof Error) {
                     console.error("Failed to fetch models for writer view dropdown:", error.message);
                 } else {
-                    console.error("Failed to fetch models for writer view dropdown:", error);
+                    console.error("An unexpected error occurred while fetching models:", error);
                 }
                 setModelList([]); // Clear list on error
             } finally {
