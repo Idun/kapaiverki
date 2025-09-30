@@ -25,6 +25,9 @@ AI 故事创作是一款创新的 AI 辅助写作工具，旨在帮助作家突�
 -   **AI 润色与编辑 (AI Polishing & Editing)**:
     在生成大纲后，您可以在【大纲内容】页面唤出 AI 助理。通过对话式指令（例如：“把第一幕写得更紧张一些”），让 AI 帮你实时修改和完善大纲内容，实现人机协作的无缝编辑体验。
 
+-   **故事存档与管理 (Story Archiving & Management)**:
+    在灵感涌现时，随时将您的故事大纲连同小说信息一并存入个人档案库。存档库支持按名称搜索和按时间/名称排序，方便您随时回顾、加载并继续之前的创作，确保每一个创意火花都不会丢失。
+
 -   **精简的大纲编辑器 (Streamlined Outline Editor)**:
     我们移除了复杂的工具栏，为您提供一个沉浸、无干扰的 Markdown 编辑环境。您可以随时【预览】格式效果，【保存】内容至浏览器，或将最终稿【导出】为标准的 Markdown 文件。
 
@@ -49,10 +52,14 @@ AI 故事创作是一款创新的 AI 辅助写作工具，旨在帮助作家突�
 │   ├── WriterView.tsx      # “卡牌写作” 视图，核心的创作和卡牌组合界面。
 │   ├── ResultView.tsx      # “大纲内容” 视图，包含 Markdown 编辑器和 AI 助理。
 │   ├── InspirationView.tsx # “灵感集” 视图，展示和管理灵感卡牌。
+│   ├── ArchiveView.tsx     # “故事存档” 视图，展示、加载和管理已保存的故事大纲。
 │   ├── SettingsView.tsx    # “设置” 视图，用于配置 AI 服务和提示词。
+│   ├── AboutView.tsx       # “关于” 页面组件。
 │   ├── CardComponent.tsx   # 单个卡片的 UI 组件。
 │   ├── CardSlot.tsx        # 用于放置卡牌的插槽组件。
+│   ├── CardCarousel.tsx    # 卡片的轮播展示组件。
 │   ├── CreateCardModal.tsx # 创建/编辑自定义卡片的模态框。
+│   ├── CreateInspirationModal.tsx # 创建/编辑灵感卡片的模态框。
 │   ├── Spinner.tsx         # 加载状态的旋转图标。
 │   └── icons.tsx           # 存放所有 SVG 图标组件。
 └── README.md               # 项目说明文件。

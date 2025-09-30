@@ -31,47 +31,41 @@
         }
 
         /* Custom Scrollbar Styles */
-        .custom-scrollbar {
-            overscroll-behavior-y: contain; /* Prevents parent from scrolling */
-            /* For Firefox */
-            scrollbar-width: thin;
-            scrollbar-color: #a1a1aa #f4f4f5; /* thumb: zinc-400, track: zinc-100 */
-        }
-        html.dark .custom-scrollbar {
-            scrollbar-color: #52525b #27272a; /* thumb: zinc-600, track: zinc-800 */
-        }
-
-        /* For Chrome, Safari, and Opera */
-        .custom-scrollbar::-webkit-scrollbar {
+        /* For Webkit Browsers */
+        ::-webkit-scrollbar {
             width: 6px;
+            height: 6px;
         }
-
-        .custom-scrollbar::-webkit-scrollbar-track {
-            background: #f4f4f5; /* zinc-100 */
-            border-radius: 10px;
-            box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.05);
+        ::-webkit-scrollbar-track {
+            background: transparent;
         }
-        html.dark .custom-scrollbar::-webkit-scrollbar-track {
-            background: #27272a; /* zinc-800 */
-            box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+        ::-webkit-scrollbar-thumb {
+            background-color: #d4d4d8; /* zinc-300 */
+            border-radius: 3px;
+            transition: background-color 0.2s ease-in-out;
         }
-
-        .custom-scrollbar::-webkit-scrollbar-thumb {
+        ::-webkit-scrollbar-thumb:hover {
             background-color: #a1a1aa; /* zinc-400 */
-            border-radius: 10px;
-            box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.1);
         }
-        html.dark .custom-scrollbar::-webkit-scrollbar-thumb {
+        html.dark ::-webkit-scrollbar-thumb {
             background-color: #52525b; /* zinc-600 */
-            box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.3);
+        }
+        html.dark ::-webkit-scrollbar-thumb:hover {
+            background-color: #71717a; /* zinc-500 */
+        }
+        ::-webkit-scrollbar-corner {
+            background: transparent;
         }
 
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-            background-color: #71717a; /* zinc-500 */
+        /* For Firefox */
+        * {
+            scrollbar-width: thin;
+            scrollbar-color: #a1a1aa transparent; /* thumb track */
         }
-        html.dark .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-            background-color: #71717a; /* zinc-500 */
+        html.dark * {
+            scrollbar-color: #52525b transparent;
         }
+
 
         /* EasyMDE Custom Styles */
         .editor-container .EasyMDEContainer {
@@ -98,21 +92,6 @@
         html.dark .CodeMirror-selected {
             background: #52525b !important; /* zinc-600 */
         }
-        /* Also apply custom scrollbar to CodeMirror */
-        .editor-container .CodeMirror-scroll {
-            scrollbar-width: thin;
-            scrollbar-color: #a1a1aa #f4f4f5;
-        }
-        html.dark .editor-container .CodeMirror-scroll {
-             scrollbar-color: #52525b #27272a;
-        }
-        .editor-container .CodeMirror-scroll::-webkit-scrollbar { width: 6px; }
-        .editor-container .CodeMirror-scroll::-webkit-scrollbar-track { background: #f4f4f5; border-radius: 10px; box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.05); }
-        html.dark .editor-container .CodeMirror-scroll::-webkit-scrollbar-track { background: #27272a; box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2); }
-        .editor-container .CodeMirror-scroll::-webkit-scrollbar-thumb { background-color: #a1a1aa; border-radius: 10px; box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.1); }
-        html.dark .editor-container .CodeMirror-scroll::-webkit-scrollbar-thumb { background-color: #52525b; box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.3); }
-        .editor-container .CodeMirror-scroll::-webkit-scrollbar-thumb:hover { background-color: #71717a; }
-        html.dark .editor-container .CodeMirror-scroll::-webkit-scrollbar-thumb:hover { background-color: #71717a; }
 
         .editor-container .editor-toolbar {
             border: none !important;

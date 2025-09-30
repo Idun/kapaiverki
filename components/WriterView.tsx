@@ -73,6 +73,27 @@ const WriterView: React.FC<WriterViewProps> = ({ config, setConfig, onStartGener
         document.addEventListener('mousedown', handleClickOutside);
         return () => document.removeEventListener('mousedown', handleClickOutside);
     }, []);
+
+    useEffect(() => {
+        const handleKeyDown = (event: KeyboardEvent) => {
+            const activeElement = document.activeElement;
+            if (activeElement && ['INPUT', 'TEXTAREA', 'SELECT'].includes(activeElement.tagName)) {
+                return;
+            }
+
+            if (event.key === 'ArrowLeft') {
+                setActivePanel(prev => Math.max(0, prev - 1));
+            } else if (event.key === 'ArrowRight') {
+                setActivePanel(prev => Math.min(totalPanels - 1, prev + 1));
+            }
+        };
+
+        window.addEventListener('keydown', handleKeyDown);
+
+        return () => {
+            window.removeEventListener('keydown', handleKeyDown);
+        };
+    }, [totalPanels]);
     
     useEffect(() => {
         const loadModels = async () => {
