@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>故事家</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        // Enable class-based dark mode for Tailwind CSS
+        tailwind.config = {
+            darkMode: 'class',
+        }
+    </script>
+    <link rel="stylesheet" href="https://unpkg.com/easymde/dist/easymde.min.css">
+    <style>
+        :root {
+            --easymde-bg: #f9fafb;
+            --easymde-border: #e5e7eb;
+            --easymde-text: #374151;
+            --easymde-toolbar-text: #4b5563;
+            --easymde-toolbar-hover-bg: #f3f4f6;
+            --ai-input-bg: #ffffff;
+        }
+        html.dark {
+            --easymde-bg: #27272a; /* bg-zinc-800 */
+            --easymde-border: #3f3f46; /* border-zinc-700 */
+            --easymde-text: #d4d4d8; /* text-zinc-300 */
+            --easymde-toolbar-text: #d4d4d8; /* text-zinc-300 */
+            --easymde-toolbar-hover-bg: #3f3f46; /* bg-zinc-700 */
+            --ai-input-bg: #18181b; /* bg-zinc-900 */
+        }
+
+        /* Custom Scrollbar Styles */
+        .custom-scrollbar {
+            overscroll-behavior-y: contain; /* Prevents parent from scrolling */
+            /* For Firefox */
+            scrollbar-width: thin;
+            scrollbar-color: #a1a1aa #f4f4f5; /* thumb: zinc-400, track: zinc-100 */
+        }
+        html.dark .custom-scrollbar {
+            scrollbar-color: #52525b #27272a; /* thumb: zinc-600, track: zinc-800 */
+        }
+
+        /* For Chrome, Safari, and Opera */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f4f4f5; /* zinc-100 */
+            border-radius: 10px;
+            box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.05);
+        }
+        html.dark .custom-scrollbar::-webkit-scrollbar-track {
+            background: #27272a; /* zinc-800 */
+            box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background-color: #a1a1aa; /* zinc-400 */
+            border-radius: 10px;
+            box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.1);
+        }
+        html.dark .custom-scrollbar::-webkit-scrollbar-thumb {
+            background-color: #52525b; /* zinc-600 */
+            box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.3);
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background-color: #71717a; /* zinc-500 */
+        }
+        html.dark .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background-color: #71717a; /* zinc-500 */
+        }
+
+        /* EasyMDE Custom Styles */
+        .editor-container .EasyMDEContainer {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            border-radius: 0.75rem;
+            border: 1px solid var(--easymde-border);
+            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+        }
+        .editor-container .CodeMirror {
+            flex-grow: 1;
+            border-radius: 0 0 0.75rem 0.75rem;
+            border: none !important;
+            font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+            background-color: var(--easymde-bg);
+            color: var(--easymde-text);
+        }
+        /* Make cursor visible in dark mode */
+        html.dark .EasyMDEContainer .CodeMirror-cursor {
+            border-left-color: #d4d4d8;
+        }
+        /* FIX: Make selected text visible in dark mode */
+        html.dark .CodeMirror-selected {
+            background: #52525b !important; /* zinc-600 */
+        }
+        /* Also apply custom scrollbar to CodeMirror */
+        .editor-container .CodeMirror-scroll {
+            scrollbar-width: thin;
+            scrollbar-color: #a1a1aa #f4f4f5;
+        }
+        html.dark .editor-container .CodeMirror-scroll {
+             scrollbar-color: #52525b #27272a;
+        }
+        .editor-container .CodeMirror-scroll::-webkit-scrollbar { width: 6px; }
+        .editor-container .CodeMirror-scroll::-webkit-scrollbar-track { background: #f4f4f5; border-radius: 10px; box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.05); }
+        html.dark .editor-container .CodeMirror-scroll::-webkit-scrollbar-track { background: #27272a; box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2); }
+        .editor-container .CodeMirror-scroll::-webkit-scrollbar-thumb { background-color: #a1a1aa; border-radius: 10px; box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.1); }
+        html.dark .editor-container .CodeMirror-scroll::-webkit-scrollbar-thumb { background-color: #52525b; box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.3); }
+        .editor-container .CodeMirror-scroll::-webkit-scrollbar-thumb:hover { background-color: #71717a; }
+        html.dark .editor-container .CodeMirror-scroll::-webkit-scrollbar-thumb:hover { background-color: #71717a; }
+
+        .editor-container .editor-toolbar {
+            border: none !important;
+            border-bottom: 1px solid var(--easymde-border) !important;
+            border-radius: 0.75rem 0.75rem 0 0;
+            background-color: var(--easymde-bg);
+        }
+        .editor-container .editor-toolbar a {
+            color: var(--easymde-toolbar-text) !important;
+        }
+        .editor-container .editor-toolbar a.active,
+        .editor-container .editor-toolbar a:hover {
+            background: var(--easymde-toolbar-hover-bg);
+            border-color: var(--easymde-toolbar-hover-bg);
+        }
+        .editor-container .editor-statusbar {
+            display: none; /* Hide status bar for a cleaner look */
+        }
+
+        /* Flip Card Styles */
+        .flip-card {
+            perspective: 1000px;
+        }
+        .flip-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+        /* Do not flip if the card is disabled */
+        .flip-card:not([aria-disabled='true']):hover .flip-card-inner {
+            transform: rotateY(180deg);
+        }
+        .flip-card-front, .flip-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden; /* Safari */
+            backface-visibility: hidden;
+            border-radius: 0.5rem; /* corresponds to rounded-lg */
+        }
+        .flip-card-back {
+            transform: rotateY(180deg);
+        }
+        /* Custom Slider Styles */
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 16px;
+            height: 16px;
+            background: #3B82F6; /* blue-500 */
+            cursor: pointer;
+            border-radius: 50%;
+            margin-top: -6px; /* Vertically center thumb on track */
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 16px;
+            height: 16px;
+            background: #3B82F6; /* blue-500 */
+            cursor: pointer;
+            border-radius: 50%;
+        }
+
+        /* AI Input Animation Styles */
+        @keyframes pop {
+            50% {
+            scale: var(--s, 1);
+            rotate: var(--r, 0deg);
+            }
+        }
+        .ai-input-icon-path {
+            transform-box: fill-box;
+            transform-origin: center;
+        }
+        .group:is(:hover, :focus-within) .ai-input-icon-path {
+            animation: pop 0.5s var(--d);
+        }
+
+        /* Archive Card Animation */
+        @keyframes blob-bounce {
+            0% { transform: translate(-100%, -100%) translate3d(0, 0, 0); }
+            25% { transform: translate(-100%, -100%) translate3d(100%, 0, 0); }
+            50% { transform: translate(-100%, -100%) translate3d(100%, 100%, 0); }
+            75% { transform: translate(-100%, -100%) translate3d(0, 100%, 0); }
+            100% { transform: translate(-100%, -100%) translate3d(0, 0, 0); }
+        }
+        .animate-blob-bounce {
+            animation: blob-bounce 8s infinite ease;
+        }
+    </style>
+<script type="importmap">
+{
+  "imports": {
+    "react-dom/": "https://aistudiocdn.com/react-dom@^18.2.0/",
+    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.20.0",
+    "react/": "https://aistudiocdn.com/react@^18.2.0/",
+    "react": "https://aistudiocdn.com/react@^18.2.0",
+    "easymde": "https://aistudiocdn.com/easymde@^2.18.0"
+  }
+}
+</script>
+</head>
+<body class="bg-slate-50 text-gray-800 dark:bg-zinc-900 dark:text-zinc-200">
+    <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
+</body>
+</html>
