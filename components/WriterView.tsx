@@ -305,7 +305,7 @@ const WriterView: React.FC<WriterViewProps> = ({ config, setConfig, onStartGener
                     >
                         {/* Panel 1: Novel Info & Story Combination */}
                         <div className="w-full flex-shrink-0 p-1">
-                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 h-full">
+                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-2 h-full">
                                 <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm flex flex-col h-full dark:bg-zinc-800 dark:border-zinc-700">
                                     <h2 className="text-xl font-semibold mb-5 text-gray-700 dark:text-zinc-200">小说信息</h2>
                                     <div className="flex flex-col flex-grow">
@@ -365,45 +365,47 @@ const WriterView: React.FC<WriterViewProps> = ({ config, setConfig, onStartGener
                                 </div>
                                 
                                 <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm flex flex-col dark:bg-zinc-800 dark:border-zinc-700">
-                                    <h2 className="text-xl font-semibold mb-5 text-gray-700 dark:text-zinc-200">故事组合</h2>
-                                    <div className="grid grid-cols-2 gap-4">
-                                        {CORE_CARD_TYPES.map(type => (
+                                    <h2 className="text-xl font-semibold mb-5 text-gray-700 dark:text-zinc-200 flex-shrink-0">故事组合</h2>
+                                    <div className="flex-grow overflow-y-auto custom-scrollbar -mr-4 pr-4">
+                                        <div className="grid grid-cols-2 gap-4">
+                                            {CORE_CARD_TYPES.map(type => (
+                                                <CardSlot
+                                                    key={type}
+                                                    cardType={type}
+                                                    card={combinedCards[type] || null}
+                                                    onClear={() => onClearCard(type)}
+                                                    onDropCard={onCardSelect}
+                                                    activeDragType={activeDragType}
+                                                    allCards={allCards}
+                                                />
+                                            ))}
+                                        </div>
+                                        
+                                        <div className="mt-4 pt-4 border-t border-gray-200/60 dark:border-zinc-600/60">
                                             <CardSlot
-                                                key={type}
-                                                cardType={type}
-                                                card={combinedCards[type] || null}
-                                                onClear={() => onClearCard(type)}
+                                                key={CardTypeEnum.Inspiration}
+                                                cardType={CardTypeEnum.Inspiration}
+                                                card={combinedCards[CardTypeEnum.Inspiration] || null}
+                                                onClear={() => onClearCard(CardTypeEnum.Inspiration)}
                                                 onDropCard={onCardSelect}
                                                 activeDragType={activeDragType}
                                                 allCards={allCards}
                                             />
-                                        ))}
-                                    </div>
-                                    
-                                    <div className="mt-4 pt-4 border-t border-gray-200/60 dark:border-zinc-600/60">
-                                        <CardSlot
-                                            key={CardTypeEnum.Inspiration}
-                                            cardType={CardTypeEnum.Inspiration}
-                                            card={combinedCards[CardTypeEnum.Inspiration] || null}
-                                            onClear={() => onClearCard(CardTypeEnum.Inspiration)}
-                                            onDropCard={onCardSelect}
-                                            activeDragType={activeDragType}
-                                            allCards={allCards}
-                                        />
-                                    </div>
+                                        </div>
 
-                                    <div className="mt-4 grid grid-cols-2 md:grid-cols-3 gap-4">
-                                        {OPTIONAL_CARD_TYPES.filter(type => type !== CardTypeEnum.Inspiration).map(type => (
-                                             <CardSlot
-                                                key={type}
-                                                cardType={type}
-                                                card={combinedCards[type] || null}
-                                                onClear={() => onClearCard(type)}
-                                                onDropCard={onCardSelect}
-                                                activeDragType={activeDragType}
-                                                allCards={allCards}
-                                            />
-                                        ))}
+                                        <div className="mt-4 grid grid-cols-2 md:grid-cols-3 gap-4">
+                                            {OPTIONAL_CARD_TYPES.filter(type => type !== CardTypeEnum.Inspiration).map(type => (
+                                                <CardSlot
+                                                    key={type}
+                                                    cardType={type}
+                                                    card={combinedCards[type] || null}
+                                                    onClear={() => onClearCard(type)}
+                                                    onDropCard={onCardSelect}
+                                                    activeDragType={activeDragType}
+                                                    allCards={allCards}
+                                                />
+                                            ))}
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -411,9 +413,9 @@ const WriterView: React.FC<WriterViewProps> = ({ config, setConfig, onStartGener
 
                          {/* Panel 2: Card Libraries */}
                         <div className="w-full flex-shrink-0 h-full p-1">
-                             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 h-full">
-                                <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm flex flex-col dark:bg-zinc-800 dark:border-zinc-700">
-                                    <h2 className="text-xl font-semibold mb-5 text-gray-700 dark:text-zinc-200">卡片库</h2>
+                             <div className="grid grid-cols-1 lg:grid-cols-2 gap-2 h-full">
+                                <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm flex flex-col dark:bg-zinc-800 dark:border-zinc-700 min-h-0">
+                                    <h2 className="text-xl font-semibold mb-5 text-gray-700 dark:text-zinc-200 flex-shrink-0">卡片库</h2>
                                     <div className="flex-grow overflow-y-auto -mr-2 pr-2 custom-scrollbar">
                                         <div className="space-y-5">
                                             {CORE_CARD_TYPES.map(type => (
@@ -447,7 +449,7 @@ const WriterView: React.FC<WriterViewProps> = ({ config, setConfig, onStartGener
                                         </div>
                                     </div>
                                 </div>
-                                <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm flex flex-col dark:bg-zinc-800 dark:border-zinc-700">
+                                <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm flex flex-col dark:bg-zinc-800 dark:border-zinc-700 min-h-0">
                                     <div className="flex-grow overflow-y-auto -mr-2 pr-2 custom-scrollbar">
                                         <div className="mb-8">
                                             <h2 className="text-xl font-semibold mb-5 text-gray-700 dark:text-zinc-200">{CARD_TYPE_NAMES[CardTypeEnum.Structure]}</h2>

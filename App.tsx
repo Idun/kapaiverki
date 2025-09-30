@@ -614,7 +614,7 @@ const App: React.FC = () => {
     }
 
     return (
-        <div className="min-h-screen flex bg-slate-50 dark:bg-zinc-900">
+        <div className="h-screen flex overflow-hidden bg-slate-50 dark:bg-zinc-900">
             <Sidebar currentView={view} setView={setView} />
             <main className="flex-1 p-6 sm:p-8 lg:p-10 flex flex-col">
                 {renderView()}

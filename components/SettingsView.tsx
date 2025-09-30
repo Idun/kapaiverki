@@ -229,11 +229,11 @@ const SettingsView: React.FC<SettingsViewProps> = ({ currentConfig, onSave, curr
     };
 
     return (
-        <div className="w-full max-w-5xl mx-auto">
-            <header className="mb-8">
+        <div className="w-full max-w-5xl mx-auto h-full flex flex-col">
+            <header className="mb-8 flex-shrink-0">
                 <h1 className="text-3xl font-bold text-gray-800 dark:text-zinc-100">设置</h1>
             </header>
-            <div className="flex flex-col md:flex-row gap-8 lg:gap-12">
+            <div className="flex flex-col md:flex-row gap-8 lg:gap-12 flex-grow min-h-0">
                 <aside className="w-full md:w-48 flex-shrink-0">
                     <nav className="space-y-1">
                         <NavItem
@@ -256,7 +256,7 @@ const SettingsView: React.FC<SettingsViewProps> = ({ currentConfig, onSave, curr
                         />
                     </nav>
                 </aside>
-                <main className="flex-1 min-w-0">
+                <main className="flex-1 min-w-0 overflow-y-auto custom-scrollbar -mr-4 pr-4">
                     <div className="bg-white p-8 rounded-xl border border-gray-200 shadow-sm dark:bg-zinc-800 dark:border-zinc-700">
                         {activeTab === 'ai' && (
                              <div className="space-y-6">

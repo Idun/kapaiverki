@@ -50,7 +50,7 @@ const ResultView: React.FC<ResultViewProps> = ({
     const chatContainerRef = useRef<HTMLDivElement | null>(null);
     const importFileInputRef = useRef<HTMLInputElement | null>(null);
     const [isEditingName, setIsEditingName] = useState(false);
-    const nameInputRef = useRef<HTMLInputElement>(null);
+    const nameInputRef = useRef<HTMLInputElement | null>(null);
     const chatInputRef = useRef<HTMLTextAreaElement | null>(null);
     const abortControllerRef = useRef<AbortController | null>(null);
     const imageUploadInputRef = useRef<HTMLInputElement | null>(null);
@@ -471,44 +471,46 @@ const ResultView: React.FC<ResultViewProps> = ({
 
 
     return (
-        <div className="w-full h-full flex flex-row gap-6">
+        <div className="w-full h-full flex flex-row gap-2">
             {/* Left Panel: Outline Info */}
-            <aside className="w-56 flex-shrink-0 h-full flex flex-col bg-white rounded-xl border border-gray-200 shadow-sm dark:bg-zinc-800 dark:border-zinc-700">
-                 <header className="p-4 border-b border-gray-200 dark:border-zinc-600">
+            <aside className="w-56 flex-shrink-0 h-full flex flex-col bg-white rounded-xl border border-gray-200 shadow-sm dark:bg-zinc-800 dark:border-zinc-700 min-h-0">
+                 <header className="p-4 border-b border-gray-200 dark:border-zinc-600 flex-shrink-0">
                     <h2 className="font-semibold text-gray-800 dark:text-zinc-100">大纲信息</h2>
                 </header>
-                <div className="p-4">
-                    <label className="block text-sm font-medium text-gray-600 dark:text-zinc-300 mb-1">大纲名称</label>
-                    {isEditingName ? (
-                        <input
-                            ref={nameInputRef}
-                            type="text"
-                            value={novelInfo.name}
-                            onChange={(e) => setNovelInfo({ ...novelInfo, name: e.target.value })}
-                            onBlur={() => setIsEditingName(false)}
-                            onKeyDown={(e) => {
-                                if (e.key === 'Enter') {
-                                    e.preventDefault();
-                                    setIsEditingName(false);
-                                }
-                            }}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-gray-500 focus:border-gray-500 dark:bg-zinc-700 dark:border-zinc-600 dark:text-white"
-                            placeholder="为你的大纲命名"
-                        />
-                    ) : (
-                        <div
-                            onDoubleClick={() => setIsEditingName(true)}
-                            className="w-full px-3 py-2 border border-transparent rounded-md cursor-pointer hover:bg-gray-100 dark:hover:bg-zinc-700"
-                            title="双击以编辑"
-                        >
-                            <p className="text-gray-800 dark:text-zinc-100 truncate">{novelInfo.name || '未命名大纲'}</p>
-                        </div>
-                    )}
+                <div className="flex-grow overflow-y-auto custom-scrollbar">
+                    <div className="p-4">
+                        <label className="block text-sm font-medium text-gray-600 dark:text-zinc-300 mb-1">大纲名称</label>
+                        {isEditingName ? (
+                            <input
+                                ref={nameInputRef}
+                                type="text"
+                                value={novelInfo.name}
+                                onChange={(e) => setNovelInfo({ ...novelInfo, name: e.target.value })}
+                                onBlur={() => setIsEditingName(false)}
+                                onKeyDown={(e) => {
+                                    if (e.key === 'Enter') {
+                                        e.preventDefault();
+                                        setIsEditingName(false);
+                                    }
+                                }}
+                                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-gray-500 focus:border-gray-500 dark:bg-zinc-700 dark:border-zinc-600 dark:text-white"
+                                placeholder="为你的大纲命名"
+                            />
+                        ) : (
+                            <div
+                                onDoubleClick={() => setIsEditingName(true)}
+                                className="w-full px-3 py-2 border border-transparent rounded-md cursor-pointer hover:bg-gray-100 dark:hover:bg-zinc-700"
+                                title="双击以编辑"
+                            >
+                                <p className="text-gray-800 dark:text-zinc-100 truncate">{novelInfo.name || '未命名大纲'}</p>
+                            </div>
+                        )}
+                    </div>
                 </div>
             </aside>
 
             {/* Middle Panel: Editor */}
-            <div className="flex-grow h-full flex flex-col min-w-0">
+            <div className="flex-grow h-full flex flex-col min-w-0 min-h-0">
                 <header className="flex-shrink-0 flex justify-end items-center mb-4 space-x-2">
                     <input type="file" ref={importFileInputRef} onChange={handleFileImport} accept=".md,.txt" style={{ display: 'none' }} />
                     <button
@@ -548,13 +550,13 @@ const ResultView: React.FC<ResultViewProps> = ({
                     </button>
                 </header>
                 
-                <div className="flex-grow relative editor-container">
+                <div className="flex-grow relative editor-container min-h-0">
                     <textarea ref={textareaRef} style={{ display: 'none' }} />
                 </div>
             </div>
 
              {/* Right Panel: Chat Assistant */}
-            <aside className="w-96 flex-shrink-0 h-full flex flex-col bg-white rounded-xl border border-gray-200 shadow-sm dark:bg-zinc-800 dark:border-zinc-700">
+            <aside className="w-96 flex-shrink-0 h-full flex flex-col bg-white rounded-xl border border-gray-200 shadow-sm dark:bg-zinc-800 dark:border-zinc-700 min-h-0">
                 <header className="flex-shrink-0 p-3 border-b border-gray-200 dark:border-zinc-600 flex justify-between items-center">
                     <div className="flex items-center gap-1 rounded-lg bg-gray-100 dark:bg-zinc-700/60 p-1">
                         <button
