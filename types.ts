@@ -82,7 +82,7 @@ export interface UISettings {
 export interface ChatMessage {
     role: 'user' | 'model' | 'system';
     content: string;
-    image?: string; // base64 encoded image data
+    images?: string[]; // array of base64 encoded image data
 };
 
 export interface StoryArchiveItem {

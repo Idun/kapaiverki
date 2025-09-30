@@ -19,9 +19,31 @@ interface ResultViewProps {
     setIsGenerating: React.Dispatch<React.SetStateAction<boolean>>;
     combinedCards: CombinedCards;
     onSaveToArchive: () => void;
+    assistantHistory: ChatMessage[];
+    setAssistantHistory: React.Dispatch<React.SetStateAction<ChatMessage[]>>;
+    chatHistory: ChatMessage[];
+    setChatHistory: React.Dispatch<React.SetStateAction<ChatMessage[]>>;
 }
 
-const ResultView: React.FC<ResultViewProps> = ({ outline, setOutline, config, setConfig, novelInfo, setNovelInfo, uiSettings, isGenerating, setIsGenerating, combinedCards, onSaveToArchive }) => {
+const MAX_ATTACHMENTS = 5;
+
+const ResultView: React.FC<ResultViewProps> = ({ 
+    outline, 
+    setOutline, 
+    config, 
+    setConfig, 
+    novelInfo, 
+    setNovelInfo, 
+    uiSettings, 
+    isGenerating, 
+    setIsGenerating, 
+    combinedCards, 
+    onSaveToArchive,
+    assistantHistory,
+    setAssistantHistory,
+    chatHistory,
+    setChatHistory
+}) => {
     const textareaRef = useRef<HTMLTextAreaElement | null>(null);
     const easyMdeInstance = useRef<EasyMDE | null>(null);
     const [saveStatus, setSaveStatus] = useState<'idle' | 'saved'>('idle');
@@ -38,15 +60,13 @@ const ResultView: React.FC<ResultViewProps> = ({ outline, setOutline, config, se
 
     // Chat states
     const [chatMode, setChatMode] = useState<'assistant' | 'chat'>('assistant');
-    const [assistantHistory, setAssistantHistory] = useState<ChatMessage[]>([]);
-    const [chatHistory, setChatHistory] = useState<ChatMessage[]>([]);
     const [chatInput, setChatInput] = useState('');
     const [isChatLoading, setIsChatLoading] = useState(false);
-    const [attachment, setAttachment] = useState<{ type: 'image' | 'text'; data: string; name: string } | null>(null);
+    const [attachments, setAttachments] = useState<Array<{ type: 'image' | 'text'; data: string; name: string }>>([]);
 
     // Get current chat history and setter based on mode
     const currentChatHistory = useMemo(() => chatMode === 'assistant' ? assistantHistory : chatHistory, [chatMode, assistantHistory, chatHistory]);
-    const setCurrentChatHistory = useMemo(() => chatMode === 'assistant' ? setAssistantHistory : setChatHistory, [chatMode]);
+    const setCurrentChatHistory = useMemo(() => chatMode === 'assistant' ? setAssistantHistory : setChatHistory, [chatMode, setAssistantHistory, setChatHistory]);
     
     // Model Dropdown states
     const [isModelSelectOpen, setIsModelSelectOpen] = useState(false);
@@ -258,13 +278,19 @@ const ResultView: React.FC<ResultViewProps> = ({ outline, setOutline, config, se
         abortControllerRef.current?.abort();
     };
 
+    const handleClearHistory = () => {
+        if (window.confirm(`您确定要清空“${chatMode === 'assistant' ? 'AI 修改' : 'AI 聊天'}”的对话记录吗？此操作无法撤销。`)) {
+            setCurrentChatHistory([]);
+        }
+    };
+
     const handleChatSubmit = useCallback(async (e: React.SyntheticEvent) => {
         e.preventDefault();
         const message = chatInput.trim();
-        if (!message && !attachment || isChatLoading) return;
+        if ((!message && attachments.length === 0) || isChatLoading) return;
 
         setChatInput('');
-        setAttachment(null);
+        setAttachments([]);
         if (chatInputRef.current) {
             chatInputRef.current.style.height = 'auto'; // Reset height
         }
@@ -273,21 +299,25 @@ const ResultView: React.FC<ResultViewProps> = ({ outline, setOutline, config, se
         abortControllerRef.current = controller;
 
         let userMessageContent = message;
-        let userMessageImage: string | undefined = undefined;
-    
-        if (attachment) {
-            if (attachment.type === 'image') {
-                userMessageImage = attachment.data;
-            } else if (attachment.type === 'text') {
-                const fileContext = `--- Attached File: ${attachment.name} ---\n${attachment.data}`;
-                userMessageContent = message ? `${message}\n\n${fileContext}` : fileContext;
+        const userMessageImages: string[] = [];
+        const textAttachmentsContent: string[] = [];
+
+        attachments.forEach(att => {
+            if (att.type === 'image') {
+                userMessageImages.push(att.data);
+            } else if (att.type === 'text') {
+                textAttachmentsContent.push(`--- Attached File: ${att.name} ---\n${att.data}`);
             }
+        });
+
+        if (textAttachmentsContent.length > 0) {
+            userMessageContent = (userMessageContent + '\n\n' + textAttachmentsContent.join('\n\n')).trim();
         }
         
         const newUserMessage: ChatMessage = { 
             role: 'user', 
-            content: userMessageContent.trim(),
-            image: userMessageImage,
+            content: userMessageContent,
+            images: userMessageImages.length > 0 ? userMessageImages : undefined,
         };
 
         const newHistory = [...currentChatHistory, newUserMessage];
@@ -300,7 +330,7 @@ const ResultView: React.FC<ResultViewProps> = ({ outline, setOutline, config, se
             if (chatMode === 'assistant') {
                 const currentOutline = easyMdeInstance.current?.value() || outline;
                 let finalOutline = "";
-                const stream = polishOutline(currentOutline, message, assistantConfig, controller.signal);
+                const stream = polishOutline(currentOutline, userMessageContent, assistantConfig, controller.signal);
                 for await (const chunk of stream) {
                     finalOutline += chunk;
                     if (easyMdeInstance.current) {
@@ -356,7 +386,7 @@ const ResultView: React.FC<ResultViewProps> = ({ outline, setOutline, config, se
             setIsChatLoading(false);
             abortControllerRef.current = null;
         }
-    }, [chatInput, isChatLoading, outline, config, setOutline, chatMode, currentChatHistory, setCurrentChatHistory, attachment]);
+    }, [chatInput, isChatLoading, outline, config, setOutline, chatMode, currentChatHistory, setCurrentChatHistory, attachments]);
 
     const handleChatInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         setChatInput(e.target.value);
@@ -365,36 +395,72 @@ const ResultView: React.FC<ResultViewProps> = ({ outline, setOutline, config, se
         const maxHeight = 200; // Max height in pixels
         textarea.style.height = `${Math.min(textarea.scrollHeight, maxHeight)}px`;
     };
+
+    const handlePaste = (e: React.ClipboardEvent<HTMLTextAreaElement>) => {
+        if (attachments.length >= MAX_ATTACHMENTS || isChatLoading) return;
+
+        const items = e.clipboardData.items;
+        for (let i = 0; i < items.length; i++) {
+            if (items[i].type.indexOf('image') !== -1) {
+                const file = items[i].getAsFile();
+                if (file) {
+                    e.preventDefault(); // Prevent pasting file path as text
+                    const reader = new FileReader();
+                    reader.onload = (event) => {
+                        const base64String = (event.target?.result as string).split(',')[1];
+                        setAttachments(prev => [...prev, { type: 'image', data: base64String, name: file.name || 'pasted-image.png' }]);
+                    };
+                    reader.readAsDataURL(file);
+                    return; // Stop after handling the first image
+                }
+            }
+        }
+    };
     
     const handleImageFileSelected = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
-        if (!file) return;
+        const files = e.target.files;
+        if (!files) return;
 
-        // Simple validation for image types
-        if (!file.type.startsWith('image/')) {
-            alert('请选择一个图片文件 (例如: JPG, PNG, GIF)。');
+        if (attachments.length + files.length > MAX_ATTACHMENTS) {
+            alert(`最多只能添加 ${MAX_ATTACHMENTS} 个附件。您尝试添加 ${files.length} 个，但只能再添加 ${MAX_ATTACHMENTS - attachments.length} 个。`);
+            e.target.value = '';
             return;
         }
 
-        const reader = new FileReader();
-        reader.onload = (event) => {
-            const base64String = (event.target?.result as string).split(',')[1];
-            setAttachment({ type: 'image', data: base64String, name: file.name });
-        };
-        reader.readAsDataURL(file);
+        for (const file of Array.from(files)) {
+            if (!file.type.startsWith('image/')) {
+                alert(`文件 "${file.name}" 不是图片，已跳过。`);
+                continue;
+            }
+
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                const base64String = (event.target?.result as string).split(',')[1];
+                setAttachments(prev => [...prev, { type: 'image', data: base64String, name: file.name }]);
+            };
+            reader.readAsDataURL(file);
+        }
         e.target.value = ''; // Reset input
     };
 
     const handleTextFileSelected = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
-        if (!file) return;
+        const files = e.target.files;
+        if (!files) return;
 
-        const reader = new FileReader();
-        reader.onload = (event) => {
-            const textContent = event.target?.result as string;
-            setAttachment({ type: 'text', data: textContent, name: file.name });
-        };
-        reader.readAsText(file);
+        if (attachments.length + files.length > MAX_ATTACHMENTS) {
+            alert(`最多只能添加 ${MAX_ATTACHMENTS} 个附件。您尝试添加 ${files.length} 个，但只能再添加 ${MAX_ATTACHMENTS - attachments.length} 个。`);
+            e.target.value = '';
+            return;
+        }
+
+        for (const file of Array.from(files)) {
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                const textContent = event.target?.result as string;
+                setAttachments(prev => [...prev, { type: 'text', data: textContent, name: file.name }]);
+            };
+            reader.readAsText(file);
+        }
         e.target.value = ''; // Reset input
     };
     
@@ -489,6 +555,37 @@ const ResultView: React.FC<ResultViewProps> = ({ outline, setOutline, config, se
 
              {/* Right Panel: Chat Assistant */}
             <aside className="w-96 flex-shrink-0 h-full flex flex-col bg-white rounded-xl border border-gray-200 shadow-sm dark:bg-zinc-800 dark:border-zinc-700">
+                <header className="flex-shrink-0 p-3 border-b border-gray-200 dark:border-zinc-600 flex justify-between items-center">
+                    <div className="flex items-center gap-1 rounded-lg bg-gray-100 dark:bg-zinc-700/60 p-1">
+                        <button
+                            onClick={() => setChatMode('assistant')}
+                            className={`w-20 py-1 rounded-md text-sm font-medium transition-all duration-200 ${
+                                chatMode === 'assistant' 
+                                ? 'bg-white text-gray-800 shadow-sm dark:bg-zinc-600 dark:text-zinc-100' 
+                                : 'text-gray-600 hover:bg-white/50 dark:text-zinc-400 dark:hover:bg-zinc-900/20'
+                            }`}
+                        >
+                            AI 修改
+                        </button>
+                        <button
+                            onClick={() => setChatMode('chat')}
+                            className={`w-20 py-1 rounded-md text-sm font-medium transition-all duration-200 ${
+                                chatMode === 'chat' 
+                                ? 'bg-white text-gray-800 shadow-sm dark:bg-zinc-600 dark:text-zinc-100' 
+                                : 'text-gray-600 hover:bg-white/50 dark:text-zinc-400 dark:hover:bg-zinc-900/20'
+                            }`}
+                        >
+                            AI 聊天
+                        </button>
+                    </div>
+                    <button
+                        onClick={handleClearHistory}
+                        className="p-2 text-gray-400 hover:text-red-600 rounded-full hover:bg-red-100/60 transition-colors dark:text-zinc-500 dark:hover:text-red-500 dark:hover:bg-red-900/40"
+                        title="清空当前对话记录"
+                    >
+                        <TrashIcon className="w-4 h-4" />
+                    </button>
+                </header>
                 <div ref={chatContainerRef} className="flex-grow p-4 space-y-4 overflow-y-auto custom-scrollbar">
                    {currentChatHistory.map((msg, index) => {
                         if (msg.role === 'system') {
@@ -514,12 +611,17 @@ const ResultView: React.FC<ResultViewProps> = ({ outline, setOutline, config, se
                                         ? 'bg-blue-600 text-white rounded-br-md' 
                                         : 'bg-gray-100 text-gray-800 rounded-bl-md dark:bg-zinc-700 dark:text-zinc-200'
                                 }`}>
-                                    {msg.image && (
-                                        <img 
-                                            src={`data:image/jpeg;base64,${msg.image}`} 
-                                            alt="Uploaded content" 
-                                            className="rounded-lg mb-2 max-w-full h-auto"
-                                        />
+                                    {msg.images && msg.images.length > 0 && (
+                                        <div className="flex flex-wrap gap-2 mb-2">
+                                            {msg.images.map((imgData, imgIndex) => (
+                                                <img
+                                                    key={imgIndex}
+                                                    src={`data:image/jpeg;base64,${imgData}`}
+                                                    alt={`Uploaded content ${imgIndex + 1}`}
+                                                    className="rounded-lg max-w-full h-auto max-h-48 object-contain bg-gray-200 dark:bg-zinc-600"
+                                                />
+                                            ))}
+                                        </div>
                                     )}
                                     <p className="text-sm leading-relaxed break-words whitespace-pre-wrap">
                                         {msg.content}
@@ -539,66 +641,39 @@ const ResultView: React.FC<ResultViewProps> = ({ outline, setOutline, config, se
                     )}
                 </div>
                 <div className="flex-shrink-0 p-4 border-t border-gray-200 dark:border-zinc-600">
-                    <div className="flex items-center gap-1 rounded-lg bg-gray-100 dark:bg-zinc-700/60 p-1 mb-3">
-                         <button
-                            onClick={() => setChatMode('assistant')}
-                            className={`w-full py-1 rounded-md text-sm font-medium transition-all duration-200 ${
-                                chatMode === 'assistant' 
-                                ? 'bg-white text-gray-800 shadow-sm dark:bg-zinc-600 dark:text-zinc-100' 
-                                : 'text-gray-600 hover:bg-white/50 dark:text-zinc-400 dark:hover:bg-zinc-900/20'
-                            }`}
-                        >
-                            AI 修改
-                        </button>
-                        <button
-                            onClick={() => setChatMode('chat')}
-                            className={`w-full py-1 rounded-md text-sm font-medium transition-all duration-200 ${
-                                chatMode === 'chat' 
-                                ? 'bg-white text-gray-800 shadow-sm dark:bg-zinc-600 dark:text-zinc-100' 
-                                : 'text-gray-600 hover:bg-white/50 dark:text-zinc-400 dark:hover:bg-zinc-900/20'
-                            }`}
-                        >
-                            AI 聊天
-                        </button>
-                    </div>
-
                     <form onSubmit={handleChatSubmit} className="group relative flex flex-col w-full rounded-xl shadow-md border-2 border-transparent bg-clip-padding focus-within:border-purple-400 transition-all duration-300"
                         style={{
                             backgroundImage: `linear-gradient(var(--ai-input-bg, #fff), var(--ai-input-bg, #fff)), linear-gradient(120deg, #a855f7, #fde047)`,
                             backgroundOrigin: 'border-box'
                         }}
                     >
-                        {attachment && (
-                            <div className="p-2 mx-2 mt-2 border-b border-gray-200 dark:border-zinc-700">
-                                {attachment.type === 'image' && (
-                                    <div className="relative inline-block bg-gray-100 dark:bg-zinc-700 p-1.5 rounded-lg">
-                                        <img src={`data:image/jpeg;base64,${attachment.data}`} alt="Preview" className="h-20 w-auto rounded" />
-                                        <button
-                                            type="button"
-                                            onClick={() => setAttachment(null)}
-                                            className="absolute -top-2 -right-2 w-5 h-5 bg-gray-700 text-white rounded-full flex items-center justify-center text-xs hover:bg-red-500 transition-colors z-10"
-                                            aria-label="Remove image"
-                                        >
-                                            &times;
-                                        </button>
-                                    </div>
-                                )}
-                                {attachment.type === 'text' && (
-                                    <div className="flex items-center justify-between bg-gray-100 dark:bg-zinc-700/50 p-2 rounded-lg">
-                                        <div className="flex items-center gap-2 overflow-hidden">
-                                            <DocumentPlusIcon className="w-5 h-5 text-gray-500 dark:text-zinc-400 flex-shrink-0" />
-                                            <span className="text-sm text-gray-700 dark:text-zinc-200 truncate" title={attachment.name}>{attachment.name}</span>
+                        {attachments.length > 0 && (
+                             <div className="px-2 pt-2 border-b border-gray-200 dark:border-zinc-700">
+                                <div className="flex items-center gap-3 overflow-x-auto custom-scrollbar pb-2">
+                                    {attachments.map((att, index) => (
+                                        <div key={index} className="relative flex-shrink-0 bg-gray-100 dark:bg-zinc-700 p-1.5 rounded-lg">
+                                            {att.type === 'image' ? (
+                                                <img src={`data:image/jpeg;base64,${att.data}`} alt="Preview" className="h-16 w-auto rounded" />
+                                            ) : (
+                                                <div className="h-16 w-20 flex flex-col items-center justify-center text-center p-1">
+                                                    <DocumentPlusIcon className="w-6 h-6 text-gray-500 dark:text-zinc-400" />
+                                                    <span className="text-xs text-gray-600 dark:text-zinc-300 mt-1 truncate w-full" title={att.name}>{att.name}</span>
+                                                </div>
+                                            )}
+                                            <button
+                                                type="button"
+                                                onClick={() => setAttachments(prev => prev.filter((_, i) => i !== index))}
+                                                className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-gray-700 text-white rounded-full flex items-center justify-center text-xs hover:bg-red-500 transition-colors z-10"
+                                                aria-label={`Remove ${att.name}`}
+                                            >
+                                                &times;
+                                            </button>
                                         </div>
-                                        <button
-                                            type="button"
-                                            onClick={() => setAttachment(null)}
-                                            className="p-1 rounded-full text-gray-500 hover:text-red-600 hover:bg-gray-200 dark:text-zinc-400 dark:hover:text-red-500 dark:hover:bg-zinc-600 flex-shrink-0"
-                                            aria-label="Remove text file"
-                                        >
-                                            <TrashIcon className="w-4 h-4" />
-                                        </button>
-                                    </div>
-                                )}
+                                    ))}
+                                    {attachments.length >= MAX_ATTACHMENTS && (
+                                        <div className="text-xs text-red-500 pl-2 flex-shrink-0 self-center">达到最大数量</div>
+                                    )}
+                                </div>
                             </div>
                         )}
                         <div className="relative flex-grow">
@@ -660,8 +735,9 @@ const ResultView: React.FC<ResultViewProps> = ({ outline, setOutline, config, se
                                         handleChatSubmit(e);
                                     }
                                 }}
+                                onPaste={handlePaste}
                                 disabled={isChatLoading}
-                                placeholder={chatMode === 'assistant' ? "有什么可以帮您修改大纲？" : "随便问点什么..."}
+                                placeholder={chatMode === 'assistant' ? "有什么可以帮您修改大纲？" : "粘贴图片或输入文字..."}
                                 className="w-full pl-12 pr-24 py-3 text-base rounded-b-xl focus:outline-none custom-scrollbar resize-none bg-transparent placeholder:text-gray-400 transition-all duration-300 dark:text-white dark:placeholder:text-zinc-500 min-h-[56px]"
                             />
                             <div className="absolute bottom-3 right-3 flex items-center gap-1 z-10">
@@ -674,7 +750,7 @@ const ResultView: React.FC<ResultViewProps> = ({ outline, setOutline, config, se
                                         title="上传文件"
                                         aria-haspopup="true"
                                         aria-expanded={isUploadMenuOpen}
-                                        disabled={isChatLoading || !!attachment}
+                                        disabled={isChatLoading || attachments.length >= MAX_ATTACHMENTS}
                                     >
                                         <PlusIcon className="w-5 h-5" />
                                     </button>
@@ -708,7 +784,7 @@ const ResultView: React.FC<ResultViewProps> = ({ outline, setOutline, config, se
                                 <button
                                     type={isChatLoading ? "button" : "submit"}
                                     onClick={isChatLoading ? handleInterrupt : undefined}
-                                    disabled={!isChatLoading && !chatInput.trim() && !attachment}
+                                    disabled={!isChatLoading && !chatInput.trim() && attachments.length === 0}
                                     className={`p-2 rounded-full transition-colors ${
                                         isChatLoading
                                             ? 'text-gray-600 bg-gray-100 hover:bg-red-100 hover:text-red-600 dark:text-zinc-300 dark:bg-zinc-700 dark:hover:bg-red-900/50 dark:hover:text-red-500'
@@ -721,8 +797,8 @@ const ResultView: React.FC<ResultViewProps> = ({ outline, setOutline, config, se
                             </div>
                         </div>
                     </form>
-                    <input type="file" ref={textUploadInputRef} onChange={handleTextFileSelected} accept=".txt,.md" className="hidden" />
-                    <input type="file" ref={imageUploadInputRef} onChange={handleImageFileSelected} accept="image/*" className="hidden" />
+                    <input type="file" ref={textUploadInputRef} onChange={handleTextFileSelected} accept=".txt,.md" className="hidden" multiple />
+                    <input type="file" ref={imageUploadInputRef} onChange={handleImageFileSelected} accept="image/*" className="hidden" multiple />
                 </div>
             </aside>
         </div>

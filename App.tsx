@@ -1,7 +1,7 @@
 
 
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import type { AIConfig, Card, CombinedCards, CardType, NovelInfo, PromptTemplate, InspirationCategory, InspirationItem, UISettings, StoryArchiveItem } from './types';
+import type { AIConfig, Card, CombinedCards, CardType, NovelInfo, PromptTemplate, InspirationCategory, InspirationItem, UISettings, StoryArchiveItem, ChatMessage } from './types';
 import { DEFAULT_CARDS } from './constants';
 import { DEFAULT_PROMPTS, DEFAULT_SNOWFLAKE_PROMPT_TEMPLATE } from './prompts';
 import { DEFAULT_INSPIRATION_DATA } from './inspirationConstants';
@@ -192,12 +192,43 @@ const App: React.FC = () => {
             return saved ? JSON.parse(saved) : [];
         } catch { return []; }
     });
+    
+    // Chat histories are lifted here for persistence
+    const [assistantHistory, setAssistantHistory] = useState<ChatMessage[]>(() => {
+        try {
+            const saved = localStorage.getItem('assistantHistory');
+            // Add a default message if history is empty for better initial UX
+            const history = saved ? JSON.parse(saved) : [];
+            return history.length > 0 ? history : [{ role: 'system', content: '您可以通过对话来修改和完善大纲。' }];
+        } catch { return [{ role: 'system', content: '您可以通过对话来修改和完善大纲。' }]; }
+    });
+
+    const [chatHistory, setChatHistory] = useState<ChatMessage[]>(() => {
+        try {
+            const saved = localStorage.getItem('chatHistory');
+            const history = saved ? JSON.parse(saved) : [];
+            return history.length > 0 ? history : [{ role: 'system', content: '您可以像和朋友一样与 AI 聊天。' }];
+        } catch { return [{ role: 'system', content: '您可以像和朋友一样与 AI 聊天。' }]; }
+    });
+
 
     useEffect(() => {
         try {
             localStorage.setItem('storyArchive', JSON.stringify(storyArchive));
         } catch (e) { console.error("Failed to save story archive", e); }
     }, [storyArchive]);
+
+    useEffect(() => {
+        try {
+            localStorage.setItem('assistantHistory', JSON.stringify(assistantHistory));
+        } catch (e) { console.error("Failed to save assistant history", e); }
+    }, [assistantHistory]);
+
+    useEffect(() => {
+        try {
+            localStorage.setItem('chatHistory', JSON.stringify(chatHistory));
+        } catch (e) { console.error("Failed to save chat history", e); }
+    }, [chatHistory]);
 
     useEffect(() => {
         try {
@@ -532,6 +563,10 @@ const App: React.FC = () => {
                             setIsGenerating={setIsGenerating}
                             combinedCards={combinedCards}
                             onSaveToArchive={handleSaveToArchive}
+                            assistantHistory={assistantHistory}
+                            setAssistantHistory={setAssistantHistory}
+                            chatHistory={chatHistory}
+                            setChatHistory={setChatHistory}
                         />;
             case 'inspiration':
                 return <InspirationView 

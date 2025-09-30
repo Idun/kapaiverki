@@ -98,17 +98,24 @@ async function* generateWithGemini(promptOrMessages: string | ChatMessage[], con
 
     // Convert ChatMessage[] to Gemini's format
     const contents = messages.map(msg => {
-        const parts: ({ text: string } | { inlineData: { mimeType: string; data: string; } })[] = [{ text: msg.content }];
-        if (msg.image) {
-            // simplistic mime type detection
-            const mimeType = msg.image.startsWith('/9j/') ? 'image/jpeg' : 'image/png';
-            parts.push({
-                inlineData: {
-                    mimeType,
-                    data: msg.image,
-                }
+        const parts: Array<{ text: string } | { inlineData: { mimeType: string; data: string } }> = [];
+        if (msg.content) {
+            parts.push({ text: msg.content });
+        }
+
+        if (msg.images) {
+            msg.images.forEach(imgData => {
+                // simplistic mime type detection
+                const mimeType = imgData.startsWith('/9j/') ? 'image/jpeg' : 'image/png';
+                parts.push({
+                    inlineData: {
+                        mimeType,
+                        data: imgData,
+                    }
+                });
             });
         }
+        
         return {
             // Treat 'system' as 'user' for multi-turn compatibility
             role: msg.role === 'model' ? 'model' : 'user',
@@ -187,17 +194,21 @@ async function* generateWithOpenAICompatible(promptOrMessages: string | ChatMess
         : promptOrMessages;
 
     body.messages = messages.map(msg => {
-        if (msg.image) {
-            const mimeType = msg.image.startsWith('/9j/') ? 'image/jpeg' : 'image/png';
-            return {
-                role: msg.role,
-                content: [
-                    { type: 'text', text: msg.content },
-                    { type: 'image_url', image_url: { url: `data:${mimeType};base64,${msg.image}` } }
-                ]
-            };
+        if (!msg.images || msg.images.length === 0) {
+            return { role: msg.role, content: msg.content };
         }
-        return { role: msg.role, content: msg.content };
+
+        const contentParts: any[] = [{ type: 'text', text: msg.content }];
+        
+        msg.images.forEach(imgData => {
+            const mimeType = imgData.startsWith('/9j/') ? 'image/jpeg' : 'image/png';
+            contentParts.push({
+                type: 'image_url',
+                image_url: { url: `data:${mimeType};base64,${imgData}` }
+            });
+        });
+
+        return { role: msg.role, content: contentParts };
     }).filter(m => m.role === 'user' || m.role === 'model'); // Some models don't like system messages
 
     if (config.temperature !== undefined) body.temperature = config.temperature;
