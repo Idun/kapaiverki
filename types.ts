@@ -1,7 +1,5 @@
 
 
-
-
 import type { ReactElement, SVGProps } from 'react';
 
 export enum CardType {
@@ -83,6 +81,7 @@ export interface UISettings {
 }
 
 export interface ChatMessage {
+    id: string;
     role: 'user' | 'model' | 'system';
     content: string;
     images?: string[]; // array of base64 encoded image data
@@ -93,4 +92,11 @@ export interface StoryArchiveItem {
   novelInfo: NovelInfo;
   outline: string;
   lastModified: number;
+}
+
+export interface Topic {
+  id: string;
+  name: string;
+  lastModified: number;
+  history: ChatMessage[];
 }

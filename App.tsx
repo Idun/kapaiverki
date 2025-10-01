@@ -1,6 +1,8 @@
 
+
+
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import type { AIConfig, Card, CombinedCards, CardType, NovelInfo, PromptTemplate, InspirationCategory, InspirationItem, UISettings, StoryArchiveItem, ChatMessage } from './types';
+import type { AIConfig, Card, CombinedCards, CardType, NovelInfo, PromptTemplate, InspirationCategory, InspirationItem, UISettings, StoryArchiveItem, ChatMessage, Topic } from './types';
 import { DEFAULT_CARDS } from './constants';
 import { DEFAULT_PROMPTS, DEFAULT_SNOWFLAKE_PROMPT_TEMPLATE } from './prompts';
 import { DEFAULT_INSPIRATION_DATA } from './inspirationConstants';
@@ -11,6 +13,7 @@ import ResultView from './components/ResultView';
 import InspirationView from './components/InspirationView';
 import AboutView from './components/AboutView';
 import ArchiveView from './components/ArchiveView';
+import TipsView from './components/TipsView';
 import { CardType as CardTypeEnum } from './types';
 import { SparklesIcon, LightbulbIcon } from './components/icons';
 
@@ -18,8 +21,47 @@ type SelectedCardIds = {
   [key in CardType]?: string | null;
 };
 
+// Helper function to load and migrate chat history from localStorage
+const loadAndMigrateChatHistory = (key: string, defaultMessage: ChatMessage): ChatMessage[] => {
+    try {
+        const saved = localStorage.getItem(key);
+        if (!saved) return [defaultMessage];
+
+        let history = JSON.parse(saved);
+        if (!Array.isArray(history)) return [defaultMessage];
+
+        // Migration: Add IDs if they don't exist
+        let needsUpdate = false;
+        history = history.map((msg: any, index: number) => {
+            if (!msg.id) {
+                needsUpdate = true;
+                return {
+                    id: `${key}-${Date.now()}-${index}`,
+                    role: msg.role,
+                    content: msg.content,
+                    images: msg.images,
+                };
+            }
+            return msg;
+        });
+
+        if (needsUpdate) {
+            try {
+                localStorage.setItem(key, JSON.stringify(history));
+            } catch (e) {
+                console.error(`Failed to save migrated history for ${key}`, e);
+            }
+        }
+        
+        return history.length > 0 ? history : [defaultMessage];
+    } catch {
+        return [defaultMessage];
+    }
+};
+
+
 const App: React.FC = () => {
-    const [view, setView] = useState<'writer' | 'result' | 'inspiration' | 'settings' | 'about' | 'archive'>('writer');
+    const [view, setView] = useState<'writer' | 'result' | 'inspiration' | 'settings' | 'about' | 'archive' | 'tips'>('writer');
     
     const [outline, setOutline] = useState<string>(() => {
         try {
@@ -194,22 +236,55 @@ const App: React.FC = () => {
     });
     
     // Chat histories are lifted here for persistence
-    const [assistantHistory, setAssistantHistory] = useState<ChatMessage[]>(() => {
+    const [assistantHistory, setAssistantHistory] = useState<ChatMessage[]>(() => 
+        loadAndMigrateChatHistory('assistantHistory', { id: `sys-asst-${Date.now()}`, role: 'system', content: '您可以通过对话来修改和完善大纲。' })
+    );
+
+    const [chatHistory, setChatHistory] = useState<ChatMessage[]>(() => 
+        loadAndMigrateChatHistory('chatHistory', { id: `sys-chat-${Date.now()}`, role: 'system', content: '您可以像和朋友一样与 AI 聊天。' })
+    );
+    
+    const [tipsHistories, setTipsHistories] = useState<{ [key: string]: ChatMessage[] }>(() => {
         try {
-            const saved = localStorage.getItem('assistantHistory');
-            // Add a default message if history is empty for better initial UX
-            const history = saved ? JSON.parse(saved) : [];
-            return history.length > 0 ? history : [{ role: 'system', content: '您可以通过对话来修改和完善大纲。' }];
-        } catch { return [{ role: 'system', content: '您可以通过对话来修改和完善大纲。' }]; }
+            const saved = localStorage.getItem('tipsHistories');
+            const histories = saved ? JSON.parse(saved) : {};
+            // Migration for nested histories to add IDs
+            let needsUpdate = false;
+            for (const key in histories) {
+                if (Array.isArray(histories[key])) {
+                    histories[key] = histories[key].map((msg: any, index: number) => {
+                        if (!msg.id) {
+                           needsUpdate = true;
+                           return {
+                                id: `tips-${key}-${Date.now()}-${index}`,
+                                role: msg.role,
+                                content: msg.content,
+                                images: msg.images,
+                           };
+                        }
+                        return msg;
+                    });
+                }
+            }
+            if (needsUpdate) {
+                localStorage.setItem('tipsHistories', JSON.stringify(histories));
+            }
+            return histories;
+        } catch { return {}; }
+    });
+    
+    const [topics, setTopics] = useState<Topic[]>(() => {
+        try {
+            const saved = localStorage.getItem('topics');
+            return saved ? JSON.parse(saved) : [];
+        } catch { return []; }
     });
 
-    const [chatHistory, setChatHistory] = useState<ChatMessage[]>(() => {
+    useEffect(() => {
         try {
-            const saved = localStorage.getItem('chatHistory');
-            const history = saved ? JSON.parse(saved) : [];
-            return history.length > 0 ? history : [{ role: 'system', content: '您可以像和朋友一样与 AI 聊天。' }];
-        } catch { return [{ role: 'system', content: '您可以像和朋友一样与 AI 聊天。' }]; }
-    });
+            localStorage.setItem('topics', JSON.stringify(topics));
+        } catch (e) { console.error("Failed to save topics", e); }
+    }, [topics]);
 
 
     useEffect(() => {
@@ -229,6 +304,12 @@ const App: React.FC = () => {
             localStorage.setItem('chatHistory', JSON.stringify(chatHistory));
         } catch (e) { console.error("Failed to save chat history", e); }
     }, [chatHistory]);
+
+     useEffect(() => {
+        try {
+            localStorage.setItem('tipsHistories', JSON.stringify(tipsHistories));
+        } catch (e) { console.error("Failed to save tips histories", e); }
+    }, [tipsHistories]);
 
     useEffect(() => {
         try {
@@ -578,6 +659,15 @@ const App: React.FC = () => {
                             onCardDragStart={handleInspirationCardDragStart}
                             onCardClick={handleInspirationCardClick}
                             selectedInspirationCardId={selectedCardIds[CardTypeEnum.Inspiration]}
+                        />;
+            case 'tips':
+                return <TipsView 
+                            histories={tipsHistories} 
+                            setHistories={setTipsHistories} 
+                            topics={topics}
+                            setTopics={setTopics}
+                            config={config} 
+                            storyArchive={storyArchive}
                         />;
             case 'archive':
                 return <ArchiveView

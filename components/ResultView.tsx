@@ -1,5 +1,6 @@
 
 
+
 import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import EasyMDE from 'easymde';
 import type { AIConfig, NovelInfo, UISettings, CombinedCards, ChatMessage } from '../types';
@@ -315,6 +316,7 @@ const ResultView: React.FC<ResultViewProps> = ({
         }
         
         const newUserMessage: ChatMessage = { 
+            id: `user-${Date.now()}`,
             role: 'user', 
             content: userMessageContent,
             images: userMessageImages.length > 0 ? userMessageImages : undefined,
@@ -339,12 +341,12 @@ const ResultView: React.FC<ResultViewProps> = ({
                 }
                 setOutline(finalOutline);
                 if (!controller.signal.aborted) {
-                    setCurrentChatHistory(prev => [...prev, { role: 'model', content: '好的，我已经根据你的要求更新了大纲。' }]);
+                    setCurrentChatHistory(prev => [...prev, { id: `model-${Date.now()}`, role: 'model', content: '好的，我已经根据你的要求更新了大纲。' }]);
                 }
             } else { // chatMode === 'chat'
                 let accumulatedResponse = "";
                 // Add a placeholder for the model's response
-                setCurrentChatHistory(prev => [...prev, { role: 'model', content: '' }]);
+                setCurrentChatHistory(prev => [...prev, { id: `model-streaming-${Date.now()}`, role: 'model', content: '' }]);
 
                 const stream = generateChatResponse(newHistory, assistantConfig, controller.signal);
 
@@ -362,7 +364,7 @@ const ResultView: React.FC<ResultViewProps> = ({
             if (err instanceof DOMException && err.name === 'AbortError') {
                 console.log("Stream interrupted by user.");
                  if (chatMode === 'assistant') {
-                     setCurrentChatHistory(prev => [...prev, { role: 'system', content: '操作已由用户中断。' }]);
+                     setCurrentChatHistory(prev => [...prev, { id: `system-${Date.now()}`, role: 'system', content: '操作已由用户中断。' }]);
                 } else { // chat mode
                      setCurrentChatHistory(prev => {
                         const newHistory = [...prev];
@@ -380,7 +382,7 @@ const ResultView: React.FC<ResultViewProps> = ({
             } else {
                 const errorMessage = err instanceof Error ? err.message : '发生未知错误。';
                 alert(errorMessage);
-                setCurrentChatHistory(prev => [...prev, { role: 'system', content: `抱歉，操作失败: ${errorMessage}` }]);
+                setCurrentChatHistory(prev => [...prev, { id: `system-error-${Date.now()}`, role: 'system', content: `抱歉，操作失败: ${errorMessage}` }]);
             }
         } finally {
             setIsChatLoading(false);
@@ -592,7 +594,7 @@ const ResultView: React.FC<ResultViewProps> = ({
                    {currentChatHistory.map((msg, index) => {
                         if (msg.role === 'system') {
                             return (
-                                <div key={index} className="text-center w-full my-2">
+                                <div key={msg.id} className="text-center w-full my-2">
                                     <p className="text-xs text-gray-500 bg-slate-100 rounded-full px-3 py-1 inline-block dark:bg-zinc-700 dark:text-zinc-400">{msg.content}</p>
                                 </div>
                             );
@@ -602,7 +604,7 @@ const ResultView: React.FC<ResultViewProps> = ({
                         const isLastMessageStreaming = isChatLoading && index === currentChatHistory.length - 1 && !isUser;
 
                         return (
-                            <div key={index} className={`flex items-end gap-2.5 ${isUser ? 'justify-end' : 'justify-start'}`}>
+                            <div key={msg.id} className={`flex items-end gap-2.5 ${isUser ? 'justify-end' : 'justify-start'}`}>
                                 {!isUser && (
                                     <div className="w-8 h-8 flex-shrink-0 rounded-full bg-gradient-to-br from-purple-400 to-yellow-300 flex items-center justify-center shadow-sm">
                                         <AiIcon className="w-5 h-5 text-white" />
@@ -626,8 +628,8 @@ const ResultView: React.FC<ResultViewProps> = ({
                                         </div>
                                     )}
                                     <p className="text-sm leading-relaxed break-words whitespace-pre-wrap">
-                                        {msg.content}
-                                        {isLastMessageStreaming && <span className="inline-block w-2 h-4 bg-gray-600 dark:bg-zinc-400 animate-pulse ml-1" />}
+                                        {isLastMessageStreaming && !msg.content ? <Spinner /> : msg.content}
+                                        {isLastMessageStreaming && msg.content ? <span className="inline-block w-2 h-4 bg-gray-600 dark:bg-zinc-400 animate-pulse ml-1" /> : null}
                                     </p>
                                 </div>
                             </div>

@@ -3,22 +3,22 @@
 
 
 import React from 'react';
-import { PenSparkleIcon, SettingsIcon, DocumentTextIcon, LightbulbIcon, InformationCircleIcon, ArchiveBoxIcon } from './icons';
+import { PenSparkleIcon, SettingsIcon, DocumentTextIcon, LightbulbIcon, InformationCircleIcon, ArchiveBoxIcon, QuestionMarkCircleIcon } from './icons';
 
 interface SidebarProps {
-    currentView: 'writer' | 'result' | 'inspiration' | 'settings' | 'about' | 'archive';
-    setView: (view: 'writer' | 'result' | 'inspiration' | 'settings' | 'about' | 'archive') => void;
+    currentView: 'writer' | 'result' | 'inspiration' | 'settings' | 'about' | 'archive' | 'tips';
+    setView: (view: 'writer' | 'result' | 'inspiration' | 'settings' | 'about' | 'archive' | 'tips') => void;
 }
 
 // Moved NavItem outside the Sidebar component to prevent re-creation on re-renders.
 const NavItem: React.FC<{
     label: string;
-    view: 'writer' | 'result' | 'inspiration' | 'settings' | 'about' | 'archive';
+    view: 'writer' | 'result' | 'inspiration' | 'settings' | 'about' | 'archive' | 'tips';
     // FIX: Use React.ReactElement instead of JSX.Element to avoid namespace error
     // FIX: Specify props for ReactElement to allow cloning with className.
     icon: React.ReactElement<React.SVGProps<SVGSVGElement>>;
-    currentView: 'writer' | 'result' | 'inspiration' | 'settings' | 'about' | 'archive';
-    setView: (view: 'writer' | 'result' | 'inspiration' | 'settings' | 'about' | 'archive') => void;
+    currentView: 'writer' | 'result' | 'inspiration' | 'settings' | 'about' | 'archive' | 'tips';
+    setView: (view: 'writer' | 'result' | 'inspiration' | 'settings' | 'about' | 'archive' | 'tips') => void;
 }> = ({ label, view, icon, currentView, setView }) => {
     const isActive = currentView === view;
     return (
@@ -47,6 +47,7 @@ const Sidebar: React.FC<SidebarProps> = ({ currentView, setView }) => {
                  <NavItem label="灵感集" view="inspiration" icon={<LightbulbIcon />} currentView={currentView} setView={setView} />
                  <NavItem label="大纲内容" view="result" icon={<DocumentTextIcon />} currentView={currentView} setView={setView} />
                  <NavItem label="故事存档" view="archive" icon={<ArchiveBoxIcon />} currentView={currentView} setView={setView} />
+                 <NavItem label="故事技巧" view="tips" icon={<QuestionMarkCircleIcon />} currentView={currentView} setView={setView} />
             </nav>
             <div className="mt-auto space-y-2">
                  <NavItem label="设置" view="settings" icon={<SettingsIcon />} currentView={currentView} setView={setView} />

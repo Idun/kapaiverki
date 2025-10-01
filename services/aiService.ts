@@ -192,10 +192,14 @@ async function* generateWithOpenAICompatible(promptOrMessages: string | ChatMess
     const messages = typeof promptOrMessages === 'string' 
         ? [{ role: 'user', content: promptOrMessages }]
         : promptOrMessages;
+        
+    // FIX: Keep system messages and map 'model' to 'assistant'.
+    const preparedMessages = messages.map(msg => {
+        // The role 'model' should be mapped to 'assistant' for OpenAI compatibility.
+        const role = msg.role === 'model' ? 'assistant' : msg.role;
 
-    body.messages = messages.map(msg => {
         if (!msg.images || msg.images.length === 0) {
-            return { role: msg.role, content: msg.content };
+            return { role, content: msg.content };
         }
 
         const contentParts: any[] = [{ type: 'text', text: msg.content }];
@@ -208,8 +212,9 @@ async function* generateWithOpenAICompatible(promptOrMessages: string | ChatMess
             });
         });
 
-        return { role: msg.role, content: contentParts };
-    }).filter(m => m.role === 'user' || m.role === 'model'); // Some models don't like system messages
+        return { role, content: contentParts };
+    });
+    body.messages = preparedMessages;
 
     if (config.temperature !== undefined) body.temperature = config.temperature;
     if (config.maxTokens !== undefined) body.max_tokens = config.maxTokens;
