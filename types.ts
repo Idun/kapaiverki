@@ -29,7 +29,7 @@ export type CombinedCards = {
   [key in CardType]?: Card | null;
 };
 
-export type AIProvider = 'gemini' | 'openai' | 'deepseek' | 'openrouter' | 'siliconflow' | 'ollama' | 'custom';
+export type AIProvider = 'gemini' | 'openai' | 'deepseek' | 'openrouter' | 'siliconflow' | 'ollama' | 'custom' | 'modelscope';
 
 export interface NovelInfo {
   name: string;
@@ -100,4 +100,5 @@ export interface Topic {
   lastModified: number;
   history: ChatMessage[];
   toolId?: string;
+  selectedArchiveId?: string | null;
 }

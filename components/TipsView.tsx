@@ -2,10 +2,12 @@
 
 import React, { useState, useCallback, useRef, useEffect, useMemo } from 'react';
 import type { AIConfig, ChatMessage, StoryArchiveItem, Topic } from '../types';
-import { AiIcon, ArrowUpIcon, StopIcon, ClipboardDocumentIcon, PencilIcon, ArrowPathIcon, PlusIcon, TrashIcon } from './icons';
+import { AiIcon, ArrowUpIcon, StopIcon, ClipboardDocumentIcon, PencilIcon, ArrowPathIcon, PlusIcon, TrashIcon, UserCircleIcon } from './icons';
 import Spinner from './Spinner';
 import { generateChatResponse, fetchModels } from '../services/aiService';
 import { BRAINSTORM_TOOLS } from '../constants';
+import { marked } from 'marked';
+import DOMPurify from 'dompurify';
 
 interface TipsViewProps {
     topics: Topic[];
@@ -67,11 +69,6 @@ const TipsView: React.FC<TipsViewProps> = ({ topics, setTopics, config, storyArc
         };
         return { currentHistory: history, setCurrentHistory: setHistory, activeTopic: topic };
     }, [activeTopicId, topics, setTopics]);
-
-    const selectedToolId = useMemo(() => {
-        const topic = topics.find(t => t.id === activeTopicId);
-        return topic?.toolId || null;
-    }, [activeTopicId, topics]);
 
     useEffect(() => {
         if (chatContainerRef.current) {
@@ -136,12 +133,34 @@ const TipsView: React.FC<TipsViewProps> = ({ topics, setTopics, config, storyArc
         const controller = new AbortController();
         abortControllerRef.current = controller;
         
+        let historyForAI = historyToUse.map(msg => ({ ...msg })); // Prevent state mutation
+
+        if (activeTopic?.selectedArchiveId) {
+            const selectedArchive = storyArchive.find(item => item.id === activeTopic.selectedArchiveId);
+            if (selectedArchive) {
+                const outlineContext = `\n\n---\n[大纲上下文]\n请将以下故事大纲作为你回答的背景信息：\n\n${selectedArchive.outline}\n---`;
+                
+                const systemMsgIndex = historyForAI.findIndex(m => m.role === 'system');
+                if (systemMsgIndex !== -1) {
+                    // Append context to existing system prompt
+                    historyForAI[systemMsgIndex].content += outlineContext;
+                } else {
+                    // Or prepend a new system message if none exists
+                    historyForAI.unshift({
+                        id: `sys-ctx-${Date.now()}`,
+                        role: 'system',
+                        content: `你是一个创意写作助手。${outlineContext}`
+                    });
+                }
+            }
+        }
+        
         try {
             let accumulatedResponse = "";
             setCurrentHistory(prev => [...prev, { id: `model-streaming-${Date.now()}`, role: 'model', content: '' }]);
             
             const chatConfig = { ...config, model: localModel };
-            const stream = generateChatResponse(historyToUse, chatConfig, controller.signal);
+            const stream = generateChatResponse(historyForAI, chatConfig, controller.signal);
 
             for await (const chunk of stream) {
                 accumulatedResponse += chunk;
@@ -177,7 +196,7 @@ const TipsView: React.FC<TipsViewProps> = ({ topics, setTopics, config, storyArc
             setIsLoading(false);
             abortControllerRef.current = null;
         }
-    }, [setCurrentHistory, config, localModel]);
+    }, [setCurrentHistory, config, localModel, activeTopic, storyArchive]);
 
     const handleChatSubmit = useCallback(async (e: React.SyntheticEvent) => {
         e.preventDefault();
@@ -244,6 +263,11 @@ const TipsView: React.FC<TipsViewProps> = ({ topics, setTopics, config, storyArc
         await triggerChatGeneration(historyToResend);
     }, [currentHistory, setCurrentHistory, triggerChatGeneration]);
 
+    const handleDeleteMessage = useCallback((messageIdToDelete: string) => {
+        if (window.confirm("您确定要删除此条消息吗？")) {
+            setCurrentHistory(prev => prev.filter(msg => msg.id !== messageIdToDelete));
+        }
+    }, [setCurrentHistory]);
     
     const handleChatInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         setChatInput(e.target.value);
@@ -355,16 +379,22 @@ const TipsView: React.FC<TipsViewProps> = ({ topics, setTopics, config, storyArc
         setEditingTopicId(null);
     };
 
+    const handleOutlineSelect = (archiveId: string) => {
+        if (!activeTopicId) return;
+        setTopics(prevTopics =>
+            prevTopics.map(t =>
+                t.id === activeTopicId
+                    ? { ...t, selectedArchiveId: archiveId || null }
+                    : t
+            )
+        );
+    };
+
+    const spinnerSVG = `<svg class="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>`;
+    const typingIndicator = `<span class="inline-block w-2 h-4 bg-gray-600 dark:bg-zinc-400 animate-pulse ml-1"></span>`;
+
     return (
         <div className="w-full h-full flex flex-col">
-            <header className="flex-shrink-0 mb-6">
-                 <div>
-                    <h1 className="text-3xl font-bold text-gray-800 dark:text-zinc-100">AI 头脑风暴</h1>
-                    <p className="mt-2 text-gray-600 dark:text-zinc-300">
-                        遇到瓶颈了吗？选择一个工具，让 AI 扮演您的专属创意伙伴，通过对话帮您解决创作难题。
-                    </p>
-                </div>
-            </header>
             <div className="flex-grow flex gap-4 min-h-0">
                 {/* Left Panel */}
                 <aside className="w-72 flex-shrink-0 bg-white rounded-xl border border-gray-200 shadow-sm dark:bg-zinc-800 dark:border-zinc-700 flex flex-col">
@@ -395,7 +425,7 @@ const TipsView: React.FC<TipsViewProps> = ({ topics, setTopics, config, storyArc
                     
                     {activeTab === 'roles' ? (
                         <div className="flex-grow overflow-y-auto custom-scrollbar">
-                            <div className="space-y-1 px-3 pb-3">
+                             <div className="space-y-1 p-3 pt-0">
                                 {BRAINSTORM_TOOLS.map(tool => (
                                     <button
                                         key={tool.id}
@@ -427,7 +457,7 @@ const TipsView: React.FC<TipsViewProps> = ({ topics, setTopics, config, storyArc
                                 </button>
                             </div>
                             <div className="flex-grow overflow-y-auto custom-scrollbar">
-                                <div className="space-y-1 p-2">
+                                 <div className="space-y-1 p-2 pt-0">
                                     {sortedTopics.map(topic => (
                                         <button
                                             key={topic.id}
@@ -490,6 +520,27 @@ const TipsView: React.FC<TipsViewProps> = ({ topics, setTopics, config, storyArc
                                     )}
                                     <h2 className="text-xl font-semibold text-gray-800 dark:text-zinc-100">{activeTopic?.name || '对话'}</h2>
                                 </div>
+                                <div className="flex items-center gap-2">
+                                    <label htmlFor="outline-selector" className="text-sm text-gray-500 dark:text-zinc-400 flex-shrink-0">大纲上下文:</label>
+                                    <div className="relative">
+                                        <select
+                                            id="outline-selector"
+                                            value={activeTopic?.selectedArchiveId || ''}
+                                            onChange={(e) => handleOutlineSelect(e.target.value)}
+                                            className="w-48 pl-3 pr-8 py-1 text-sm bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-gray-500 focus:border-gray-500 appearance-none transition-all dark:bg-zinc-700 dark:border-zinc-600 dark:text-zinc-100 disabled:opacity-50"
+                                            disabled={!activeTopicId || storyArchive.length === 0}
+                                            title={storyArchive.length === 0 ? "故事存档中暂无大纲" : "选择一份大纲作为聊天背景"}
+                                        >
+                                            <option value="">不选择大纲</option>
+                                            {storyArchive.map(item => (
+                                                <option key={item.id} value={item.id}>{item.novelInfo.name}</option>
+                                            ))}
+                                        </select>
+                                        <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700 dark:text-zinc-300">
+                                            <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+                                        </div>
+                                    </div>
+                                </div>
                             </header>
                             <div ref={chatContainerRef} className="flex-grow p-4 space-y-4 overflow-y-auto custom-scrollbar">
                                 {currentHistory.map((msg, index) => {
@@ -516,33 +567,54 @@ const TipsView: React.FC<TipsViewProps> = ({ topics, setTopics, config, storyArc
                                     }
 
                                     return (
-                                        <div key={msg.id} className={`flex items-start gap-2.5 group ${isUser ? 'justify-end' : 'justify-start'}`}>
-                                            {!isUser && (
+                                        <div key={msg.id} className="flex items-start gap-3">
+                                            {isUser ? (
+                                                <div className="w-8 h-8 flex-shrink-0 rounded-full bg-gray-200 dark:bg-zinc-600 flex items-center justify-center shadow-sm">
+                                                    <UserCircleIcon className="w-6 h-6 text-gray-500 dark:text-zinc-300" />
+                                                </div>
+                                            ) : (
                                                 <div className="w-8 h-8 flex-shrink-0 rounded-full bg-gradient-to-br from-purple-400 to-yellow-300 flex items-center justify-center shadow-sm">
                                                     <AiIcon className="w-5 h-5 text-white" />
                                                 </div>
                                             )}
-                                             <div className={`flex items-center gap-2 ${isUser ? 'flex-row-reverse' : 'flex-row'}`}>
-                                                <div className={`max-w-[85%] px-4 py-3 rounded-2xl ${
+                                            <div className="flex flex-col max-w-[85%] group">
+                                                <div className={`px-4 py-2 rounded-2xl ${
                                                     isUser 
-                                                        ? 'bg-blue-600 text-white rounded-br-md' 
-                                                        : 'bg-gray-100 text-gray-800 rounded-bl-md dark:bg-zinc-700 dark:text-zinc-200'
-                                                }`} style={{ opacity: 1 }}>
-                                                    <p className="text-sm leading-relaxed break-words whitespace-pre-wrap">
-                                                        {isLastMessageStreaming && !msg.content ? <Spinner /> : msg.content}
-                                                        {isLastMessageStreaming && msg.content ? <span className="inline-block w-2 h-4 bg-gray-600 dark:bg-zinc-400 animate-pulse ml-1" /> : null}
-                                                    </p>
+                                                        ? 'bg-gray-200 text-gray-800 rounded-bl-md dark:bg-zinc-600 dark:text-zinc-200' 
+                                                        : 'bg-gray-100 text-gray-800 rounded-bl-md dark:bg-zinc-700'
+                                                }`}>
+                                                    <div 
+                                                        className="prose-chat dark:prose-invert max-w-none"
+                                                        dangerouslySetInnerHTML={{ 
+                                                            __html: isLastMessageStreaming && !msg.content 
+                                                                ? spinnerSVG
+                                                                : DOMPurify.sanitize(marked(msg.content || '') as string) + (isLastMessageStreaming && msg.content ? typingIndicator : '')
+                                                        }} 
+                                                    />
                                                 </div>
-                                                 {!isLoading && (
-                                                    <div className={`flex-shrink-0 self-center flex gap-1 transition-opacity ${isUser ? 'pr-1' : 'pl-1'} opacity-0 group-hover:opacity-100`}>
-                                                        <button onClick={() => handleCopy(msg.content, msg.id)} title="复制" className="p-1.5 text-gray-400 hover:text-gray-700 dark:text-zinc-500 dark:hover:text-zinc-200 rounded-full hover:bg-gray-100 dark:hover:bg-zinc-700">
-                                                            {copiedMessageId === msg.id ? <span className="text-xs">已复制</span> : <ClipboardDocumentIcon className="w-4 h-4" />}
-                                                        </button>
-                                                        <button onClick={() => setEditingMessage({id: msg.id, content: msg.content})} title="编辑" className="p-1.5 text-gray-400 hover:text-gray-700 dark:text-zinc-500 dark:hover:text-zinc-200 rounded-full hover:bg-gray-100 dark:hover:bg-zinc-700"><PencilIcon className="w-4 h-4"/></button>
-                                                        {!isUser && <button onClick={() => handleRegenerate(msg.id)} title="重新生成" className="p-1.5 text-gray-400 hover:text-gray-700 dark:text-zinc-500 dark:hover:text-zinc-200 rounded-full hover:bg-gray-100 dark:hover:bg-zinc-700"><ArrowPathIcon className="w-4 h-4"/></button>}
+                                                {!isLoading && msg.content && msg.content.trim() !== '' && (
+                                                    <div className="flex justify-end items-center gap-1 mt-1.5 transition-opacity opacity-0 group-hover:opacity-100">
+                                                        {isUser ? (
+                                                            <>
+                                                                <button onClick={() => setEditingMessage({id: msg.id, content: msg.content})} title="编辑" className="p-1.5 text-gray-400 hover:text-gray-700 dark:text-zinc-500 dark:hover:text-zinc-200 rounded-full hover:bg-gray-100 dark:hover:bg-zinc-600"><PencilIcon className="w-4 h-4"/></button>
+                                                                <button onClick={() => handleCopy(msg.content, msg.id)} title="复制" className="p-1.5 text-gray-400 hover:text-gray-700 dark:text-zinc-500 dark:hover:text-zinc-200 rounded-full hover:bg-gray-100 dark:hover:bg-zinc-600">
+                                                                    {copiedMessageId === msg.id ? <span className="text-xs px-1">已复制</span> : <ClipboardDocumentIcon className="w-4 h-4" />}
+                                                                </button>
+                                                                <button onClick={() => handleDeleteMessage(msg.id)} title="删除" className="p-1.5 text-gray-400 hover:text-red-600 dark:text-zinc-500 dark:hover:text-red-400 rounded-full hover:bg-red-100 dark:hover:bg-red-900/40"><TrashIcon className="w-4 h-4"/></button>
+                                                            </>
+                                                        ) : (
+                                                            <>
+                                                                <button onClick={() => handleRegenerate(msg.id)} title="重新生成" className="p-1.5 text-gray-400 hover:text-gray-700 dark:text-zinc-500 dark:hover:text-zinc-200 rounded-full hover:bg-gray-100 dark:hover:bg-zinc-600"><ArrowPathIcon className="w-4 h-4"/></button>
+                                                                <button onClick={() => setEditingMessage({id: msg.id, content: msg.content})} title="编辑" className="p-1.5 text-gray-400 hover:text-gray-700 dark:text-zinc-500 dark:hover:text-zinc-200 rounded-full hover:bg-gray-100 dark:hover:bg-zinc-600"><PencilIcon className="w-4 h-4"/></button>
+                                                                <button onClick={() => handleCopy(msg.content, msg.id)} title="复制" className="p-1.5 text-gray-400 hover:text-gray-700 dark:text-zinc-500 dark:hover:text-zinc-200 rounded-full hover:bg-gray-100 dark:hover:bg-zinc-600">
+                                                                    {copiedMessageId === msg.id ? <span className="text-xs px-1">已复制</span> : <ClipboardDocumentIcon className="w-4 h-4" />}
+                                                                </button>
+                                                                <button onClick={() => handleDeleteMessage(msg.id)} title="删除" className="p-1.5 text-gray-400 hover:text-red-600 dark:text-zinc-500 dark:hover:text-red-400 rounded-full hover:bg-red-100 dark:hover:bg-red-900/40"><TrashIcon className="w-4 h-4"/></button>
+                                                            </>
+                                                        )}
                                                     </div>
                                                 )}
-                                             </div>
+                                            </div>
                                         </div>
                                     );
                                 })}

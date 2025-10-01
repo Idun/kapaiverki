@@ -170,7 +170,7 @@ const getEndpoint = (url: string, path: 'chat' | 'models'): string => {
 
 
 async function* generateWithOpenAICompatible(promptOrMessages: string | ChatMessage[], config: AIConfig, signal?: AbortSignal): AsyncGenerator<string> {
-    const providersThatNeedKey: AIProvider[] = ['openai', 'deepseek', 'openrouter', 'siliconflow'];
+    const providersThatNeedKey: AIProvider[] = ['openai', 'deepseek', 'openrouter', 'siliconflow', 'modelscope'];
     if (providersThatNeedKey.includes(config.provider) && !config.apiKey) {
         throw new Error(`API key is required for the ${config.provider} provider.`);
     }
@@ -219,8 +219,12 @@ async function* generateWithOpenAICompatible(promptOrMessages: string | ChatMess
     if (config.temperature !== undefined) body.temperature = config.temperature;
     if (config.maxTokens !== undefined) body.max_tokens = config.maxTokens;
     if (config.topP !== undefined) body.top_p = config.topP;
-    if (config.frequencyPenalty !== undefined) body.frequency_penalty = config.frequencyPenalty;
-    if (config.presencePenalty !== undefined) body.presence_penalty = config.presencePenalty;
+    
+    // FIX: ModelScope does not support frequency_penalty or presence_penalty
+    if (config.provider !== 'modelscope') {
+        if (config.frequencyPenalty !== undefined) body.frequency_penalty = config.frequencyPenalty;
+        if (config.presencePenalty !== undefined) body.presence_penalty = config.presencePenalty;
+    }
 
 
     if (config.streaming) {
@@ -298,7 +302,7 @@ export async function* generateOutline(cards: CombinedCards, config: AIConfig, n
     }
 
     const prompt = createPrompt(cards, activePrompt.content, novelInfo);
-    const openAICompatibleProviders: AIProvider[] = ['openai', 'deepseek', 'openrouter', 'siliconflow', 'ollama', 'custom'];
+    const openAICompatibleProviders: AIProvider[] = ['openai', 'deepseek', 'openrouter', 'siliconflow', 'ollama', 'custom', 'modelscope'];
     
     try {
         if (config.provider === 'gemini') {
@@ -334,7 +338,7 @@ ${currentOutline}
 
 请提供完整、修订后的小说大纲，并保持 Markdown 格式。不要在纲要之外添加任何评论或解释。只返回更新后的完整 Markdown 内容。`;
 
-    const openAICompatibleProviders: AIProvider[] = ['openai', 'deepseek', 'openrouter', 'siliconflow', 'ollama', 'custom'];
+    const openAICompatibleProviders: AIProvider[] = ['openai', 'deepseek', 'openrouter', 'siliconflow', 'ollama', 'custom', 'modelscope'];
 
     try {
         if (config.provider === 'gemini') {
@@ -358,7 +362,7 @@ ${currentOutline}
 };
 
 export async function* generateChatResponse(chatHistory: ChatMessage[], config: AIConfig, signal?: AbortSignal): AsyncGenerator<string> {
-    const openAICompatibleProviders: AIProvider[] = ['openai', 'deepseek', 'openrouter', 'siliconflow', 'ollama', 'custom'];
+    const openAICompatibleProviders: AIProvider[] = ['openai', 'deepseek', 'openrouter', 'siliconflow', 'ollama', 'custom', 'modelscope'];
     const chatConfig = { ...config, model: config.assistantModel || config.model };
 
     try {

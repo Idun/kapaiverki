@@ -21,6 +21,7 @@ const PROVIDER_DEFAULTS: Record<AIProvider, { endpoint: string; modelPlaceholder
     deepseek: { endpoint: 'https://api.deepseek.com', modelPlaceholder: 'deepseek-chat' },
     openrouter: { endpoint: 'https://openrouter.ai/api/v1', modelPlaceholder: 'meta-llama/llama-3-8b-instruct' },
     siliconflow: { endpoint: 'https://api.siliconflow.cn', modelPlaceholder: 'Qwen/Qwen2-7B-Instruct' },
+    modelscope: { endpoint: 'https://api-inference.modelscope.cn', modelPlaceholder: 'qwen-plus, qwen-turbo' },
     ollama: { endpoint: 'http://localhost:11443', modelPlaceholder: 'llama3, qwen2' },
     custom: { endpoint: '', modelPlaceholder: '输入您的模型名称' },
 };
@@ -276,6 +277,7 @@ const SettingsView: React.FC<SettingsViewProps> = ({ currentConfig, onSave, curr
                                         <option value="deepseek">DeepSeek</option>
                                         <option value="openrouter">OpenRouter</option>
                                         <option value="siliconflow">SiliconFlow</option>
+                                        <option value="modelscope">ModelScope 魔搭</option>
                                         <option value="ollama">Ollama (本地)</option>
                                         <option value="custom">自定义 (OpenAI 兼容)</option>
                                     </select>
