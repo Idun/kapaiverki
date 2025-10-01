@@ -7,7 +7,7 @@
     "start": "serve",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d .",
-    "build": "esbuild index.tsx --bundle --outfile=index.js --format=esm --jsx=automatic --external:react --external:react/* --external:react-dom/* --external:@google/genai --external:easymde --external:marked --external:dompurify",
+    "build": "esbuild index.tsx --bundle --outfile=main.js --format=esm --jsx=automatic --external:react --external:react/* --external:react-dom/* --external:@google/genai --external:easymde --external:marked --external:dompurify",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
