@@ -70,6 +70,20 @@ const TipsView: React.FC<TipsViewProps> = ({ topics, setTopics, config, storyArc
         return { currentHistory: history, setCurrentHistory: setHistory, activeTopic: topic };
     }, [activeTopicId, topics, setTopics]);
 
+    const currentPresetQuestions = useMemo(() => {
+        if (!activeTopic) return [];
+        const tool = BRAINSTORM_TOOLS.find(t => t.id === activeTopic.toolId);
+        if (!tool) return [];
+
+        if (activeTopic.selectedArchiveId && tool.outlinePresetQuestions) {
+            return tool.outlinePresetQuestions;
+        }
+        if (!activeTopic.selectedArchiveId && tool.presetQuestions) {
+            return tool.presetQuestions;
+        }
+        return [];
+    }, [activeTopic]);
+
     useEffect(() => {
         if (chatContainerRef.current) {
             chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
@@ -211,6 +225,15 @@ const TipsView: React.FC<TipsViewProps> = ({ topics, setTopics, config, storyArc
         setCurrentHistory(newHistory);
         await triggerChatGeneration(newHistory);
     }, [chatInput, isLoading, currentHistory, setCurrentHistory, triggerChatGeneration, activeTopicId]);
+
+    const handlePresetQuestionClick = useCallback(async (question: string) => {
+        if (isLoading || !activeTopicId) return;
+
+        const newUserMessage: ChatMessage = { id: `user-preset-${Date.now()}`, role: 'user', content: question };
+        const newHistory = [...currentHistory, newUserMessage];
+        setCurrentHistory(newHistory);
+        await triggerChatGeneration(newHistory);
+    }, [isLoading, currentHistory, setCurrentHistory, triggerChatGeneration, activeTopicId]);
     
     const handleSelectRole = (toolId: string) => {
         // Find the base topic for this role (one without a number suffix)
@@ -628,6 +651,25 @@ const TipsView: React.FC<TipsViewProps> = ({ topics, setTopics, config, storyArc
                                 )}
                             </div>
                             <div className="flex-shrink-0 p-4 border-t border-gray-200 dark:border-zinc-700">
+                                {currentPresetQuestions.length > 0 && (
+                                    <div className="mb-3">
+                                        <div className="overflow-x-auto custom-scrollbar">
+                                            <div className="flex items-center gap-2 pb-2">
+                                                {currentPresetQuestions.map((q, i) => (
+                                                    <button
+                                                        key={i}
+                                                        type="button"
+                                                        onClick={() => handlePresetQuestionClick(q)}
+                                                        disabled={isLoading}
+                                                        className="flex-shrink-0 px-3 py-1.5 text-sm bg-gray-100 dark:bg-zinc-700 rounded-full hover:bg-gray-200 dark:hover:bg-zinc-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                                    >
+                                                        {q}
+                                                    </button>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
                                 <form onSubmit={handleChatSubmit} className="relative">
                                      <div ref={modelSelectRef} className="absolute bottom-2.5 left-3 z-10">
                                         <button
