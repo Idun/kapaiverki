@@ -99,4 +99,5 @@ export interface Topic {
   name: string;
   lastModified: number;
   history: ChatMessage[];
+  toolId?: string;
 }

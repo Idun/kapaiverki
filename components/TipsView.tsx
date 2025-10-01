@@ -1,78 +1,36 @@
 
+
 import React, { useState, useCallback, useRef, useEffect, useMemo } from 'react';
 import type { AIConfig, ChatMessage, StoryArchiveItem, Topic } from '../types';
-import { UserCircleIcon, ArrowsRightLeftIcon, GlobeAltIcon, AiIcon, ArrowUpIcon, StopIcon, ClipboardDocumentIcon, PencilIcon, ArrowPathIcon, FireIcon, Bars3BottomLeftIcon, PlusIcon } from './icons';
+import { AiIcon, ArrowUpIcon, StopIcon, ClipboardDocumentIcon, PencilIcon, ArrowPathIcon, PlusIcon, TrashIcon } from './icons';
 import Spinner from './Spinner';
 import { generateChatResponse, fetchModels } from '../services/aiService';
+import { BRAINSTORM_TOOLS } from '../constants';
 
 interface TipsViewProps {
-    histories: { [key: string]: ChatMessage[] };
-    setHistories: React.Dispatch<React.SetStateAction<{ [key: string]: ChatMessage[] }>>;
     topics: Topic[];
     setTopics: React.Dispatch<React.SetStateAction<Topic[]>>;
     config: AIConfig;
     storyArchive: StoryArchiveItem[];
 }
 
-const BRAINSTORM_TOOLS = [
-    {
-        id: 'character',
-        name: '角色深潜',
-        description: '深入挖掘角色的动机、矛盾与背景故事。',
-        icon: <UserCircleIcon className="w-6 h-6" />,
-        systemPrompt: '你是一位经验丰富的小说编辑，擅长通过提问来帮助作者深化角色。你的回答应该简洁、具有启发性，并始终以开放式问题结尾，引导用户思考。',
-        initialMessage: '你好！让我们来深入探索你的角色吧。请先告诉我这个角色的基本设定，比如他/她的名字、职业和最大的愿望是什么？',
-    },
-    {
-        id: 'plot',
-        name: '情节风暴',
-        description: '生成颠覆性场景，打破思维定式。',
-        icon: <ArrowsRightLeftIcon className="w-6 h-6" />,
-        systemPrompt: "你是一个充满奇思妙想的创意引擎。你的任务是针对用户遇到的情节瓶颈，生成多个颠覆性的 'What If...?' (如果...会怎样?) 场景。每个场景都要简短、有力，并能激发新的故事可能性。",
-        initialMessage: "情节卡壳了？没关系，我们来一场头脑风暴！告诉我你现在卡住的情节是什么，比如：‘主角需要进入一座守卫森严的城堡，但不知道怎么进去。’ 我会为你提供一些意想不到的思路。",
-    },
-    {
-        id: 'world',
-        name: '世界构建',
-        description: '为故事世界增添独特的规则、文化与细节。',
-        icon: <GlobeAltIcon className="w-6 h-6" />,
-        systemPrompt: '你是一位世界构建大师，知识渊博，想象力丰富。你会帮助用户为他们的故事世界添加独特而可信的细节。你的回答应该具体、富有画面感，并能引申出更多相关的设定。',
-        initialMessage: '让我们一起构建一个令人难忘的世界吧！请先描述一下你的世界的基本样貌。它是奇幻王国，是赛博朋克都市，还是别的什么？告诉我它的核心特点，我们可以从那里开始。',
-    },
-    {
-        id: 'worse',
-        name: '还能更糟吗',
-        description: '基于当前困境，生成五个让情况更糟的可能性。',
-        icon: <FireIcon className="w-6 h-6" />,
-        systemPrompt: '### 角色：创意写作助手情节设计专家\n### 背景：我的故事目前进展到以下内容\n### 任务：\n基于“还能更糟吗？“的原则，请帮我头脑风暴，想出五种能让当前情况变得更加糟糕、更具戏剧性或更出乎意料的可能性。\n请从不同角度思考，例如：\n* **外部冲突加剧：**（比如：出现新的敌人、环境突变、时间限制等）\n* **内部冲突激化：**（比如：主角的旧伤复发、道德困境加深、队友背叛等）\n* **引入新麻烦：**（比如：节外生枝的新问题、无辜者被卷入、之前的言被揭穿等）\n* **失去关键物品/信息/优势：**\n### 转出要求：\n请以列表形式给出具体的“更糟糕“情况，并简要说明它为什么更糟。\n### 重要：\n    -   可以添加一些自然的语言瑕疵，比如口语化表达或轻微的语法不规范，避免过于完美。\n    -   不要有AI味儿的表达，要像人类作家一样自然、口语化。\n    -   保持专业性，但可以融入你作为小说作家的个人风格。\n    -   请记住，你的目标是将用户给的原文细化，扩写成一段富有画面感、层次感和情感深度的文字，但不需要展示你的思考过程。\n    -   请直接用简体中文输出内容，不需要任何额外的解释或说明。\n    -   朱雀v3检测置信度＜20%。',
-        initialMessage: '故事卡住了？别怕，有时候让事情变得更糟，反而能找到出路。把你的主角现在面临的困境告诉我，我们一起看看还能怎么火上浇油！',
-    },
-    {
-        id: 'deduction',
-        name: '逻辑推演',
-        description: '根据一个关键事件，推演其可能引发的多个后果。',
-        icon: <Bars3BottomLeftIcon className="w-6 h-6" />,
-        systemPrompt: '### 角色：故事逻辑推演助手/因果链分析师\n### 核心事件/原因（石子）：\n我的故事中发生了这个关键事件\n### 任务：\n基于“涟漪法”的因果逻辑，请帮我推演这个事件可能引发的[数字，例如5—7个]个直接或间接的**后果（涟漪）**。\n请从不同层面思考可能的后果，例如：\n* **对主角的直接影响：**（行动、情绪、处境的变化）\n* **对其他角色的影响：**（他们的反应、立场变化、与主角关系的变化）\n* **对故事情节的推动：**（新的冲突点、新的目标、新的谜团）\n* **对故事世界/环境的影响：**（社会奥论、规则改变、物理环境变化等）\n### 输出要求：\n请以列表形式给出可能的后果，并简要说这个后果是如何从核心事件逻辑推导出来的。最好能标注出哪些是比较直接的后果，哪些是间接的、更深远的后果。\n### 重要：\n    -   可以添加一些自然的语言瑕疵，比如口语化表达或轻微的语法不规范，避免过于完美。\n    -   不要有AI味儿的表达，要像人类作家一样自然、口语化。\n    -   保持专业性，但可以融入你作为小说作家的个人风格。\n    -   请记住，你的目标是故事结构架构师，将用户给的原文细化，扩写成一段富有画面感、层次感和情感深度的文字，但不需要展示你的思考过程。\n    -   请直接用简体中文输出内容，不需要任何额外的解释或说明。\n    -   朱雀v3检测置信度＜20%。',
-        initialMessage: '一个好故事就像多米诺骨牌，一件事会引发另一件。告诉我你故事里的那颗‘石子’——那个关键的事件或原因，我们一起来看看它会激起怎样的涟漪。',
-    },
-];
-
-const TipsView: React.FC<TipsViewProps> = ({ histories, setHistories, topics, setTopics, config, storyArchive }) => {
+const TipsView: React.FC<TipsViewProps> = ({ topics, setTopics, config, storyArchive }) => {
     const [activeTab, setActiveTab] = useState<'roles' | 'topics'>('roles');
     
-    // State for 'roles' tab
-    const [selectedToolId, setSelectedToolId] = useState<string | null>(null);
-    const [selectedOutlineId, setSelectedOutlineId] = useState<string>('');
+    const sortedTopics = useMemo(() => [...topics].sort((a, b) => b.lastModified - a.lastModified), [topics]);
     
-    // State for 'topics' tab
-    const [activeTopicId, setActiveTopicId] = useState<string | null>(null);
-
+    const [activeTopicId, setActiveTopicId] = useState<string | null>(() => sortedTopics[0]?.id || null);
+    
     // Shared chat state
     const [chatInput, setChatInput] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [editingMessage, setEditingMessage] = useState<{ id: string; content: string } | null>(null);
     const [copiedMessageId, setCopiedMessageId] = useState<string | null>(null);
     
+    // Topic renaming state
+    const [editingTopicId, setEditingTopicId] = useState<string | null>(null);
+    const [tempTopicName, setTempTopicName] = useState('');
+
     // Model selector states
     const [localModel, setLocalModel] = useState<string>(config.assistantModel || config.model);
     const [isModelSelectOpen, setIsModelSelectOpen] = useState(false);
@@ -84,60 +42,50 @@ const TipsView: React.FC<TipsViewProps> = ({ histories, setHistories, topics, se
     const chatContainerRef = useRef<HTMLDivElement | null>(null);
     const chatInputRef = useRef<HTMLTextAreaElement | null>(null);
     const modelSelectRef = useRef<HTMLDivElement | null>(null);
+    const renameInputRef = useRef<HTMLInputElement | null>(null);
     
-    const { currentHistory, setCurrentHistory } = useMemo(() => {
-        if (activeTab === 'roles') {
-            const history = histories[selectedToolId || ''] || [];
-            const setHistory = (updater: React.SetStateAction<ChatMessage[]>) => {
-                if (!selectedToolId) return;
-                setHistories(prev => ({
-                    ...prev,
-                    [selectedToolId]: typeof updater === 'function' ? updater(prev[selectedToolId] || []) : updater,
-                }));
-            };
-            return { currentHistory: history, setCurrentHistory: setHistory };
-        } else { // activeTab === 'topics'
-            const activeTopic = topics.find(t => t.id === activeTopicId);
-            const history = activeTopic ? activeTopic.history : [];
-            const setHistory = (updater: React.SetStateAction<ChatMessage[]>) => {
-                 if (!activeTopicId) return;
-                 setTopics(prevTopics => prevTopics.map(t => {
-                     if (t.id === activeTopicId) {
-                         const newHistory = typeof updater === 'function' ? updater(t.history) : updater;
-                         return { ...t, history: newHistory, lastModified: Date.now() };
-                     }
-                     return t;
-                 }));
-            };
-            return { currentHistory: history, setCurrentHistory: setHistory };
+    useEffect(() => {
+        if (topics.length > 0 && !topics.some(t => t.id === activeTopicId)) {
+            setActiveTopicId(sortedTopics[0]?.id || null);
+        } else if (topics.length === 0) {
+            setActiveTopicId(null);
         }
-    }, [activeTab, selectedToolId, histories, setHistories, activeTopicId, topics, setTopics]);
+    }, [topics, sortedTopics, activeTopicId]);
 
-    const handleSelectTool = (toolId: string) => {
-        setSelectedToolId(toolId);
-        setSelectedOutlineId(''); // Reset context when switching tool
-    };
+    const { currentHistory, setCurrentHistory, activeTopic } = useMemo(() => {
+        const topic = topics.find(t => t.id === activeTopicId);
+        const history = topic ? topic.history : [];
+        const setHistory = (updater: React.SetStateAction<ChatMessage[]>) => {
+             if (!activeTopicId) return;
+             setTopics(prevTopics => prevTopics.map(t => {
+                 if (t.id === activeTopicId) {
+                     const newHistory = typeof updater === 'function' ? updater(t.history) : updater;
+                     return { ...t, history: newHistory, lastModified: Date.now() };
+                 }
+                 return t;
+             }));
+        };
+        return { currentHistory: history, setCurrentHistory: setHistory, activeTopic: topic };
+    }, [activeTopicId, topics, setTopics]);
 
-     useEffect(() => {
+    const selectedToolId = useMemo(() => {
+        const topic = topics.find(t => t.id === activeTopicId);
+        return topic?.toolId || null;
+    }, [activeTopicId, topics]);
+
+    useEffect(() => {
         if (chatContainerRef.current) {
             chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
         }
     }, [currentHistory]);
 
-    // Initialize history for a newly selected tool
+    // Effect to focus rename input
     useEffect(() => {
-        if (activeTab === 'roles' && selectedToolId && (!histories[selectedToolId] || histories[selectedToolId].length === 0)) {
-            const tool = BRAINSTORM_TOOLS.find(t => t.id === selectedToolId);
-            if (tool) {
-                const newHistory: ChatMessage[] = [
-                    { id: `sys-${tool.id}-${Date.now()}`, role: 'system', content: tool.systemPrompt },
-                    { id: `model-${tool.id}-${Date.now()}`, role: 'model', content: tool.initialMessage },
-                ];
-                setCurrentHistory(newHistory);
-            }
+        if (editingTopicId && renameInputRef.current) {
+            renameInputRef.current.focus();
+            renameInputRef.current.select();
         }
-    }, [activeTab, selectedToolId, histories, setCurrentHistory]);
-
+    }, [editingTopicId]);
 
     // Effect to fetch models for the chat
     useEffect(() => {
@@ -182,7 +130,6 @@ const TipsView: React.FC<TipsViewProps> = ({ histories, setHistories, topics, se
         document.addEventListener('mousedown', handleClickOutside);
         return () => document.removeEventListener('mousedown', handleClickOutside);
     }, []);
-
 
     const triggerChatGeneration = useCallback(async (historyToUse: ChatMessage[]) => {
         setIsLoading(true);
@@ -232,11 +179,10 @@ const TipsView: React.FC<TipsViewProps> = ({ histories, setHistories, topics, se
         }
     }, [setCurrentHistory, config, localModel]);
 
-
     const handleChatSubmit = useCallback(async (e: React.SyntheticEvent) => {
         e.preventDefault();
         const message = chatInput.trim();
-        if (!message || isLoading) return;
+        if (!message || isLoading || !activeTopicId) return;
 
         setChatInput('');
         if (chatInputRef.current) chatInputRef.current.style.height = 'auto';
@@ -245,34 +191,34 @@ const TipsView: React.FC<TipsViewProps> = ({ histories, setHistories, topics, se
         const newHistory = [...currentHistory, newUserMessage];
         setCurrentHistory(newHistory);
         await triggerChatGeneration(newHistory);
-    }, [chatInput, isLoading, currentHistory, setCurrentHistory, triggerChatGeneration]);
+    }, [chatInput, isLoading, currentHistory, setCurrentHistory, triggerChatGeneration, activeTopicId]);
     
-    const handleOutlineChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        const newOutlineId = e.target.value;
-        setSelectedOutlineId(newOutlineId);
-
-        if (selectedToolId) {
-            const tool = BRAINSTORM_TOOLS.find(t => t.id === selectedToolId);
+    const handleSelectRole = (toolId: string) => {
+        // Find the base topic for this role (one without a number suffix)
+        let topicForRole = topics.find(t => t.toolId === toolId && !/\s\(\d+\)$/.test(t.name));
+        
+        if (!topicForRole) {
+            const tool = BRAINSTORM_TOOLS.find(t => t.id === toolId);
             if (!tool) return;
 
-            const selectedStory = storyArchive.find(s => s.id === newOutlineId);
-            let systemPrompt = tool.systemPrompt;
-            let initialMessage = tool.initialMessage;
-
-            if (selectedStory) {
-                const outlineSnippet = selectedStory.outline.length > 1500 ? selectedStory.outline.substring(0, 1500) + '...' : selectedStory.outline;
-                systemPrompt += `\n\n我们正在围绕以下故事大纲进行讨论：\n标题：${selectedStory.novelInfo.name}\n---\n${outlineSnippet}\n---`;
-                initialMessage = `好的，我们来聊聊大纲《${selectedStory.novelInfo.name}》。你想从哪里开始呢？`;
-            }
-
-            const newHistory: ChatMessage[] = [
-                { id: `sys-${tool.id}-${Date.now()}`, role: 'system', content: systemPrompt },
-                { id: `model-${tool.id}-${Date.now()}`, role: 'model', content: initialMessage },
-            ];
-            setCurrentHistory(newHistory);
+            const newTopic: Topic = {
+                id: `topic-role-${tool.id}-${Date.now()}`,
+                name: tool.name,
+                toolId: tool.id,
+                lastModified: Date.now(),
+                history: [
+                    { id: `sys-${tool.id}-${Date.now()}`, role: 'system', content: tool.systemPrompt },
+                    { id: `model-${tool.id}-${Date.now()}`, role: 'model', content: tool.initialMessage },
+                ],
+            };
+            setTopics(prev => [newTopic, ...prev]);
+            topicForRole = newTopic;
         }
+        
+        setActiveTopicId(topicForRole.id);
+        setActiveTab('topics'); // Always switch to topics tab to see the list
     };
-    
+
     const handleCopy = (content: string, messageId: string) => {
         navigator.clipboard.writeText(content).then(() => {
             setCopiedMessageId(messageId);
@@ -288,16 +234,13 @@ const TipsView: React.FC<TipsViewProps> = ({ histories, setHistories, topics, se
 
     const handleRegenerate = useCallback(async (messageIdToRegen: string) => {
         const messageIndex = currentHistory.findIndex(msg => msg.id === messageIdToRegen);
-        // Can't regenerate user message or first message (system prompt)
+        // Can't regenerate user message or first message
         if (messageIndex <= 0 || currentHistory[messageIndex].role === 'user') return;
         
-        // History up to the message before the one we're regenerating
         const historyToResend = currentHistory.slice(0, messageIndex);
         
-        // Set the history to this truncated version
         setCurrentHistory(historyToResend);
 
-        // Trigger generation with this history
         await triggerChatGeneration(historyToResend);
     }, [currentHistory, setCurrentHistory, triggerChatGeneration]);
 
@@ -320,28 +263,97 @@ const TipsView: React.FC<TipsViewProps> = ({ histories, setHistories, topics, se
     }, [modelList, modelSearch]);
 
     const handleNewTopic = () => {
-        const newTopic: Topic = {
-            id: `topic-${Date.now()}`,
-            name: '默认话题',
-            lastModified: Date.now(),
-            history: [{ id: `sys-new-${Date.now()}`, role: 'system', content: '这是一个新的对话话题。' }],
-        };
-        setTopics(prev => [newTopic, ...prev].sort((a, b) => b.lastModified - a.lastModified));
-        setActiveTopicId(newTopic.id);
+        const activeToolId = activeTopic?.toolId;
+
+        if (activeToolId) {
+            // Create a new topic based on the current active role/tool
+            const tool = BRAINSTORM_TOOLS.find(t => t.id === activeToolId);
+            if (!tool) return;
+
+            const baseName = tool.name;
+            const relatedTopics = topics.filter(t => t.toolId === activeToolId);
+            let maxIndex = 0;
+            relatedTopics.forEach(topic => {
+                if (topic.name.startsWith(baseName)) {
+                    const match = topic.name.match(/\((\d+)\)$/);
+                    if (match) {
+                        const index = parseInt(match[1], 10);
+                        if (index > maxIndex) maxIndex = index;
+                    }
+                }
+            });
+            const newName = `${baseName} (${maxIndex + 1})`;
+
+            const newTopic: Topic = {
+                id: `topic-role-${tool.id}-${Date.now()}`,
+                name: newName,
+                toolId: tool.id,
+                lastModified: Date.now(),
+                history: [
+                    { id: `sys-new-${tool.id}-${Date.now()}`, role: 'system', content: tool.systemPrompt },
+                    { id: `model-new-${tool.id}-${Date.now()}`, role: 'model', content: tool.initialMessage },
+                ],
+            };
+            setTopics(prev => [newTopic, ...prev]);
+            setActiveTopicId(newTopic.id);
+        } else {
+            // Generic new topic with incremental naming
+            const baseName = '新话题';
+            const genericTopics = topics.filter(t => !t.toolId && (t.name === baseName || t.name.startsWith(baseName + ' (')));
+            let maxIndex = 0;
+            const baseNameExists = genericTopics.some(t => t.name === baseName);
+
+            genericTopics.forEach(topic => {
+                const match = topic.name.match(/\((\d+)\)$/);
+                if (match) {
+                    const index = parseInt(match[1], 10);
+                    if (index > maxIndex) maxIndex = index;
+                }
+            });
+
+            const newName = !baseNameExists ? baseName : `${baseName} (${maxIndex + 1})`;
+
+            const newTopic: Topic = {
+                id: `topic-new-${Date.now()}`,
+                name: newName,
+                lastModified: Date.now(),
+                history: [{ id: `sys-new-${Date.now()}`, role: 'system', content: '这是一个新的对话话题。' }],
+            };
+            setTopics(prev => [newTopic, ...prev]);
+            setActiveTopicId(newTopic.id);
+        }
     };
+
 
     const handleDeleteTopic = (e: React.MouseEvent, topicId: string) => {
         e.stopPropagation();
         if (window.confirm("您确定要删除这个话题吗？此操作无法撤销。")) {
-            setTopics(prev => prev.filter(t => t.id !== topicId));
+            const remainingTopics = topics.filter(t => t.id !== topicId);
             if (activeTopicId === topicId) {
-                setActiveTopicId(null);
+                const sortedRemaining = [...remainingTopics].sort((a, b) => b.lastModified - a.lastModified);
+                setActiveTopicId(sortedRemaining[0]?.id || null);
             }
+            setTopics(remainingTopics);
         }
     };
+    
+    const handleStartRename = (topic: Topic) => {
+        setEditingTopicId(topic.id);
+        setTempTopicName(topic.name);
+    };
 
-    const sortedTopics = useMemo(() => [...topics].sort((a, b) => b.lastModified - a.lastModified), [topics]);
-    const activeTopic = topics.find(t => t.id === activeTopicId);
+    const handleFinishRename = () => {
+        if (!editingTopicId || !tempTopicName.trim()) {
+            setEditingTopicId(null);
+            return; // Don't save if empty name
+        }
+        setTopics(prevTopics =>
+            prevTopics.map(t =>
+                t.id === editingTopicId ? { ...t, name: tempTopicName.trim(), lastModified: Date.now() } : t
+            )
+        );
+        setEditingTopicId(null);
+    };
 
     return (
         <div className="w-full h-full flex flex-col">
@@ -382,20 +394,16 @@ const TipsView: React.FC<TipsViewProps> = ({ histories, setHistories, topics, se
                     </div>
                     
                     {activeTab === 'roles' ? (
-                        <div className="flex-grow overflow-y-auto custom-scrollbar px-3 pb-3">
-                            <div className="space-y-1">
+                        <div className="flex-grow overflow-y-auto custom-scrollbar">
+                            <div className="space-y-1 px-3 pb-3">
                                 {BRAINSTORM_TOOLS.map(tool => (
                                     <button
                                         key={tool.id}
-                                        onClick={() => handleSelectTool(tool.id)}
-                                        className={`w-full text-left p-3 rounded-lg border-2 transition-all duration-200 ${
-                                            selectedToolId === tool.id 
-                                            ? 'bg-blue-50 border-blue-500 dark:bg-blue-900/30 dark:border-blue-500' 
-                                            : 'bg-transparent border-transparent hover:bg-slate-100/70 dark:hover:bg-zinc-700/50'
-                                        }`}
+                                        onClick={() => handleSelectRole(tool.id)}
+                                        className="w-full text-left p-3 rounded-lg border-2 border-transparent hover:bg-slate-100/70 dark:hover:bg-zinc-700/50 transition-colors duration-200"
                                     >
                                         <div className="flex items-center gap-3">
-                                            <div className={`p-1 rounded-lg ${selectedToolId === tool.id ? 'text-blue-600 dark:text-blue-400' : 'text-gray-500 dark:text-zinc-400'}`}>
+                                            <div className="p-1 rounded-lg text-gray-500 dark:text-zinc-400">
                                                 {tool.icon}
                                             </div>
                                             <div>
@@ -418,25 +426,49 @@ const TipsView: React.FC<TipsViewProps> = ({ histories, setHistories, topics, se
                                     <span>新建话题</span>
                                 </button>
                             </div>
-                            <div className="flex-grow overflow-y-auto custom-scrollbar p-2">
-                                <div className="space-y-1">
+                            <div className="flex-grow overflow-y-auto custom-scrollbar">
+                                <div className="space-y-1 p-2">
                                     {sortedTopics.map(topic => (
                                         <button
                                             key={topic.id}
-                                            onClick={() => setActiveTopicId(topic.id)}
+                                            onClick={() => !editingTopicId && setActiveTopicId(topic.id)}
                                             className={`w-full text-left p-3 rounded-lg relative group ${
                                                 activeTopicId === topic.id ? 'bg-blue-50 dark:bg-blue-900/30' : 'hover:bg-gray-100 dark:hover:bg-zinc-700/50'
                                             }`}
                                         >
-                                            <h3 className="font-medium text-sm text-gray-800 dark:text-zinc-100 truncate pr-6">{topic.name}</h3>
-                                            <p className="text-xs text-gray-500 dark:text-zinc-400 mt-1">{new Date(topic.lastModified).toLocaleString()}</p>
-                                            <div
+                                            <div className="min-h-[36px]">
+                                                {editingTopicId === topic.id ? (
+                                                    <input
+                                                        ref={renameInputRef}
+                                                        type="text"
+                                                        value={tempTopicName}
+                                                        onChange={(e) => setTempTopicName(e.target.value)}
+                                                        onBlur={handleFinishRename}
+                                                        onKeyDown={(e) => {
+                                                            if (e.key === 'Enter') { e.preventDefault(); handleFinishRename(); }
+                                                            if (e.key === 'Escape') { e.preventDefault(); setEditingTopicId(null); }
+                                                        }}
+                                                        onClick={(e) => e.stopPropagation()}
+                                                        className="w-full text-sm font-medium bg-white dark:bg-zinc-600 border border-blue-500 rounded px-2 py-0.5 focus:outline-none ring-1 ring-blue-500"
+                                                    />
+                                                ) : (
+                                                    <h3
+                                                        onDoubleClick={(e) => { e.stopPropagation(); handleStartRename(topic); }}
+                                                        className="font-medium text-sm text-gray-800 dark:text-zinc-100 truncate pr-6"
+                                                        title="双击重命名"
+                                                    >
+                                                        {topic.name}
+                                                    </h3>
+                                                )}
+                                                <p className="text-xs text-gray-500 dark:text-zinc-400 mt-1">{new Date(topic.lastModified).toLocaleString()}</p>
+                                            </div>
+                                            <button
                                                 onClick={(e) => handleDeleteTopic(e, topic.id)}
                                                 className="absolute top-1/2 -translate-y-1/2 right-2 p-1.5 rounded-full text-gray-400 hover:bg-red-100 hover:text-red-600 dark:hover:bg-red-900/50 dark:hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity"
                                                 title="删除话题"
                                             >
-                                                &times;
-                                            </div>
+                                                <TrashIcon className="w-4 h-4" />
+                                            </button>
                                         </button>
                                     ))}
                                 </div>
@@ -447,38 +479,17 @@ const TipsView: React.FC<TipsViewProps> = ({ histories, setHistories, topics, se
 
                 {/* Right Panel: Chat Interface */}
                 <main className="flex-1 flex flex-col bg-white rounded-xl border border-gray-200 shadow-sm dark:bg-zinc-800 dark:border-zinc-700 min-h-0">
-                    {((activeTab === 'roles' && selectedToolId) || (activeTab === 'topics' && activeTopicId)) ? (
+                    {activeTopicId ? (
                         <>
                              <header className="flex-shrink-0 p-3 border-b border-gray-200 dark:border-zinc-700 flex justify-between items-center">
-                                {activeTab === 'roles' && BRAINSTORM_TOOLS.find(t => t.id === selectedToolId) ? (
-                                    <>
-                                        <div className="flex items-center gap-3">
-                                            <div className="p-2 rounded-lg text-blue-600 dark:text-blue-400">
-                                                {BRAINSTORM_TOOLS.find(t => t.id === selectedToolId)?.icon}
-                                            </div>
-                                            <h2 className="text-xl font-semibold text-gray-800 dark:text-zinc-100">{BRAINSTORM_TOOLS.find(t => t.id === selectedToolId)?.name}</h2>
+                                <div className="flex items-center gap-3 px-2">
+                                    {activeTopic?.toolId && BRAINSTORM_TOOLS.find(t => t.id === activeTopic.toolId) && (
+                                         <div className="p-2 rounded-lg text-blue-600 dark:text-blue-400">
+                                            {React.cloneElement(BRAINSTORM_TOOLS.find(t => t.id === activeTopic.toolId)!.icon, { className: "w-6 h-6" })}
                                         </div>
-                                        <div className="relative">
-                                            <select
-                                                value={selectedOutlineId}
-                                                onChange={handleOutlineChange}
-                                                className="max-w-xs pl-3 pr-8 py-1.5 text-sm bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-gray-500 focus:border-gray-500 appearance-none transition-all dark:bg-zinc-700 dark:border-zinc-600 dark:text-zinc-100"
-                                            >
-                                                <option value="">选择大纲 (可选)</option>
-                                                {storyArchive.map(story => (
-                                                    <option key={story.id} value={story.id}>
-                                                        {story.novelInfo.name}
-                                                    </option>
-                                                ))}
-                                            </select>
-                                            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700 dark:text-zinc-300">
-                                                <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
-                                            </div>
-                                        </div>
-                                    </>
-                                ) : (
-                                    <h2 className="text-xl font-semibold text-gray-800 dark:text-zinc-100 px-4">{activeTopic?.name || '新话题'}</h2>
-                                )}
+                                    )}
+                                    <h2 className="text-xl font-semibold text-gray-800 dark:text-zinc-100">{activeTopic?.name || '对话'}</h2>
+                                </div>
                             </header>
                             <div ref={chatContainerRef} className="flex-grow p-4 space-y-4 overflow-y-auto custom-scrollbar">
                                 {currentHistory.map((msg, index) => {
@@ -628,7 +639,7 @@ const TipsView: React.FC<TipsViewProps> = ({ histories, setHistories, topics, se
                             <h2 className="text-xl font-semibold text-gray-700 dark:text-zinc-200">准备好激发创意了吗？</h2>
                             <p className="mt-2 max-w-sm">
                                 {activeTab === 'roles'
-                                    ? '请从左侧的工具箱中选择一个头脑风暴工具，开始与 AI 创意伙伴的对话吧。'
+                                    ? '请从左侧的角色列表中选择一个，开始您的头脑风暴之旅。'
                                     : '请从左侧新建或选择一个话题，开始您的对话。'
                                 }
                             </p>

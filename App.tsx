@@ -1,9 +1,10 @@
 
 
 
+
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import type { AIConfig, Card, CombinedCards, CardType, NovelInfo, PromptTemplate, InspirationCategory, InspirationItem, UISettings, StoryArchiveItem, ChatMessage, Topic } from './types';
-import { DEFAULT_CARDS } from './constants';
+import { DEFAULT_CARDS, BRAINSTORM_TOOLS } from './constants';
 import { DEFAULT_PROMPTS, DEFAULT_SNOWFLAKE_PROMPT_TEMPLATE } from './prompts';
 import { DEFAULT_INSPIRATION_DATA } from './inspirationConstants';
 import Sidebar from './components/Sidebar';
@@ -244,40 +245,43 @@ const App: React.FC = () => {
         loadAndMigrateChatHistory('chatHistory', { id: `sys-chat-${Date.now()}`, role: 'system', content: '您可以像和朋友一样与 AI 聊天。' })
     );
     
-    const [tipsHistories, setTipsHistories] = useState<{ [key: string]: ChatMessage[] }>(() => {
-        try {
-            const saved = localStorage.getItem('tipsHistories');
-            const histories = saved ? JSON.parse(saved) : {};
-            // Migration for nested histories to add IDs
-            let needsUpdate = false;
-            for (const key in histories) {
-                if (Array.isArray(histories[key])) {
-                    histories[key] = histories[key].map((msg: any, index: number) => {
-                        if (!msg.id) {
-                           needsUpdate = true;
-                           return {
-                                id: `tips-${key}-${Date.now()}-${index}`,
-                                role: msg.role,
-                                content: msg.content,
-                                images: msg.images,
-                           };
-                        }
-                        return msg;
-                    });
-                }
-            }
-            if (needsUpdate) {
-                localStorage.setItem('tipsHistories', JSON.stringify(histories));
-            }
-            return histories;
-        } catch { return {}; }
-    });
-    
     const [topics, setTopics] = useState<Topic[]>(() => {
         try {
-            const saved = localStorage.getItem('topics');
-            return saved ? JSON.parse(saved) : [];
-        } catch { return []; }
+            const savedTopicsRaw = localStorage.getItem('topics');
+            let currentTopics: Topic[] = savedTopicsRaw ? JSON.parse(savedTopicsRaw) : [];
+
+            // One-time migration from old `tipsHistories` to `topics`
+            const savedHistoriesRaw = localStorage.getItem('tipsHistories');
+            if (savedHistoriesRaw) {
+                const histories = JSON.parse(savedHistoriesRaw);
+                const migratedTopics: Topic[] = [];
+                for (const toolId in histories) {
+                    // Prevent duplicates if already migrated
+                    if (!currentTopics.some(t => t.toolId === toolId)) {
+                        const tool = BRAINSTORM_TOOLS.find(t => t.id === toolId);
+                        // Only migrate if the user has actually chatted (more than the 2 initial messages)
+                        if (tool && Array.isArray(histories[toolId]) && histories[toolId].length > 2) {
+                            migratedTopics.push({
+                                id: `topic-migrated-${toolId}-${Date.now()}`,
+                                name: tool.name,
+                                toolId: tool.id,
+                                lastModified: Date.now(),
+                                history: histories[toolId],
+                            });
+                        }
+                    }
+                }
+                if (migratedTopics.length > 0) {
+                    currentTopics = [...currentTopics, ...migratedTopics];
+                }
+                localStorage.removeItem('tipsHistories'); // Clean up old data after migration
+            }
+            
+            return currentTopics;
+        } catch(e) { 
+            console.error("Failed to load or migrate topics", e);
+            return []; 
+        }
     });
 
     useEffect(() => {
@@ -306,12 +310,6 @@ const App: React.FC = () => {
     }, [chatHistory]);
 
      useEffect(() => {
-        try {
-            localStorage.setItem('tipsHistories', JSON.stringify(tipsHistories));
-        } catch (e) { console.error("Failed to save tips histories", e); }
-    }, [tipsHistories]);
-
-    useEffect(() => {
         try {
             if (currentStoryId) {
                 localStorage.setItem('currentStoryId', currentStoryId);
@@ -662,8 +660,6 @@ const App: React.FC = () => {
                         />;
             case 'tips':
                 return <TipsView 
-                            histories={tipsHistories} 
-                            setHistories={setTipsHistories} 
                             topics={topics}
                             setTopics={setTopics}
                             config={config} 

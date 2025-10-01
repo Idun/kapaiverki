@@ -3,7 +3,7 @@
 import React from 'react';
 import type { Card } from './types';
 import { CardType } from './types';
-import { ThemeIcon, GenreIcon, CharacterIcon, PlotIcon, StructureIcon, TechniqueIcon, EndingIcon } from './components/icons';
+import { ThemeIcon, GenreIcon, CharacterIcon, PlotIcon, StructureIcon, TechniqueIcon, EndingIcon, UserCircleIcon, ArrowsRightLeftIcon, GlobeAltIcon, FireIcon, Bars3BottomLeftIcon } from './components/icons';
 
 export const CORE_CARD_TYPES: CardType[] = [CardType.Theme, CardType.Genre, CardType.Character, CardType.Plot];
 export const OPTIONAL_CARD_TYPES: CardType[] = [CardType.Structure, CardType.Technique, CardType.Ending, CardType.Inspiration];
@@ -18,6 +18,49 @@ export const CARD_TYPE_NAMES: Record<CardType, string> = {
     [CardType.Ending]: '结局',
     [CardType.Inspiration]: '灵感集 (可选)',
 };
+
+export const BRAINSTORM_TOOLS = [
+    {
+        id: 'character',
+        name: '角色深潜',
+        description: '深入挖掘角色的动机、矛盾与背景故事。',
+        icon: <UserCircleIcon className="w-6 h-6" />,
+        systemPrompt: '你是一位经验丰富的小说编辑，擅长通过提问来帮助作者深化角色。你的回答应该简洁、具有启发性，并始终以开放式问题结尾，引导用户思考。',
+        initialMessage: '你好！让我们来深入探索你的角色吧。请先告诉我这个角色的基本设定，比如他/她的名字、职业和最大的愿望是什么？',
+    },
+    {
+        id: 'plot',
+        name: '情节风暴',
+        description: '生成颠覆性场景，打破思维定式。',
+        icon: <ArrowsRightLeftIcon className="w-6 h-6" />,
+        systemPrompt: "你是一个充满奇思妙想的创意引擎。你的任务是针对用户遇到的情节瓶颈，生成多个颠覆性的 'What If...?' (如果...会怎样?) 场景。每个场景都要简短、有力，并能激发新的故事可能性。",
+        initialMessage: "情节卡壳了？没关系，我们来一场头脑风暴！告诉我你现在卡住的情节是什么，比如：‘主角需要进入一座守卫森严的城堡，但不知道怎么进去。’ 我会为你提供一些意想不到的思路。",
+    },
+    {
+        id: 'world',
+        name: '世界构建',
+        description: '为故事世界增添独特的规则、文化与细节。',
+        icon: <GlobeAltIcon className="w-6 h-6" />,
+        systemPrompt: '你是一位世界构建大师，知识渊博，想象力丰富。你会帮助用户为他们的故事世界添加独特而可信的细节。你的回答应该具体、富有画面感，并能引申出更多相关的设定。',
+        initialMessage: '让我们一起构建一个令人难忘的世界吧！请先描述一下你的世界的基本样貌。它是奇幻王国，是赛博朋克都市，还是别的什么？告诉我它的核心特点，我们可以从那里开始。',
+    },
+    {
+        id: 'worse',
+        name: '还能更糟吗',
+        description: '基于当前困境，生成五个让情况更糟的可能性。',
+        icon: <FireIcon className="w-6 h-6" />,
+        systemPrompt: '### 角色：创意写作助手情节设计专家\n### 背景：我的故事目前进展到以下内容\n### 任务：\n基于“还能更糟吗？“的原则，请帮我头脑风暴，想出五种能让当前情况变得更加糟糕、更具戏剧性或更出乎意料的可能性。\n请从不同角度思考，例如：\n* **外部冲突加剧：**（比如：出现新的敌人、环境突变、时间限制等）\n* **内部冲突激化：**（比如：主角的旧伤复发、道德困境加深、队友背叛等）\n* **引入新麻烦：**（比如：节外生枝的新问题、无辜者被卷入、之前的言被揭穿等）\n* **失去关键物品/信息/优势：**\n### 转出要求：\n请以列表形式给出具体的“更糟糕“情况，并简要说明它为什么更糟。\n### 重要：\n    -   可以添加一些自然的语言瑕疵，比如口语化表达或轻微的语法不规范，避免过于完美。\n    -   不要有AI味儿的表达，要像人类作家一样自然、口语化。\n    -   保持专业性，但可以融入你作为小说作家的个人风格。\n    -   请记住，你的目标是将用户给的原文细化，扩写成一段富有画面感、层次感和情感深度的文字，但不需要展示你的思考过程。\n    -   请直接用简体中文输出内容，不需要任何额外的解释或说明。\n    -   朱雀v3检测置信度＜20%。',
+        initialMessage: '故事卡住了？别怕，有时候让事情变得更糟，反而能找到出路。把你的主角现在面临的困境告诉我，我们一起看看还能怎么火上浇油！',
+    },
+    {
+        id: 'deduction',
+        name: '逻辑推演',
+        description: '根据一个关键事件，推演其可能引发的多个后果。',
+        icon: <Bars3BottomLeftIcon className="w-6 h-6" />,
+        systemPrompt: '### 角色：故事逻辑推演助手/因果链分析师\n### 核心事件/原因（石子）：\n我的故事中发生了这个关键事件\n### 任务：\n基于“涟漪法”的因果逻辑，请帮我推演这个事件可能引发的[数字，例如5—7个]个直接或间接的**后果（涟漪）**。\n请从不同层面思考可能的后果，例如：\n* **对主角的直接影响：**（行动、情绪、处境的变化）\n* **对其他角色的影响：**（他们的反应、立场变化、与主角关系的变化）\n* **对故事情节的推动：**（新的冲突点、新的目标、新的谜团）\n* **对故事世界/环境的影响：**（社会奥论、规则改变、物理环境变化等）\n### 输出要求：\n请以列表形式给出可能的后果，并简要说这个后果是如何从核心事件逻辑推导出来的。最好能标注出哪些是比较直接的后果，哪些是间接的、更深远的后果。\n### 重要：\n    -   可以添加一些自然的语言瑕疵，比如口语化表达或轻微的语法不规范，避免过于完美。\n    -   不要有AI味儿的表达，要像人类作家一样自然、口语化。\n    -   保持专业性，但可以融入你作为小说作家的个人风格。\n    -   请记住，你的目标是故事结构架构师，将用户给的原文细化，扩写成一段富有画面感、层次感和情感深度的文字，但不需要展示你的思考过程。\n    -   请直接用简体中文输出内容，不需要任何额外的解释或说明。\n    -   朱雀v3检测置信度＜20%。',
+        initialMessage: '一个好故事就像多米诺骨牌，一件事会引发另一件。告诉我你故事里的那颗‘石子’——那个关键的事件或原因，我们一起来看看它会激起怎样的涟漪。',
+    },
+];
 
 export const DEFAULT_CARDS: Card[] = [
     // Themes
