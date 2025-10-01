@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>故事家</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        // Enable class-based dark mode for Tailwind CSS
+        tailwind.config = {
+            darkMode: 'class',
+        }
+    </script>
+    <link rel="stylesheet" href="https://unpkg.com/easymde/dist/easymde.min.css">
+    <style>
+        :root {
+            --easymde-bg: #f9fafb;
+            --easymde-border: #e5e7eb;
+            --easymde-text: #374151;
+            --easymde-toolbar-text: #4b5563;
+            --easymde-toolbar-hover-bg: #f3f4f6;
+            --ai-input-bg: #ffffff;
+        }
+        html.dark {
+            --easymde-bg: #27272a; /* bg-zinc-800 */
+            --easymde-border: #3f3f46; /* border-zinc-700 */
+            --easymde-text: #d4d4d8; /* text-zinc-300 */
+            --easymde-toolbar-text: #d4d4d8; /* text-zinc-300 */
+            --easymde-toolbar-hover-bg: #3f3f46; /* bg-zinc-700 */
+            --ai-input-bg: #18181b; /* bg-zinc-900 */
+        }
+
+        /* Custom Scrollbar Styles */
+        /* For Webkit Browsers */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background-color: #d4d4d8; /* zinc-300 */
+            border-radius: 3px;
+            transition: background-color 0.2s ease-in-out;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background-color: #a1a1aa; /* zinc-400 */
+        }
+        html.dark ::-webkit-scrollbar-thumb {
+            background-color: #52525b; /* zinc-600 */
+        }
+        html.dark ::-webkit-scrollbar-thumb:hover {
+            background-color: #71717a; /* zinc-500 */
+        }
+        ::-webkit-scrollbar-corner {
+            background: transparent;
+        }
+
+        /* For Firefox */
+        * {
+            scrollbar-width: thin;
+            scrollbar-color: #a1a1aa transparent; /* thumb track */
+        }
+        html.dark * {
+            scrollbar-color: #52525b transparent;
+        }
+
+
+        /* EasyMDE Custom Styles */
+        .editor-container .EasyMDEContainer {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            border-radius: 0.75rem;
+            border: 1px solid var(--easymde-border);
+            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+        }
+        .editor-container .CodeMirror {
+            flex-grow: 1;
+            border-radius: 0 0 0.75rem 0.75rem;
+            border: none !important;
+            font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+            background-color: var(--easymde-bg);
+            color: var(--easymde-text);
+        }
+        /* Make cursor visible in dark mode */
+        html.dark .EasyMDEContainer .CodeMirror-cursor {
+            border-left-color: #d4d4d8;
+        }
+        /* FIX: Make selected text visible in dark mode */
+        html.dark .CodeMirror-selected {
+            background: #52525b !important; /* zinc-600 */
+        }
+
+        .editor-container .editor-toolbar {
+            border: none !important;
+            border-bottom: 1px solid var(--easymde-border) !important;
+            border-radius: 0.75rem 0.75rem 0 0;
+            background-color: var(--easymde-bg);
+        }
+        .editor-container .editor-toolbar a {
+            color: var(--easymde-toolbar-text) !important;
+        }
+        .editor-container .editor-toolbar a.active,
+        .editor-container .editor-toolbar a:hover {
+            background: var(--easymde-toolbar-hover-bg);
+            border-color: var(--easymde-toolbar-hover-bg);
+        }
+        .editor-container .editor-statusbar {
+            display: none; /* Hide status bar for a cleaner look */
+        }
+
+        /* Flip Card Styles */
+        .flip-card {
+            perspective: 1000px;
+        }
+        .flip-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+        /* Do not flip if the card is disabled */
+        .flip-card:not([aria-disabled='true']):hover .flip-card-inner {
+            transform: rotateY(180deg);
+        }
+        .flip-card-front, .flip-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden; /* Safari */
+            backface-visibility: hidden;
+            border-radius: 0.5rem; /* corresponds to rounded-lg */
+        }
+        .flip-card-back {
+            transform: rotateY(180deg);
+        }
+        /* Custom Slider Styles */
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 16px;
+            height: 16px;
+            background: #3B82F6; /* blue-500 */
+            cursor: pointer;
+            border-radius: 50%;
+            margin-top: -6px; /* Vertically center thumb on track */
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 16px;
+            height: 16px;
+            background: #3B82F6; /* blue-500 */
+            cursor: pointer;
+            border-radius: 50%;
+        }
+
+        /* AI Input Animation Styles */
+        @keyframes pop {
+            50% {
+            scale: var(--s, 1);
+            rotate: var(--r, 0deg);
+            }
+        }
+        .ai-input-icon-path {
+            transform-box: fill-box;
+            transform-origin: center;
+        }
+        .group:is(:hover, :focus-within) .ai-input-icon-path {
+            animation: pop 0.5s var(--d);
+        }
+
+        /* Archive Card Animation */
+        @keyframes blob-bounce {
+            0% { transform: translate(-100%, -100%) translate3d(0, 0, 0); }
+            25% { transform: translate(-100%, -100%) translate3d(100%, 0, 0); }
+            50% { transform: translate(-100%, -100%) translate3d(100%, 100%, 0); }
+            75% { transform: translate(-100%, -100%) translate3d(0, 100%, 0); }
+            100% { transform: translate(-100%, -100%) translate3d(0, 0, 0); }
+        }
+        .animate-blob-bounce {
+            animation: blob-bounce 8s infinite ease;
+        }
+
+        /* Card Carousel Styles */
+        .card-carousel-viewport {
+            perspective: 1000px;
+            transform-style: preserve-3d;
+        }
+        .card-carousel-card {
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+            will-change: transform, opacity, z-index;
+            transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+        /* Animation for detail view changes */
+         @keyframes detail-fade-in {
+            from { opacity: 0.5; transform: scale(0.98) translateY(8px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        .animate-detail-fade-in {
+            animation: detail-fade-in 0.4s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+        }
+        
+        /* Styles for AI Chat Markdown rendering */
+        .prose-chat {
+            font-size: 1rem; /* 16px */
+            line-height: 1.75;
+            color: var(--easymde-text);
+        }
+        .prose-chat p:last-child { margin-bottom: 0; }
+        .prose-chat p { margin-bottom: 1em; }
+        .prose-chat h1, .prose-chat h2, .prose-chat h3 { font-weight: 600; margin-bottom: 0.8em; margin-top: 1.2em; border-bottom: 1px solid var(--easymde-border); padding-bottom: .3em;}
+        .prose-chat h1 { font-size: 1.5em; }
+        .prose-chat h2 { font-size: 1.25em; }
+        .prose-chat h3 { font-size: 1.1em; }
+        .prose-chat ul, .prose-chat ol { margin-left: 1.5em; margin-bottom: 1em; }
+        .prose-chat ul { list-style-type: disc; }
+        .prose-chat ol { list-style-type: decimal; }
+        .prose-chat li { margin-bottom: 0.25em; }
+        .prose-chat strong { font-weight: 600; }
+        .prose-chat em { font-style: italic; }
+        .prose-chat blockquote { border-left: 3px solid #d1d5db; margin-left: 0; padding-left: 1em; color: #6b7280;}
+        html.dark .prose-chat blockquote { border-left-color: #4b5563; color: #9ca3af;}
+        .prose-chat a { color: #2563eb; text-decoration: none; }
+        .prose-chat a:hover { text-decoration: underline; }
+        html.dark .prose-chat a { color: #60a5fa; }
+        .prose-chat pre {
+            background-color: #f3f4f6; /* gray-100 */
+            color: #1f2937; /* gray-800 */
+            padding: 1em;
+            border-radius: 0.5rem;
+            overflow-x: auto;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+        }
+        .prose-chat code {
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+            background-color: #e5e7eb; /* gray-200 */
+            padding: 0.2em 0.4em;
+            margin: 0;
+            font-size: 85%;
+            border-radius: 3px;
+        }
+        .prose-chat pre code {
+            background-color: transparent;
+            padding: 0;
+            margin: 0;
+            font-size: inherit;
+        }
+        html.dark .prose-chat pre {
+            background-color: #1f2937; /* gray-800 */
+            color: #d1d5db; /* gray-300 */
+        }
+        html.dark .prose-chat code {
+            background-color: #374151; /* gray-700 */
+        }
+        html.dark .prose-chat pre code {
+            background-color: transparent;
+        }
+
+
+    </style>
+<script type="importmap">
+{
+  "imports": {
+    "react-dom/": "https://aistudiocdn.com/react-dom@^18.2.0/",
+    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.20.0",
+    "react/": "https://aistudiocdn.com/react@^18.2.0/",
+    "react": "https://aistudiocdn.com/react@^18.2.0",
+    "easymde": "https://aistudiocdn.com/easymde@^2.18.0",
+    "marked": "https://aistudiocdn.com/marked@^12.0.1",
+    "dompurify": "https://aistudiocdn.com/dompurify@^3.0.11"
+  }
+}
+</script>
+</head>
+<body class="bg-slate-50 text-gray-800 dark:bg-zinc-900 dark:text-zinc-200">
+    <div id="root"></div>
+    <script type="module" src="/index.js"></script>
+</body>
+</html>

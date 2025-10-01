@@ -1,0 +1,443 @@
+
+
+import { GoogleGenAI } from "@google/genai";
+import type { CombinedCards, AIConfig, AIProvider, Card, NovelInfo, ChatMessage } from '../types';
+import { CardType } from '../types';
+
+interface OpenAIModel {
+  id: string;
+}
+
+interface OllamaModel {
+  name: string;
+}
+
+const createPrompt = (cards: CombinedCards, customPrompt: string, novelInfo: NovelInfo): string => {
+    const requiredCards: { [key: string]: Card } = {
+        Theme: cards[CardType.Theme]!,
+        Genre: cards[CardType.Genre]!,
+        Character: cards[CardType.Character]!,
+        Plot: cards[CardType.Plot]!,
+    };
+    
+    const characterCard = requiredCards.Character;
+    const characterPrompt = `- 角色创作指导 (Character Archetype Guide): 这是创作角色的核心概念，请基于「${characterCard.name}」(${characterCard.description}) 的特质，设计一个独特的、有血有肉的角色。请注意，这只是一个创作指引，严禁在故事中直接使用「${characterCard.name}」这个原型名称作为角色的名字或身份。例如，如果原型是“导师”，你应该创造一个具体的、有名字的人物（比如“老法师埃兰”或“退休的李将军”），而不是在故事里直接称呼角色为“导师”。`;
+
+    const promptParts = [
+        `- 主题 (Theme): ${requiredCards.Theme.name} (${requiredCards.Theme.description})`,
+        `- 类型 (Genre): ${requiredCards.Genre.name} (${requiredCards.Genre.description})`,
+        characterPrompt,
+        `- 情节结构 (Plot): ${requiredCards.Plot.name} (${requiredCards.Plot.description})`
+    ];
+    
+    if (cards.Structure) {
+        promptParts.push(`- 叙事结构 (Narrative Structure): ${cards.Structure.name} (${cards.Structure.description})`);
+    }
+
+    if (cards.Technique) {
+        promptParts.push(`- 叙事手法 (Narrative Technique): ${cards.Technique.name} (${cards.Technique.description})`);
+    }
+    
+    if (cards.Ending) {
+        promptParts.push(`- 结局风格 (Ending Style): ${cards.Ending.name} (${cards.Ending.description})`);
+    }
+
+    if (cards.Inspiration) {
+        const inspirationPrompt = `- 创作氛围与世界观参考 (Creative Atmosphere & Worldview Reference): 请从以下概念中汲取灵感来构建故事的独特世界观或氛围，但不要直接照搬其设定。将其作为一种风格指引，与其它核心要素融合创作：${cards.Inspiration.name} (${cards.Inspiration.description})`;
+        promptParts.push(inspirationPrompt);
+    }
+
+    const novelInfoParts = [];
+    if (novelInfo.name) novelInfoParts.push(`- 小说名称: ${novelInfo.name}`);
+    if (novelInfo.wordCount) novelInfoParts.push(`- 预估字数: ${novelInfo.wordCount}`);
+    if (novelInfo.perspective) novelInfoParts.push(`- 叙事视角: ${novelInfo.perspective}`);
+    if (novelInfo.synopsis) novelInfoParts.push(`- 一句话概要: ${novelInfo.synopsis}`);
+    
+    const novelInfoSection = novelInfoParts.length > 0 ? `
+请同时参考以下小说基本信息：
+${novelInfoParts.join('\n')}` : '';
+
+    return `
+${customPrompt}
+${novelInfoSection}
+
+请基于以下故事核心要素进行创作：
+${promptParts.join('\n')}
+`;
+}
+
+
+async function* generateWithGemini(promptOrMessages: string | ChatMessage[], config: AIConfig, signal?: AbortSignal): AsyncGenerator<string> {
+    // FIX: Per coding guidelines, API key must come exclusively from environment variables.
+    const apiKey = process.env.API_KEY;
+    if (!apiKey) {
+        throw new Error("Gemini API key is not configured in environment variables (API_KEY).");
+    }
+    const ai = new GoogleGenAI({ apiKey });
+
+    // FIX: Add thinkingConfig when maxOutputTokens is set for gemini-2.5-flash
+    const generationConfig: { 
+        temperature?: number; 
+        topP?: number; 
+        maxOutputTokens?: number;
+        thinkingConfig?: { thinkingBudget: number };
+    } = {};
+    if (config.temperature !== undefined) generationConfig.temperature = config.temperature;
+    if (config.topP !== undefined) generationConfig.topP = config.topP;
+    if (config.maxTokens !== undefined) {
+        generationConfig.maxOutputTokens = config.maxTokens;
+        // Set thinkingBudget to reserve tokens for the final output, preventing blocks.
+        // Using a quarter of the max tokens for thinking is a safe default.
+        generationConfig.thinkingConfig = { thinkingBudget: Math.floor(config.maxTokens / 4) };
+    }
+
+
+    const messages = typeof promptOrMessages === 'string'
+        ? [{ role: 'user', content: promptOrMessages }]
+        : promptOrMessages;
+
+    // Convert ChatMessage[] to Gemini's format
+    const contents = messages.map(msg => {
+        const parts: Array<{ text: string } | { inlineData: { mimeType: string; data: string } }> = [];
+        if (msg.content) {
+            parts.push({ text: msg.content });
+        }
+
+        if (msg.images) {
+            msg.images.forEach(imgData => {
+                // simplistic mime type detection
+                const mimeType = imgData.startsWith('/9j/') ? 'image/jpeg' : 'image/png';
+                parts.push({
+                    inlineData: {
+                        mimeType,
+                        data: imgData,
+                    }
+                });
+            });
+        }
+        
+        return {
+            // Treat 'system' as 'user' for multi-turn compatibility
+            role: msg.role === 'model' ? 'model' : 'user',
+            parts: parts,
+        };
+    });
+
+    if (config.streaming) {
+        const response = await ai.models.generateContentStream({
+            model: 'gemini-2.5-flash',
+            contents: contents as any, // Cast to handle structured content
+            config: generationConfig,
+        });
+        for await (const chunk of response) {
+            if (signal?.aborted) throw new DOMException('Aborted by user', 'AbortError');
+            const chunkText = chunk.text;
+            if (chunkText) {
+                yield chunkText;
+            }
+        }
+    } else {
+        if (signal?.aborted) throw new DOMException('Aborted by user', 'AbortError');
+        const response = await ai.models.generateContent({
+            model: 'gemini-2.5-flash',
+            contents: contents as any,
+            config: generationConfig,
+        });
+        if (signal?.aborted) throw new DOMException('Aborted by user', 'AbortError');
+        if (!response.text) {
+            throw new Error("API returned an empty response.");
+        }
+        yield response.text.trim();
+    }
+};
+
+const getEndpoint = (url: string, path: 'chat' | 'models'): string => {
+    const trimmedUrl = url.trim().replace(/\/+$/, '');
+    const finalPath = path === 'chat' ? '/v1/chat/completions' : '/v1/models';
+    
+    if (trimmedUrl.endsWith('/v1')) {
+        return `${trimmedUrl}/${path === 'chat' ? 'chat/completions' : 'models'}`;
+    }
+    if (trimmedUrl.includes('/api/v1')) { // Handle OpenRouter style
+        return `${trimmedUrl}/${path === 'chat' ? 'chat/completions' : 'models'}`;
+    }
+    // Prevent double /v1/v1
+    if (trimmedUrl.endsWith(finalPath)) {
+        return trimmedUrl;
+    }
+    return `${trimmedUrl}${finalPath}`;
+};
+
+
+async function* generateWithOpenAICompatible(promptOrMessages: string | ChatMessage[], config: AIConfig, signal?: AbortSignal): AsyncGenerator<string> {
+    const providersThatNeedKey: AIProvider[] = ['openai', 'deepseek', 'openrouter', 'siliconflow', 'modelscope'];
+    if (providersThatNeedKey.includes(config.provider) && !config.apiKey) {
+        throw new Error(`API key is required for the ${config.provider} provider.`);
+    }
+    if (!config.endpoint) throw new Error("Endpoint URL is missing.");
+    if (!config.model) throw new Error("Model name is missing.");
+
+    const endpoint = getEndpoint(config.endpoint, 'chat');
+    
+    const headers: HeadersInit = { 'Content-Type': 'application/json' };
+
+    if (config.apiKey) {
+        headers['Authorization'] = `Bearer ${config.apiKey}`;
+    }
+    
+    const body: Record<string, any> = {
+        model: config.model,
+    };
+    
+    const messages = typeof promptOrMessages === 'string' 
+        ? [{ role: 'user', content: promptOrMessages }]
+        : promptOrMessages;
+        
+    // FIX: Keep system messages and map 'model' to 'assistant'.
+    const preparedMessages = messages.map(msg => {
+        // The role 'model' should be mapped to 'assistant' for OpenAI compatibility.
+        const role = msg.role === 'model' ? 'assistant' : msg.role;
+
+        if (!msg.images || msg.images.length === 0) {
+            return { role, content: msg.content };
+        }
+
+        const contentParts: any[] = [{ type: 'text', text: msg.content }];
+        
+        msg.images.forEach(imgData => {
+            const mimeType = imgData.startsWith('/9j/') ? 'image/jpeg' : 'image/png';
+            contentParts.push({
+                type: 'image_url',
+                image_url: { url: `data:${mimeType};base64,${imgData}` }
+            });
+        });
+
+        return { role, content: contentParts };
+    });
+    body.messages = preparedMessages;
+
+    if (config.temperature !== undefined) body.temperature = config.temperature;
+    if (config.maxTokens !== undefined) body.max_tokens = config.maxTokens;
+    if (config.topP !== undefined) body.top_p = config.topP;
+    
+    // FIX: ModelScope does not support frequency_penalty or presence_penalty
+    if (config.provider !== 'modelscope') {
+        if (config.frequencyPenalty !== undefined) body.frequency_penalty = config.frequencyPenalty;
+        if (config.presencePenalty !== undefined) body.presence_penalty = config.presencePenalty;
+    }
+
+
+    if (config.streaming) {
+        body.stream = true;
+        const response = await fetch(endpoint, { method: 'POST', headers, body: JSON.stringify(body), signal });
+        if (!response.ok || !response.body) {
+             let errorData;
+            try {
+                errorData = await response.json();
+            } catch(e) {
+                throw new Error(`API error (${response.status}): ${response.statusText}`);
+            }
+            throw new Error(`API error (${response.status}): ${errorData.error?.message || 'Unknown error'}`);
+        }
+
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder();
+        let buffer = '';
+
+        while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+
+            if (signal?.aborted) {
+                await reader.cancel();
+                throw new DOMException('Aborted by user', 'AbortError');
+            }
+
+            buffer += decoder.decode(value, { stream: true });
+            const lines = buffer.split('\n');
+            buffer = lines.pop() || '';
+
+            for (const line of lines) {
+                if (line.startsWith('data: ')) {
+                    const dataStr = line.substring(6);
+                    if (dataStr.trim() === '[DONE]') return;
+                    try {
+                        const data = JSON.parse(dataStr);
+                        const content = data.choices?.[0]?.delta?.content;
+                        if (content) {
+                            yield content;
+                        }
+                    } catch (e) {
+                        // Ignore JSON parse errors, might be partial data
+                    }
+                }
+            }
+        }
+    } else {
+        const response = await fetch(endpoint, { method: 'POST', headers, body: JSON.stringify(body), signal });
+        if (!response.ok) {
+            let errorData;
+            try {
+                errorData = await response.json();
+            } catch(e) {
+                throw new Error(`API error (${response.status}): ${response.statusText}`);
+            }
+            throw new Error(`API error (${response.status}): ${errorData.error?.message || 'Unknown error'}`);
+        }
+        const data = await response.json();
+        const content = data.choices?.[0]?.message?.content;
+
+        if (!content) {
+            throw new Error("API returned an invalid response structure.");
+        }
+        yield content.trim();
+    }
+};
+
+
+export async function* generateOutline(cards: CombinedCards, config: AIConfig, novelInfo: NovelInfo): AsyncGenerator<string> {
+    const activePrompt = config.prompts.find(p => p.id === config.activePromptId) || config.prompts[0];
+    if (!activePrompt) {
+        throw new Error("No active prompt template found. Please check your settings.");
+    }
+
+    const prompt = createPrompt(cards, activePrompt.content, novelInfo);
+    const openAICompatibleProviders: AIProvider[] = ['openai', 'deepseek', 'openrouter', 'siliconflow', 'ollama', 'custom', 'modelscope'];
+    
+    try {
+        if (config.provider === 'gemini') {
+            yield* generateWithGemini(prompt, config);
+        } else if (openAICompatibleProviders.includes(config.provider)) {
+            yield* generateWithOpenAICompatible(prompt, config);
+        } else {
+            throw new Error(`Unsupported AI provider: ${config.provider}`);
+        }
+    } catch (error) {
+        console.error(`Error generating outline with ${config.provider} API:`, error);
+        if (error instanceof Error) {
+            let detailedMessage = `生成故事大纲失败: ${error.message}`;
+            if (error.message.includes('Failed to fetch')) {
+                detailedMessage += '\n\n这通常是由于以下原因之一造成的：\n1. **网络连接问题**：请检查您的网络连接以及能否访问目标 Endpoint URL。\n2. **CORS 跨域问题**：如果您正在使用本地或自定义 API，请确保服务器已正确配置 CORS 策略，允许来自当前网页的请求。\n3. **Endpoint URL 错误**：请检查您在设置中填写的 Endpoint URL 是否正确，包括协议 (http/https) 和端口。';
+            }
+            throw new Error(detailedMessage);
+        }
+        throw new Error(`生成故事大纲失败。请检查您的 API 设置后重试。`);
+    }
+};
+
+export async function* polishOutline(currentOutline: string, userMessage: string, config: AIConfig, signal?: AbortSignal): AsyncGenerator<string> {
+    const polishPrompt = `你是一位专业的小说写作助理。你的任务是根据用户的指示来修改一份故事大纲。
+
+这是当前的大纲内容（Markdown格式）：
+---
+${currentOutline}
+---
+
+用户的修改要求是：
+"${userMessage}"
+
+请提供完整、修订后的小说大纲，并保持 Markdown 格式。不要在纲要之外添加任何评论或解释。只返回更新后的完整 Markdown 内容。`;
+
+    const openAICompatibleProviders: AIProvider[] = ['openai', 'deepseek', 'openrouter', 'siliconflow', 'ollama', 'custom', 'modelscope'];
+
+    try {
+        if (config.provider === 'gemini') {
+            yield* generateWithGemini(polishPrompt, config, signal);
+        } else if (openAICompatibleProviders.includes(config.provider)) {
+            yield* generateWithOpenAICompatible(polishPrompt, config, signal);
+        } else {
+            throw new Error(`Unsupported AI provider: ${config.provider}`);
+        }
+    } catch (error) {
+        console.error(`Error polishing outline with ${config.provider} API:`, error);
+        if (error instanceof Error) {
+            let detailedMessage = `AI 润色失败: ${error.message}`;
+            if (error.message.includes('Failed to fetch')) {
+                detailedMessage += '\n\n请检查您的网络连接和 AI Endpoint 设置。';
+            }
+            throw new Error(detailedMessage);
+        }
+        throw new Error(`AI 润色失败。请检查您的 API 设置后重试。`);
+    }
+};
+
+export async function* generateChatResponse(chatHistory: ChatMessage[], config: AIConfig, signal?: AbortSignal): AsyncGenerator<string> {
+    const openAICompatibleProviders: AIProvider[] = ['openai', 'deepseek', 'openrouter', 'siliconflow', 'ollama', 'custom', 'modelscope'];
+    const chatConfig = { ...config, model: config.assistantModel || config.model };
+
+    try {
+        if (chatConfig.provider === 'gemini') {
+            yield* generateWithGemini(chatHistory, chatConfig, signal);
+        } else if (openAICompatibleProviders.includes(chatConfig.provider)) {
+            yield* generateWithOpenAICompatible(chatHistory, chatConfig, signal);
+        } else {
+            throw new Error(`Unsupported AI provider: ${chatConfig.provider}`);
+        }
+    } catch (error) {
+        console.error(`Error in chat response with ${chatConfig.provider} API:`, error);
+        if (error instanceof Error) {
+            let detailedMessage = `AI 聊天失败: ${error.message}`;
+            if (error.message.includes('Failed to fetch')) {
+                detailedMessage += '\n\n请检查您的网络连接和 AI Endpoint 设置。';
+            }
+            throw new Error(detailedMessage);
+        }
+        throw new Error(`AI 聊天失败。请检查您的 API 设置后重试。`);
+    }
+}
+
+
+export const fetchModels = async (config: AIConfig): Promise<string[]> => {
+    if (config.provider !== 'gemini' && !config.endpoint) {
+        throw new Error("Endpoint URL 不能为空。");
+    }
+
+    if (config.provider === 'gemini') {
+        // Gemini SDK doesn't have a public models list API. The model is fixed.
+        return ['gemini-2.5-flash'];
+    }
+
+    const endpoint = config.provider === 'ollama'
+        ? `${config.endpoint.trim().replace(/\/+$/, '')}/api/tags`
+        : getEndpoint(config.endpoint, 'models');
+
+    const headers: HeadersInit = { 'Content-Type': 'application/json' };
+
+    if (config.provider !== 'ollama' && config.apiKey) {
+        headers['Authorization'] = `Bearer ${config.apiKey}`;
+    }
+
+    try {
+        const response = await fetch(endpoint, { method: 'GET', headers });
+
+        if (!response.ok) {
+            let errorData;
+            try {
+                errorData = await response.json();
+            } catch (e) {
+                throw new Error(`API 返回状态 ${response.status}: ${response.statusText}`);
+            }
+            throw new Error(`获取模型列表失败 (状态 ${response.status}): ${errorData.error?.message || '请检查 Endpoint URL。'}`);
+        }
+
+        const data = await response.json();
+
+        if (config.provider === 'ollama') {
+            // Ollama response: { models: [{ name: 'llama3:latest', ... }] }
+            return data.models?.map((model: OllamaModel) => model.name) || [];
+        } else {
+            // OpenAI-compatible response: { data: [{ id: 'gpt-4', ... }] }
+            return data.data?.map((model: OpenAIModel) => model.id).sort() || [];
+        }
+    } catch (error) {
+        console.error(`Failed to fetch models from ${config.endpoint}:`, error);
+        if (error instanceof Error) {
+            let detailedMessage = `获取模型列表失败: ${error.message}`;
+             if (error.message.includes('Failed to fetch')) {
+                detailedMessage += '\n\n这通常是由于以下原因之一造成的：\n1. **网络连接问题**：请检查您的网络连接以及能否访问目标 Endpoint URL。\n2. **CORS 跨域问题**：如果您正在使用本地或自定义 API，请确保服务器已正确配置 CORS 策略。\n3. **Endpoint URL 错误**：请检查您在设置中填写的 Endpoint URL 是否正确。';
+            }
+            throw new Error(detailedMessage);
+        }
+        throw new Error('获取模型列表时发生未知网络错误。');
+    }
+};

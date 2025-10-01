@@ -1,0 +1,26 @@
+{
+  "name": "kapaiverki",
+  "version": "1.0.0",
+  "description": "An AI-assisted writing tool that uses a card combination system to help you brainstorm and structure compelling stories.",
+  "homepage": "https://Idun.github.io/kapaiverki",
+  "scripts": {
+    "start": "serve",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d .",
+    "build": "esbuild index.tsx --bundle --outfile=index.js --format=esm --jsx=automatic --external:react --external:react/* --external:react-dom/* --external:@google/genai --external:easymde --external:marked --external:dompurify",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "react",
+    "ai",
+    "writing",
+    "gemini"
+  ],
+  "author": "Idun",
+  "license": "MIT",
+  "devDependencies": {
+    "esbuild": "^0.21.4",
+    "gh-pages": "^6.1.1",
+    "serve": "^14.2.3"
+  }
+}
