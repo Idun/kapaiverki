@@ -26,7 +26,7 @@ export interface Card {
 }
 
 export type CombinedCards = {
-  [key in CardType]?: Card | null;
+  [key in CardType]?: (Card | null)[];
 };
 
 export type AIProvider = 'gemini' | 'openai' | 'deepseek' | 'openrouter' | 'siliconflow' | 'ollama' | 'custom' | 'modelscope';
@@ -36,6 +36,8 @@ export interface NovelInfo {
   wordCount: string;
   synopsis: string;
   perspective?: string;
+  channel?: 'male' | 'female' | '';
+  emotion?: string;
 }
 
 export interface PromptTemplate {
@@ -92,6 +94,12 @@ export interface StoryArchiveItem {
   novelInfo: NovelInfo;
   outline: string;
   lastModified: number;
+}
+
+export interface SavedCombination {
+  id: string;
+  name: string;
+  selectedCardIds: {[key in CardType]?: (string | null)[] };
 }
 
 export interface Topic {

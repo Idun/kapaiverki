@@ -132,8 +132,8 @@ const CardCarousel: React.FC<CardCarouselProps> = ({ cards, onCardSelect, isCard
             onMouseLeave={() => setIsHovered(false)}
         >
             {/* Left Column: Carousel and Pagination */}
-            <div className="flex flex-col items-center justify-center h-40">
-                <div ref={containerRef} className="relative h-32 w-full flex items-center justify-center card-carousel-viewport">
+            <div className="flex flex-col items-center justify-center h-36">
+                <div ref={containerRef} className="relative h-28 w-full flex items-center justify-center card-carousel-viewport">
                     {cards.map((card, index) => {
                         const offset = index - activeIndex;
                         const isVisible = Math.abs(offset) < 4;
@@ -163,7 +163,7 @@ const CardCarousel: React.FC<CardCarouselProps> = ({ cards, onCardSelect, isCard
                         return (
                             <div
                                 key={card.id}
-                                className="card-carousel-card absolute w-24 h-28 rounded-lg shadow-md bg-white border border-gray-200 dark:bg-zinc-800 dark:border-zinc-700 flex flex-col items-center justify-center p-3 text-center"
+                                className="card-carousel-card absolute w-24 h-24 rounded-lg shadow-md bg-white border border-gray-200 dark:bg-zinc-800 dark:border-zinc-700 flex flex-col items-center justify-center p-3 text-center"
                                 style={{
                                     transform,
                                     zIndex: cards.length - Math.abs(offset),

@@ -1,9 +1,6 @@
 
 
 
-
-
-
 import React, { useState, useEffect } from 'react';
 import type { AIConfig, AIProvider, PromptTemplate, UISettings } from '../types';
 import { fetchModels } from '../services/aiService';
@@ -16,7 +13,7 @@ interface SettingsViewProps {
 }
 
 const PROVIDER_DEFAULTS: Record<AIProvider, { endpoint: string; modelPlaceholder: string; }> = {
-    gemini: { endpoint: '', modelPlaceholder: '' },
+    gemini: { endpoint: 'https://generativelanguage.googleapis.com', modelPlaceholder: 'gemini-2.5-flash' },
     openai: { endpoint: 'https://api.openai.com', modelPlaceholder: 'gpt-4o, gpt-3.5-turbo' },
     deepseek: { endpoint: 'https://api.deepseek.com', modelPlaceholder: 'deepseek-chat' },
     openrouter: { endpoint: 'https://openrouter.ai/api/v1', modelPlaceholder: 'meta-llama/llama-3-8b-instruct' },
@@ -121,6 +118,18 @@ const SettingsView: React.FC<SettingsViewProps> = ({ currentConfig, onSave, curr
     }, [currentConfig]);
 
     useEffect(() => {
+        // This effect ensures that the endpoint for the current provider is set if it's missing,
+        // which can happen on initial load if it wasn't saved in localStorage.
+        const currentProvider = config.provider;
+        if (!config.endpoint && PROVIDER_DEFAULTS[currentProvider]?.endpoint) {
+            setConfig(prev => ({
+                ...prev,
+                endpoint: PROVIDER_DEFAULTS[currentProvider].endpoint
+            }));
+        }
+    }, [config.provider, config.endpoint]);
+
+    useEffect(() => {
         // Sync local state if the prop from parent changes
         setUISettings(currentUISettings);
     }, [currentUISettings]);
@@ -144,17 +153,10 @@ const SettingsView: React.FC<SettingsViewProps> = ({ currentConfig, onSave, curr
         setModelList([]);
 
         try {
-            if (config.provider === 'gemini') {
-                if(!process.env.API_KEY || process.env.API_KEY.length < 30) throw new Error("无效的 Gemini API 密钥格式。请检查您的环境变量。");
-                setTestResult({ status: 'success', message: '链接成功! Gemini 模型是固定的。' });
-                setIsTesting(false);
-                return;
-            }
-
             const models = await fetchModels(config);
             
             if (models.length === 0) {
-                setTestResult({ status: 'success', message: "成功连接，但未找到可用模型。" });
+                 setTestResult({ status: 'success', message: "成功连接，但未找到可用模型。" });
             } else {
                 setModelList(models);
                 if (!models.includes(config.model)) {
@@ -173,14 +175,18 @@ const SettingsView: React.FC<SettingsViewProps> = ({ currentConfig, onSave, curr
         const newProvider = e.target.value as AIProvider;
         const defaults = PROVIDER_DEFAULTS[newProvider];
         
+        const preservedApiKey = (config.provider === 'ollama' && newProvider !== 'ollama')
+            ? '' // If coming from Ollama, start with a fresh key field.
+            : config.apiKey;
+
         setConfig(prev => ({
             ...prev,
             provider: newProvider,
-            model: newProvider === 'gemini' ? 'gemini-2.5-flash' : '',
-            assistantModel: newProvider === 'gemini' ? 'gemini-2.5-flash' : prev.assistantModel,
+            model: '',
             endpoint: defaults.endpoint,
-            apiKey: newProvider === 'ollama' || newProvider === 'gemini' ? '' : prev.apiKey,
+            apiKey: newProvider === 'ollama' ? '' : preservedApiKey,
         }));
+
         setTestResult({ status: 'idle', message: '' });
         setModelList([]);
     };
@@ -283,8 +289,7 @@ const SettingsView: React.FC<SettingsViewProps> = ({ currentConfig, onSave, curr
                                     </select>
                                 </InputField>
                                 
-                                {/*// FIX: Hide API key field for Gemini as per guidelines.*/}
-                                {config.provider !== 'ollama' && config.provider !== 'gemini' && (
+                                {config.provider !== 'ollama' && (
                                     <InputField label="API 密钥" id="apiKey">
                                         <input
                                             id="apiKey"
@@ -297,47 +302,44 @@ const SettingsView: React.FC<SettingsViewProps> = ({ currentConfig, onSave, curr
                                     </InputField>
                                 )}
                                 
-                                {config.provider !== 'gemini' && (
-                                    <>
-                                        <InputField label="Endpoint URL" id="endpoint">
-                                            <input
-                                                id="endpoint"
-                                                type="text"
-                                                value={config.endpoint}
-                                                onChange={(e) => setConfig(prev => ({ ...prev, endpoint: e.target.value }))}
-                                                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-gray-500 focus:border-gray-500 dark:bg-zinc-700 dark:border-zinc-600 dark:text-white"
-                                                placeholder="服务地址将根据提供商自动填充"
-                                            />
-                                        </InputField>
-                                        <InputField label="模型名称" id="model">
-                                        {modelList.length > 0 ? (
-                                                <select
-                                                    id="model"
-                                                    value={config.model}
-                                                    onChange={(e) => setConfig(prev => ({ ...prev, model: e.target.value }))}
-                                                    className="w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-gray-500 focus:border-gray-500 dark:bg-zinc-700 dark:border-zinc-600 dark:text-white"
-                                                >
-                                                    {modelList.map(modelName => (
-                                                        <option key={modelName} value={modelName}>
-                                                            {modelName}
-                                                        </option>
-                                                    ))}
-                                                </select>
-                                            ) : (
-                                                <input
-                                                    id="model"
-                                                    type="text"
-                                                    value={config.model}
-                                                    onChange={(e) => setConfig(prev => ({ ...prev, model: e.target.value }))}
-                                                    className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-gray-500 focus:border-gray-500 dark:bg-zinc-700 dark:border-zinc-600 dark:text-white"
-                                                    placeholder={PROVIDER_DEFAULTS[config.provider]?.modelPlaceholder || "点击“测试链接”以加载模型"}
-                                                    disabled={isTesting}
-                                                />
-                                            )}
-                                        </InputField>
-                                    </>
-                                )}
+                                <InputField label="Endpoint URL" id="endpoint">
+                                    <input
+                                        id="endpoint"
+                                        type="text"
+                                        value={config.endpoint}
+                                        onChange={(e) => setConfig(prev => ({ ...prev, endpoint: e.target.value }))}
+                                        className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-gray-500 focus:border-gray-500 disabled:bg-gray-100/80 dark:bg-zinc-700 dark:border-zinc-600 dark:text-white dark:disabled:bg-zinc-800/60 dark:disabled:cursor-not-allowed"
+                                        placeholder={PROVIDER_DEFAULTS[config.provider]?.endpoint}
+                                    />
+                                </InputField>
                                 
+                                <InputField label="模型名称" id="model">
+                                    {modelList.length > 0 ? (
+                                        <select
+                                            id="model"
+                                            value={config.model}
+                                            onChange={(e) => setConfig(prev => ({ ...prev, model: e.target.value }))}
+                                            className="w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-gray-500 focus:border-gray-500 dark:bg-zinc-700 dark:border-zinc-600 dark:text-white"
+                                        >
+                                            {modelList.map(modelName => (
+                                                <option key={modelName} value={modelName}>
+                                                    {modelName}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    ) : (
+                                        <input
+                                            id="model"
+                                            type="text"
+                                            value={config.model}
+                                            onChange={(e) => setConfig(prev => ({ ...prev, model: e.target.value }))}
+                                            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-gray-500 focus:border-gray-500 disabled:bg-gray-100/80 dark:bg-zinc-700 dark:border-zinc-600 dark:text-white dark:disabled:bg-zinc-800/60 dark:disabled:cursor-not-allowed"
+                                            placeholder={PROVIDER_DEFAULTS[config.provider]?.modelPlaceholder || "点击“测试链接”以加载模型"}
+                                            disabled={isTesting}
+                                        />
+                                    )}
+                                </InputField>
+
                                 <div className="pt-4 flex items-center gap-4">
                                     <button
                                         onClick={handleTest}

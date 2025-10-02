@@ -1,9 +1,7 @@
 
 
-
-
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import type { AIConfig, Card, CombinedCards, CardType, NovelInfo, PromptTemplate, InspirationCategory, InspirationItem, UISettings, StoryArchiveItem, ChatMessage, Topic } from './types';
+import type { AIConfig, Card, CombinedCards, CardType, NovelInfo, PromptTemplate, InspirationCategory, InspirationItem, UISettings, StoryArchiveItem, ChatMessage, Topic, SavedCombination } from './types';
 import { DEFAULT_CARDS, BRAINSTORM_TOOLS } from './constants';
 import { DEFAULT_PROMPTS, DEFAULT_SNOWFLAKE_PROMPT_TEMPLATE } from './prompts';
 import { DEFAULT_INSPIRATION_DATA } from './inspirationConstants';
@@ -17,10 +15,6 @@ import ArchiveView from './components/ArchiveView';
 import TipsView from './components/TipsView';
 import { CardType as CardTypeEnum } from './types';
 import { SparklesIcon, LightbulbIcon } from './components/icons';
-
-type SelectedCardIds = {
-  [key in CardType]?: string | null;
-};
 
 // Helper function to load and migrate chat history from localStorage
 const loadAndMigrateChatHistory = (key: string, defaultMessage: ChatMessage): ChatMessage[] => {
@@ -142,7 +136,7 @@ const App: React.FC = () => {
     });
 
     const [novelInfo, setNovelInfo] = useState<NovelInfo>(() => {
-        const defaultState = { name: '', wordCount: '', synopsis: '', perspective: '' };
+        const defaultState = { name: '', wordCount: '', synopsis: '', perspective: '', channel: '', emotion: '无' };
         try {
             const savedInfo = localStorage.getItem('novelInfo');
             return savedInfo ? { ...defaultState, ...JSON.parse(savedInfo) } : defaultState;
@@ -152,31 +146,47 @@ const App: React.FC = () => {
         }
     });
 
-    const [selectedCardIds, setSelectedCardIds] = useState<SelectedCardIds>(() => {
+    const [selectedCardIds, setSelectedCardIds] = useState<{[key in CardType]?: (string | null)[] }>(() => {
         try {
             const savedIds = localStorage.getItem('selectedCardIds');
             const defaultState = {
-                [CardTypeEnum.Theme]: null, 
-                [CardTypeEnum.Genre]: null, 
-                [CardTypeEnum.Character]: null, 
-                [CardTypeEnum.Plot]: null,
-                [CardTypeEnum.Structure]: null,
-                [CardTypeEnum.Technique]: null,
-                [CardTypeEnum.Ending]: null,
-                [CardTypeEnum.Inspiration]: null,
+                [CardTypeEnum.Theme]: [null], 
+                [CardTypeEnum.Genre]: [null], 
+                [CardTypeEnum.Character]: [null], 
+                [CardTypeEnum.Plot]: [null],
+                [CardTypeEnum.Structure]: [null],
+                [CardTypeEnum.Technique]: [null],
+                [CardTypeEnum.Ending]: [null],
+                [CardTypeEnum.Inspiration]: [null],
             };
-            return savedIds ? { ...defaultState, ...JSON.parse(savedIds) } : defaultState;
+            if (savedIds) {
+                const parsed = JSON.parse(savedIds);
+                // Migration from old format (string) to new format (array of strings)
+                for (const key in parsed) {
+                    if (parsed[key] && !Array.isArray(parsed[key])) {
+                        parsed[key] = [parsed[key]]; // Wrap old string value in an array
+                    }
+                }
+                 // Ensure all types from defaultState are present
+                for (const key in defaultState) {
+                    if (!parsed[key]) {
+                        parsed[key] = defaultState[key as CardType];
+                    }
+                }
+                return parsed;
+            }
+            return defaultState;
         } catch (error) {
             console.error("Failed to parse selected card IDs from localStorage", error);
             return { 
-                [CardTypeEnum.Theme]: null, 
-                [CardTypeEnum.Genre]: null, 
-                [CardTypeEnum.Character]: null, 
-                [CardTypeEnum.Plot]: null,
-                [CardTypeEnum.Structure]: null,
-                [CardTypeEnum.Technique]: null,
-                [CardTypeEnum.Ending]: null,
-                [CardTypeEnum.Inspiration]: null,
+                [CardTypeEnum.Theme]: [null], 
+                [CardTypeEnum.Genre]: [null], 
+                [CardTypeEnum.Character]: [null], 
+                [CardTypeEnum.Plot]: [null],
+                [CardTypeEnum.Structure]: [null],
+                [CardTypeEnum.Technique]: [null],
+                [CardTypeEnum.Ending]: [null],
+                [CardTypeEnum.Inspiration]: [null],
             };
         }
     });
@@ -232,6 +242,13 @@ const App: React.FC = () => {
     const [storyArchive, setStoryArchive] = useState<StoryArchiveItem[]>(() => {
         try {
             const saved = localStorage.getItem('storyArchive');
+            return saved ? JSON.parse(saved) : [];
+        } catch { return []; }
+    });
+
+    const [savedCombinations, setSavedCombinations] = useState<SavedCombination[]>(() => {
+        try {
+            const saved = localStorage.getItem('savedCombinations');
             return saved ? JSON.parse(saved) : [];
         } catch { return []; }
     });
@@ -296,6 +313,12 @@ const App: React.FC = () => {
             localStorage.setItem('storyArchive', JSON.stringify(storyArchive));
         } catch (e) { console.error("Failed to save story archive", e); }
     }, [storyArchive]);
+
+    useEffect(() => {
+        try {
+            localStorage.setItem('savedCombinations', JSON.stringify(savedCombinations));
+        } catch (e) { console.error("Failed to save combinations", e); }
+    }, [savedCombinations]);
 
     useEffect(() => {
         try {
@@ -398,13 +421,13 @@ const App: React.FC = () => {
         const rehydratedCards: CombinedCards = {};
         for (const type in selectedCardIds) {
             const cardType = type as CardType;
-            const cardId = selectedCardIds[cardType];
-            if (cardId) {
-                const foundCard = allCards.find(card => card.id === cardId);
-                rehydratedCards[cardType] = foundCard || null;
-            } else {
-                 rehydratedCards[cardType] = null;
-            }
+            const cardIdArray = selectedCardIds[cardType] || [];
+            rehydratedCards[cardType] = cardIdArray.map(cardId => {
+                if (cardId) {
+                    return allCards.find(card => card.id === cardId) || null;
+                }
+                return null;
+            });
         }
         return rehydratedCards;
     }, [selectedCardIds, allCards]);
@@ -495,15 +518,63 @@ const App: React.FC = () => {
             setStoryArchive(prev => prev.filter(item => item.id !== storyId));
             if (currentStoryId === storyId) {
                 setCurrentStoryId(null);
-                setNovelInfo({ name: '', wordCount: '', synopsis: '', perspective: '' });
+                setNovelInfo({ name: '', wordCount: '', synopsis: '', perspective: '', channel: '', emotion: '无' });
                 setAndPersistOutline('');
             }
         }
     }, [currentStoryId, setAndPersistOutline]);
 
+    // BUG FIX & Refactor: The function is now a plain function (no useCallback) to always capture the latest state.
+    // It now performs a deep copy of 'selectedCardIds' to prevent any potential downstream mutations
+    // from affecting the saved state, which could be the source of the persistent bug.
+    const handleSaveCombination = (name: string) => {
+        if (!name.trim()) {
+            alert("组合名称不能为空。");
+            return;
+        }
+        // Deep copy to prevent reference issues
+        const cardsToSave = JSON.parse(JSON.stringify(selectedCardIds));
 
-    const handleCardSelect = useCallback((card: Card) => {
-        setSelectedCardIds(prev => ({ ...prev, [card.type]: card.id }));
+        const newCombination: SavedCombination = {
+            id: `combo-${Date.now()}`,
+            name: name.trim(),
+            selectedCardIds: cardsToSave,
+        };
+        setSavedCombinations(prev => [newCombination, ...prev]);
+        alert(`组合 “${name.trim()}” 已保存！`);
+    };
+
+    // Refactor: Removed useCallback for simplicity and to match the pattern of other handlers.
+    // This ensures it always has the latest `savedCombinations` state from the render scope.
+    const handleLoadCombination = (combinationId: string) => {
+        const combinationToLoad = savedCombinations.find(c => c.id === combinationId);
+        if (combinationToLoad) {
+            // A deep copy is also good practice here when loading state.
+            const cardsToLoad = JSON.parse(JSON.stringify(combinationToLoad.selectedCardIds));
+            setSelectedCardIds(cardsToLoad);
+            alert(`已加载组合 “${combinationToLoad.name}”！`);
+        }
+    };
+
+    // Refactor: Removed useCallback for consistency, although the original was safe due to functional updates.
+    const handleDeleteCombination = (combinationId: string) => {
+        if (window.confirm("您确定要删除此组合吗？")) {
+            setSavedCombinations(prev => prev.filter(c => c.id !== combinationId));
+        }
+    };
+
+
+    const handleCardSelect = useCallback((card: Card, index: number) => {
+        setSelectedCardIds(prev => {
+            const newIds = { ...prev };
+            if (!newIds[card.type]) {
+                newIds[card.type] = [];
+            }
+            const typeArray = [...(newIds[card.type] || [])];
+            typeArray[index] = card.id;
+            newIds[card.type] = typeArray;
+            return newIds;
+        });
     }, []);
 
     const handleCreateCard = useCallback((newCardData: Omit<Card, 'id' | 'icon' | 'isCustom'>) => {
@@ -527,8 +598,10 @@ const App: React.FC = () => {
             const newSelection = { ...prev };
             let changed = false;
             for (const key in newSelection) {
-                if (newSelection[key as CardType] === cardId) {
-                    newSelection[key as CardType] = null;
+                const cardType = key as CardType;
+                const idArray = newSelection[cardType];
+                if (idArray && idArray.includes(cardId)) {
+                    newSelection[cardType] = idArray.map(id => id === cardId ? null : id);
                     changed = true;
                 }
             }
@@ -536,10 +609,45 @@ const App: React.FC = () => {
         });
     }, []);
 
-
-    const handleClearCard = useCallback((cardType: CardType) => {
-        setSelectedCardIds(prev => ({ ...prev, [cardType]: null }));
+    const handleClearCard = useCallback((cardType: CardType, index: number) => {
+        setSelectedCardIds(prev => {
+            const newIds = { ...prev };
+            const typeArray = [...(newIds[cardType] || [])];
+            typeArray[index] = null;
+            newIds[cardType] = typeArray;
+            return newIds;
+        });
     }, []);
+
+    const handleAddCardSlot = useCallback((cardType: CardType) => {
+        setSelectedCardIds(prev => {
+            const currentSlots = prev[cardType] || [];
+            if (currentSlots.length < 3) {
+                return {
+                    ...prev,
+                    [cardType]: [...currentSlots, null],
+                };
+            }
+            return prev;
+        });
+    }, []);
+
+    const handleRemoveCardSlot = useCallback((cardType: CardType, index: number) => {
+        setSelectedCardIds(prev => {
+            const currentSlots = prev[cardType] || [];
+            // Prevent deleting if it's the first slot or the only slot left
+            if (currentSlots.length <= 1 || index === 0) {
+                return prev;
+            }
+            const newSlots = [...currentSlots];
+            newSlots.splice(index, 1); // Remove the item at the given index
+            return {
+                ...prev,
+                [cardType]: newSlots,
+            };
+        });
+    }, []);
+
 
     const handleCreateInspirationCard = useCallback((categoryId: string, newItemData: { title: string; description: string }) => {
         setInspirationCards(prevCards => {
@@ -589,8 +697,12 @@ const App: React.FC = () => {
         // Also unselect it if it's selected
         const cardIdToClear = `inspiration-${categoryId}-${itemId}`;
         setSelectedCardIds(prev => {
-            if (prev[CardTypeEnum.Inspiration] === cardIdToClear) {
-                return { ...prev, [CardTypeEnum.Inspiration]: null };
+            const inspirationSlots = prev[CardTypeEnum.Inspiration] || [];
+            if (inspirationSlots.includes(cardIdToClear)) {
+                return { 
+                    ...prev, 
+                    [CardTypeEnum.Inspiration]: inspirationSlots.map(id => id === cardIdToClear ? null : id)
+                };
             }
             return prev;
         });
@@ -605,7 +717,19 @@ const App: React.FC = () => {
     const handleInspirationCardClick = useCallback((cardId: string) => {
         const foundCard = allCards.find(card => card.id === cardId);
         if (foundCard && foundCard.type === CardTypeEnum.Inspiration) {
-            setSelectedCardIds(prev => ({ ...prev, [CardTypeEnum.Inspiration]: foundCard.id }));
+            // Find the first empty inspiration slot and fill it
+            setSelectedCardIds(prev => {
+                const inspirationSlots = prev[CardTypeEnum.Inspiration] || [null];
+                const emptyIndex = inspirationSlots.findIndex(id => id === null);
+                const newSlots = [...inspirationSlots];
+                if (emptyIndex !== -1) {
+                    newSlots[emptyIndex] = foundCard.id;
+                } else {
+                    // This case should ideally be handled by disabling the button/drag if full
+                    newSlots[0] = foundCard.id; // Fallback: replace the first one
+                }
+                return { ...prev, [CardTypeEnum.Inspiration]: newSlots };
+            });
         }
     }, [allCards]);
 
@@ -621,6 +745,8 @@ const App: React.FC = () => {
                         combinedCards={combinedCards}
                         onCardSelect={handleCardSelect}
                         onClearCard={handleClearCard}
+                        onAddCardSlot={handleAddCardSlot}
+                        onRemoveCardSlot={handleRemoveCardSlot}
                         novelInfo={novelInfo}
                         setNovelInfo={setNovelInfo}
                         allCards={allCards}
@@ -628,6 +754,10 @@ const App: React.FC = () => {
                         onUpdateCard={handleUpdateCard}
                         onDeleteCard={handleDeleteCard}
                         uiSettings={uiSettings}
+                        savedCombinations={savedCombinations}
+                        onSaveCombination={handleSaveCombination}
+                        onLoadCombination={handleLoadCombination}
+                        onDeleteCombination={handleDeleteCombination}
                     />
                 );
             case 'result':
@@ -656,7 +786,7 @@ const App: React.FC = () => {
                             onDeleteCard={handleDeleteInspirationCard}
                             onCardDragStart={handleInspirationCardDragStart}
                             onCardClick={handleInspirationCardClick}
-                            selectedInspirationCardId={selectedCardIds[CardTypeEnum.Inspiration]}
+                            selectedInspirationCardId={selectedCardIds[CardTypeEnum.Inspiration]?.[0]}
                         />;
             case 'tips':
                 return <TipsView 
@@ -689,6 +819,8 @@ const App: React.FC = () => {
                         combinedCards={combinedCards}
                         onCardSelect={handleCardSelect}
                         onClearCard={handleClearCard}
+                        onAddCardSlot={handleAddCardSlot}
+                        onRemoveCardSlot={handleRemoveCardSlot}
                         novelInfo={novelInfo}
                         setNovelInfo={setNovelInfo}
                         allCards={allCards}
@@ -696,6 +828,10 @@ const App: React.FC = () => {
                         onUpdateCard={handleUpdateCard}
                         onDeleteCard={handleDeleteCard}
                         uiSettings={uiSettings}
+                        savedCombinations={savedCombinations}
+                        onSaveCombination={handleSaveCombination}
+                        onLoadCombination={handleLoadCombination}
+                        onDeleteCombination={handleDeleteCombination}
                     />
                 );
         }

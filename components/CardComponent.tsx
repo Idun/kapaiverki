@@ -48,7 +48,7 @@ const CardComponent: React.FC<CardComponentProps> = ({ card, onClick, isSelected
 
     return (
         <div 
-            className={`flip-card group h-28 ${interactionClasses}`}
+            className={`flip-card group h-24 ${interactionClasses}`}
             draggable={!isSelected}
             onDragStart={handleDragStartInternal}
             onDragEnd={onDragEnd}

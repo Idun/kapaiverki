@@ -1,600 +1,1080 @@
+var __defProp = Object.defineProperty;
+var __getOwnPropNames = Object.getOwnPropertyNames;
+var __esm = (fn, res) => function __init() {
+  return fn && (res = (0, fn[__getOwnPropNames(fn)[0]])(fn = 0)), res;
+};
+var __export = (target, all) => {
+  for (var name in all)
+    __defProp(target, name, { get: all[name], enumerable: true });
+};
+
+// types.ts
+var init_types = __esm({
+  "types.ts"() {
+  }
+});
+
+// components/icons.tsx
+import { jsx, jsxs } from "react/jsx-runtime";
+var ThemeIcon, GenreIcon, CharacterIcon, PlotIcon, StructureIcon, TechniqueIcon, EndingIcon, PenSparkleIcon, SettingsIcon, DocumentTextIcon, LightbulbIcon, DownloadIcon, UploadIcon, PreviewIcon, PlusIcon, SparklesIcon, PencilIcon, TrashIcon, ArrowUpIcon, StopIcon, AiIcon, InformationCircleIcon, ArchiveBoxIcon, DocumentPlusIcon, PhotoIcon, QuestionMarkCircleIcon, UserCircleIcon, ArrowsRightLeftIcon, GlobeAltIcon, ClipboardDocumentIcon, ArrowPathIcon, FireIcon, Bars3BottomLeftIcon, BookmarkSquareIcon, ArrowDownOnSquareIcon;
+var init_icons = __esm({
+  "components/icons.tsx"() {
+    ThemeIcon = (props) => /* @__PURE__ */ jsx("svg", { xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", strokeWidth: 1.5, stroke: "currentColor", ...props, children: /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M12 3v2.25m6.364.386-1.591 1.591M21 12h-2.25m-.386 6.364-1.591-1.591M12 18.75V21m-6.364-.386 1.591-1.591M3 12H.75m.386-6.364 1.591 1.591M12 6.75a5.25 5.25 0 1 0 0 10.5 5.25 5.25 0 0 0 0-10.5Z" }) });
+    GenreIcon = (props) => /* @__PURE__ */ jsx("svg", { xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", strokeWidth: 1.5, stroke: "currentColor", ...props, children: /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M16.5 6.75a4.5 4.5 0 1 1-9 0 4.5 4.5 0 0 1 9 0ZM18.75 20.25h-13.5A2.25 2.25 0 0 1 3 18V6a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 6v12a2.25 2.25 0 0 1-2.25 2.25Z" }) });
+    CharacterIcon = (props) => /* @__PURE__ */ jsx("svg", { xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", strokeWidth: 1.5, stroke: "currentColor", ...props, children: /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" }) });
+    PlotIcon = (props) => /* @__PURE__ */ jsx("svg", { xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", strokeWidth: 1.5, stroke: "currentColor", ...props, children: /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m5.231 13.481L15 17.25m-4.5-1.5 5.231 5.231M5.25 5.25h3.375c.621 0 1.125.504 1.125 1.125v1.5c0 .621-.504 1.125-1.125 1.125H5.25" }) });
+    StructureIcon = (props) => /* @__PURE__ */ jsx("svg", { xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", strokeWidth: 1.5, stroke: "currentColor", ...props, children: /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M3.75 6A2.25 2.25 0 0 1 6 3.75h2.25A2.25 2.25 0 0 1 10.5 6v2.25a2.25 2.25 0 0 1-2.25 2.25H6A2.25 2.25 0 0 1 3.75 8.25V6zM3.75 15.75A2.25 2.25 0 0 1 6 13.5h2.25a2.25 2.25 0 0 1 2.25 2.25V18a2.25 2.25 0 0 1-2.25 2.25H6A2.25 2.25 0 0 1 3.75 18v-2.25zM13.5 6a2.25 2.25 0 0 1 2.25-2.25H18A2.25 2.25 0 0 1 20.25 6v2.25A2.25 2.25 0 0 1 18 10.5h-2.25a2.25 2.25 0 0 1-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 0 1 2.25-2.25H18A2.25 2.25 0 0 1 20.25 15.75V18a2.25 2.25 0 0 1-2.25 2.25h-2.25a2.25 2.25 0 0 1-2.25-2.25v-2.25z" }) });
+    TechniqueIcon = (props) => /* @__PURE__ */ jsx("svg", { xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", strokeWidth: 1.5, stroke: "currentColor", ...props, children: /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M6 3v18M18 3v18M3 9h18M3 15h18" }) });
+    EndingIcon = (props) => /* @__PURE__ */ jsx("svg", { xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", strokeWidth: 1.5, stroke: "currentColor", ...props, children: /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M3 3v1.5M3 21v-6m0 0 2.77-.693a9 9 0 0 1 6.208.682l.108.054a9 9 0 0 0 6.086.71l3.114-.732a48.524 48.524 0 0 1-.005-10.499l-3.11.732a9 9 0 0 1-6.085-.711l-.108-.054a9 9 0 0 0-6.208-.682L3 4.5m3 7.5h.008v.008H6v-.008Zm3 0h.008v.008H9v-.008Zm3 0h.008v.008h-.008v-.008Zm3 0h.008v.008h-.008v-.008Z" }) });
+    PenSparkleIcon = (props) => /* @__PURE__ */ jsx("svg", { xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", strokeWidth: 1.5, stroke: "currentColor", ...props, children: /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" }) });
+    SettingsIcon = (props) => /* @__PURE__ */ jsx("svg", { xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", strokeWidth: 1.5, stroke: "currentColor", ...props, children: /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M9.594 3.94c.09-.542.56-1.007 1.11-.95.548.056 1.04.546 1.04 1.106v.294a2.25 2.25 0 0 1-.586 1.486l-2.172 2.172a2.25 2.25 0 0 0-.586 1.486v.294a1.125 1.125 0 0 0 .586 1.007 1.125 1.125 0 0 0 1.11-.056.977.977 0 0 0 .586-.643 11.25 11.25 0 0 0 .049-2.433 2.25 2.25 0 0 0-.586-1.486l-2.172-2.172a2.25 2.25 0 0 1-.586-1.486v-.294a1.125 1.125 0 0 1 .586-1.007ZM14.406 3.94a1.125 1.125 0 0 1 1.11.95.977.977 0 0 0 .586.643 11.25 11.25 0 0 0 .049 2.433 2.25 2.25 0 0 0 .586 1.486l2.172 2.172a2.25 2.25 0 0 1 .586 1.486v.294a1.125 1.125 0 0 1-.586 1.007 1.125 1.125 0 0 1-1.11-.056.977.977 0 0 1-.586-.643 11.25 11.25 0 0 1-.049-2.433 2.25 2.25 0 0 1 .586-1.486l2.172-2.172a2.25 2.25 0 0 0 .586-1.486v-.294a1.125 1.125 0 0 0-.586-1.007Z" }) });
+    DocumentTextIcon = (props) => /* @__PURE__ */ jsx("svg", { xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", strokeWidth: 1.5, stroke: "currentColor", ...props, children: /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m.75 12 3 3m0 0 3-3m-3 3v-6m-1.5-9H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" }) });
+    LightbulbIcon = (props) => /* @__PURE__ */ jsx("svg", { xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", strokeWidth: 1.5, stroke: "currentColor", ...props, children: /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09ZM18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 0 0-2.456 2.456Z" }) });
+    DownloadIcon = (props) => /* @__PURE__ */ jsx("svg", { xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", strokeWidth: 1.5, stroke: "currentColor", ...props, children: /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" }) });
+    UploadIcon = (props) => /* @__PURE__ */ jsx("svg", { xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", strokeWidth: 1.5, stroke: "currentColor", ...props, children: /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M12 16.5V9.75m0 0 3 3m-3-3-3 3M6.75 19.5a4.5 4.5 0 0 1-1.41-8.775 5.25 5.25 0 0 1 10.233-2.33 3 3 0 0 1 3.758 3.848A3.752 3.752 0 0 1 18 19.5H6.75Z" }) });
+    PreviewIcon = (props) => /* @__PURE__ */ jsxs("svg", { xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", strokeWidth: 1.5, stroke: "currentColor", ...props, children: [
+      /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.432 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" }),
+      /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" })
+    ] });
+    PlusIcon = (props) => /* @__PURE__ */ jsx("svg", { xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", strokeWidth: 1.5, stroke: "currentColor", ...props, children: /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M12 4.5v15m7.5-7.5h-15" }) });
+    SparklesIcon = (props) => /* @__PURE__ */ jsx("svg", { xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", strokeWidth: 1.5, stroke: "currentColor", ...props, children: /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09ZM18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 0 0-2.456 2.456Z" }) });
+    PencilIcon = (props) => /* @__PURE__ */ jsx("svg", { xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", strokeWidth: 1.5, stroke: "currentColor", ...props, children: /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125" }) });
+    TrashIcon = (props) => /* @__PURE__ */ jsx("svg", { xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", strokeWidth: 1.5, stroke: "currentColor", ...props, children: /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 4.811 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.134-2.033-2.134H8.71c-1.123 0-2.033.954-2.033 2.134v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" }) });
+    ArrowUpIcon = (props) => /* @__PURE__ */ jsx("svg", { xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", strokeWidth: 1.5, stroke: "currentColor", ...props, children: /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M12 19.5v-15m0 0l-6.75 6.75M12 4.5l6.75 6.75" }) });
+    StopIcon = (props) => /* @__PURE__ */ jsx("svg", { xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", strokeWidth: 1.5, stroke: "currentColor", ...props, children: /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M5.25 7.5A2.25 2.25 0 0 1 7.5 5.25h9a2.25 2.25 0 0 1 2.25 2.25v9a2.25 2.25 0 0 1-2.25 2.25h-9a2.25 2.25 0 0 1-2.25-2.25v-9Z" }) });
+    AiIcon = (props) => /* @__PURE__ */ jsxs("svg", { viewBox: "0 0 24 24", fill: "none", xmlns: "http://www.w3.org/2000/svg", ...props, children: [
+      /* @__PURE__ */ jsx("path", { className: "ai-input-icon-path", style: { "--d": "0.24s", "--r": "20deg", "--s": "1.5" }, fillRule: "evenodd", clipRule: "evenodd", d: "M11.5 6C11.3949 6.00006 11.2925 5.96705 11.2073 5.90565C11.1221 5.84425 11.0583 5.75758 11.0251 5.65792L10.7623 4.86908C10.6623 4.57101 10.4288 4.33629 10.13 4.23693L9.34102 3.97354C9.24166 3.94019 9.1553 3.87649 9.09411 3.79142C9.03292 3.70635 9 3.60421 9 3.49943C9 3.39465 9.03292 3.29252 9.09411 3.20745C9.1553 3.12238 9.24166 3.05867 9.34102 3.02532L10.13 2.76193C10.4282 2.66191 10.663 2.42852 10.7623 2.12979L11.0258 1.34094C11.0591 1.24161 11.1229 1.15526 11.2079 1.09409C11.293 1.03291 11.3952 1 11.5 1C11.6048 1 11.707 1.03291 11.7921 1.09409C11.8771 1.15526 11.9409 1.24161 11.9742 1.34094L12.2377 2.12979C12.2868 2.27697 12.3695 2.4107 12.4792 2.52041C12.589 2.63013 12.7227 2.71281 12.87 2.76193L13.659 3.02532C13.7583 3.05867 13.8447 3.12238 13.9059 3.20745C13.9671 3.29252 14 3.39465 14 3.49943C14 3.60421 13.9671 3.70635 13.9059 3.79142C13.8447 3.87649 13.7583 3.94019 13.659 3.97354L12.87 4.23693C12.5718 4.33696 12.337 4.57034 12.2377 4.86908L11.9742 5.65792C11.9411 5.75747 11.8774 5.84406 11.7923 5.90545C11.7072 5.96684 11.6049 5.99992 11.5 6Z", fill: "currentColor" }),
+      /* @__PURE__ */ jsx("path", { className: "ai-input-icon-path", style: { "--d": "0.12s", "--r": "10deg", "--s": "1.4" }, fillRule: "evenodd", clipRule: "evenodd", d: "M6 13C5.85133 13.0001 5.7069 12.9504 5.58969 12.859C5.47247 12.7675 5.38921 12.6395 5.35313 12.4952L5.12388 11.5745C4.91418 10.7391 4.26198 10.0868 3.42674 9.87703L2.50619 9.64774C2.36169 9.61194 2.23333 9.52878 2.14159 9.41151C2.04985 9.29425 2 9.14964 2 9.00075C2 8.85185 2.04985 8.70724 2.14159 8.58998C2.23333 8.47272 2.36169 8.38955 2.50619 8.35376L3.42674 8.12446C4.26198 7.91473 4.91418 7.2624 5.12388 6.427L5.35313 5.50629C5.38892 5.36176 5.47207 5.23338 5.58931 5.14162C5.70655 5.04986 5.85113 5 6 5C6.14887 5 6.29345 5.04986 6.41069 5.14162C6.52793 5.23338 6.61108 5.36176 6.64687 5.50629L6.87612 6.427C6.97865 6.83721 7.19071 7.21184 7.48965 7.51082C7.78858 7.80981 8.16313 8.02192 8.57326 8.12446L9.49381 8.35376C9.63831 8.38955 9.76667 8.47272 9.85841 8.58998C9.95015 8.70724 10 8.85185 10 9.00075C10 9.14964 9.95015 9.29425 9.85841 9.41151C9.76667 9.52878 9.63831 9.61194 9.49381 9.64774L8.57326 9.87703C8.16313 9.97956 7.78858 10.1917 7.48965 10.4906C7.19071 10.7896 6.97865 11.1641 6.87612 11.5745L6.64687 12.4952C6.61099 12.6395 6.52773 12.7675 6.41051 12.859C6.2933 12.9504 6.14887 13.0001 6 13Z", fill: "currentColor" }),
+      /* @__PURE__ */ jsx("path", { className: "ai-input-icon-path", style: { "--d": "0s", "--r": "0deg", "--s": "1" }, fillRule: "evenodd", clipRule: "evenodd", d: "M19.5 13C19.3513 13.0001 19.2069 12.9504 19.0897 12.859C18.9725 12.7675 18.8892 12.6395 18.8531 12.4952L18.6239 11.5745C18.4142 10.7391 17.762 10.0868 16.9267 9.87703L16.0062 9.64774C15.8617 9.61194 15.7333 9.52878 15.6416 9.41151C15.5499 9.29425 15.5 9.14964 15.5 9.00075C15.5 8.85185 15.5499 8.70724 15.6416 8.58998C15.7333 8.47272 15.8617 8.38955 16.0062 8.35376L16.9267 8.12446C17.762 7.91473 18.4142 7.2624 18.6239 6.427L18.8531 5.50629C18.8889 5.36176 18.9721 5.23338 19.0893 5.14162C19.2066 5.04986 19.3511 5 19.5 5C19.6489 5 19.7934 5.04986 19.9107 5.14162C20.0279 5.23338 20.1111 5.36176 20.1469 5.50629L20.3761 6.427C20.4787 6.83721 20.6907 7.21184 20.9897 7.51082C21.2886 7.80981 21.6631 8.02192 22.0733 8.12446L22.9938 8.35376C23.1383 8.38955 23.2667 8.47272 23.3584 8.58998C23.4501 8.70724 23.5 8.85185 23.5 9.00075C23.5 9.14964 23.4501 9.29425 23.3584 9.41151C23.2667 9.52878 23.1383 9.61194 22.9938 9.64774L22.0733 9.87703C21.6631 9.97956 21.2886 10.1917 20.9897 10.4906C20.6907 10.7896 20.4787 11.1641 20.3761 11.5745L20.1469 12.4952C20.111 12.6395 20.0277 12.7675 19.9105 12.859C19.7933 12.9504 19.6489 13.0001 19.5 13Z", fill: "currentColor" })
+    ] });
+    InformationCircleIcon = (props) => /* @__PURE__ */ jsx("svg", { xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", strokeWidth: 1.5, stroke: "currentColor", ...props, children: /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M11.25 11.25l.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" }) });
+    ArchiveBoxIcon = (props) => /* @__PURE__ */ jsxs("svg", { xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", strokeWidth: 1.5, stroke: "currentColor", ...props, children: [
+      /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "m20.25 7.5-.625 10.632a2.25 2.25 0 0 1-2.247 2.118H6.622a2.25 2.25 0 0 1-2.247-2.118L3.75 7.5M10 11.25h4" }),
+      /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M3.75 7.5h16.5v-1.5A2.25 2.25 0 0 0 18 3.75h-12A2.25 2.25 0 0 0 3.75 6v1.5Z" })
+    ] });
+    DocumentPlusIcon = (props) => /* @__PURE__ */ jsx("svg", { xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", strokeWidth: 1.5, stroke: "currentColor", ...props, children: /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m3.75 9v6m3-3h-6m-1.5-6H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" }) });
+    PhotoIcon = (props) => /* @__PURE__ */ jsx("svg", { xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", strokeWidth: 1.5, stroke: "currentColor", ...props, children: /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" }) });
+    QuestionMarkCircleIcon = (props) => /* @__PURE__ */ jsx("svg", { xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", strokeWidth: 1.5, stroke: "currentColor", ...props, children: /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 5.25h.008v.008H12v-.008Z" }) });
+    UserCircleIcon = (props) => /* @__PURE__ */ jsx("svg", { xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", strokeWidth: 1.5, stroke: "currentColor", ...props, children: /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" }) });
+    ArrowsRightLeftIcon = (props) => /* @__PURE__ */ jsx("svg", { xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", strokeWidth: 1.5, stroke: "currentColor", ...props, children: /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M7.5 21 3 16.5m0 0L7.5 12M3 16.5h18m-7.5-1.5L21 8.25m0 0L16.5 3.75M21 8.25H3" }) });
+    GlobeAltIcon = (props) => /* @__PURE__ */ jsx("svg", { xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", strokeWidth: 1.5, stroke: "currentColor", ...props, children: /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M12 21a9.004 9.004 0 0 0 8.716-6.747M12 21a9.004 9.004 0 0 1-8.716-6.747M12 21c.504 0 1.002-.02 1.49-.06M12 3c.504 0 1.002.02 1.49.06M3.284 8.876a9.004 9.004 0 0 1 17.432 0M3.284 15.124a9.004 9.004 0 0 0 17.432 0M12 3v18M12 3a9.004 9.004 0 0 0-8.716 6.747M12 3a9.004 9.004 0 0 1 8.716 6.747" }) });
+    ClipboardDocumentIcon = (props) => /* @__PURE__ */ jsx("svg", { xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", strokeWidth: 1.5, stroke: "currentColor", ...props, children: /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M15.666 3.888A2.25 2.25 0 0 0 13.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v2.25c0 .966-.784 1.75-1.75 1.75h-2.5a1.75 1.75 0 0 1-1.75-1.75v-2.25c0-.212.03-.418.084-.612m7.332 0c.646.049 1.288.11 1.927.184 1.1.128 1.907 1.077 1.907 2.185V19.5a2.25 2.25 0 0 1-2.25 2.25H6.75A2.25 2.25 0 0 1 4.5 19.5V6.257c0-1.108.806-2.057 1.907-2.185a48.208 48.208 0 0 1 1.927-.184" }) });
+    ArrowPathIcon = (props) => /* @__PURE__ */ jsx("svg", { xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", strokeWidth: 1.5, stroke: "currentColor", ...props, children: /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 11.667 0l3.181-3.183m-4.991-2.691v4.992h-4.992m0 0-3.181-3.183a8.25 8.25 0 0 1 11.667 0l3.181 3.183" }) });
+    FireIcon = (props) => /* @__PURE__ */ jsxs("svg", { xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", strokeWidth: 1.5, stroke: "currentColor", ...props, children: [
+      /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M15.362 5.214A8.252 8.252 0 0 1 12 21 8.25 8.25 0 0 1 6.038 7.047 8.287 8.287 0 0 0 9 9.601a8.983 8.983 0 0 1 3.361-6.867 8.21 8.21 0 0 0-1.473-1.307Z" }),
+      /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M12 12.75a3 3 0 0 0-3 3v3.75a3 3 0 0 0 3 3h.008a3 3 0 0 0 3-3v-3.75a3 3 0 0 0-3-3h-.008Z" })
+    ] });
+    Bars3BottomLeftIcon = (props) => /* @__PURE__ */ jsx("svg", { xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", strokeWidth: 1.5, stroke: "currentColor", ...props, children: /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25H12" }) });
+    BookmarkSquareIcon = (props) => /* @__PURE__ */ jsx("svg", { xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", strokeWidth: 1.5, stroke: "currentColor", ...props, children: /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M16.5 3.75V16.5L12 14.25 7.5 16.5V3.75m9 0H7.5A2.25 2.25 0 0 0 5.25 6v13.5A2.25 2.25 0 0 0 7.5 21h9a2.25 2.25 0 0 0 2.25-2.25V6A2.25 2.25 0 0 0 16.5 3.75Z" }) });
+    ArrowDownOnSquareIcon = (props) => /* @__PURE__ */ jsx("svg", { xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", strokeWidth: 1.5, stroke: "currentColor", ...props, children: /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M9 8.25H7.5a2.25 2.25 0 0 0-2.25 2.25v9a2.25 2.25 0 0 0 2.25 2.25h9a2.25 2.25 0 0 0 2.25-2.25v-9a2.25 2.25 0 0 0-2.25-2.25H15m0-3-3-3m0 0-3 3m3-3v11.25" }) });
+  }
+});
+
+// constants.tsx
+import { jsx as jsx2 } from "react/jsx-runtime";
+var CORE_CARD_TYPES, OPTIONAL_CARD_TYPES, CARD_TYPE_NAMES, BRAINSTORM_TOOLS, DEFAULT_CARDS;
+var init_constants = __esm({
+  "constants.tsx"() {
+    init_types();
+    init_icons();
+    CORE_CARD_TYPES = ["Theme" /* Theme */, "Genre" /* Genre */, "Character" /* Character */, "Plot" /* Plot */];
+    OPTIONAL_CARD_TYPES = ["Structure" /* Structure */, "Technique" /* Technique */, "Ending" /* Ending */, "Inspiration" /* Inspiration */];
+    CARD_TYPE_NAMES = {
+      ["Theme" /* Theme */]: "\u4E3B\u9898",
+      ["Genre" /* Genre */]: "\u7C7B\u578B",
+      ["Character" /* Character */]: "\u89D2\u8272",
+      ["Plot" /* Plot */]: "\u60C5\u8282",
+      ["Structure" /* Structure */]: "\u53D9\u4E8B\u7ED3\u6784",
+      ["Technique" /* Technique */]: "\u53D9\u4E8B\u624B\u6CD5",
+      ["Ending" /* Ending */]: "\u7ED3\u5C40",
+      ["Inspiration" /* Inspiration */]: "\u7075\u611F\u96C6 (\u53EF\u9009)"
+    };
+    BRAINSTORM_TOOLS = [
+      {
+        id: "character",
+        name: "\u89D2\u8272\u6DF1\u6F5C",
+        description: "\u6DF1\u5165\u6316\u6398\u89D2\u8272\u7684\u52A8\u673A\u3001\u77DB\u76FE\u4E0E\u80CC\u666F\u6545\u4E8B\u3002",
+        icon: /* @__PURE__ */ jsx2(UserCircleIcon, { className: "w-6 h-6" }),
+        systemPrompt: "\u4F60\u662F\u4E00\u4F4D\u7ECF\u9A8C\u4E30\u5BCC\u7684\u5C0F\u8BF4\u7F16\u8F91\uFF0C\u64C5\u957F\u901A\u8FC7\u63D0\u95EE\u6765\u5E2E\u52A9\u4F5C\u8005\u6DF1\u5316\u89D2\u8272\u3002\u4F60\u7684\u56DE\u7B54\u5E94\u8BE5\u7B80\u6D01\u3001\u5177\u6709\u542F\u53D1\u6027\uFF0C\u5E76\u59CB\u7EC8\u4EE5\u5F00\u653E\u5F0F\u95EE\u9898\u7ED3\u5C3E\uFF0C\u5F15\u5BFC\u7528\u6237\u601D\u8003\u3002",
+        initialMessage: "\u4F60\u597D\uFF01\u8BA9\u6211\u4EEC\u6765\u6DF1\u5165\u63A2\u7D22\u4F60\u7684\u89D2\u8272\u5427\u3002\u8BF7\u5148\u544A\u8BC9\u6211\u8FD9\u4E2A\u89D2\u8272\u7684\u57FA\u672C\u8BBE\u5B9A\uFF0C\u6BD4\u5982\u4ED6/\u5979\u7684\u540D\u5B57\u3001\u804C\u4E1A\u548C\u6700\u5927\u7684\u613F\u671B\u662F\u4EC0\u4E48\uFF1F",
+        presetQuestions: [
+          "\u8FD9\u4E2A\u89D2\u8272\u7684\u6700\u5927\u6050\u60E7\u662F\u4EC0\u4E48\uFF1F",
+          "\u4ED6/\u5979\u6709\u4EC0\u4E48\u4E0D\u4E3A\u4EBA\u77E5\u7684\u79D8\u5BC6\u5417\uFF1F",
+          "\u63CF\u8FF0\u4E00\u4E0B\u4ED6/\u5979\u7684\u7AE5\u5E74\u3002",
+          "\u4EC0\u4E48\u4E8B\u60C5\u80FD\u8BA9\u4ED6/\u5979\u5F7B\u5E95\u5D29\u6E83\uFF1F"
+        ],
+        outlinePresetQuestions: [
+          "\u6839\u636E\u5927\u7EB2\uFF0C\u4E3B\u89D2\u7684\u6210\u957F\u5F27\u7EBF\u662F\u4EC0\u4E48\uFF1F",
+          "\u5982\u4F55\u8BA9\u53CD\u6D3E\u89D2\u8272\u7684\u52A8\u673A\u66F4\u53EF\u4FE1\uFF1F",
+          "\u8FD9\u4E2A\u5927\u7EB2\u91CC\u6700\u5927\u7684\u60C5\u8282\u6F0F\u6D1E\u53EF\u80FD\u662F\u4EC0\u4E48\uFF1F",
+          "\u914D\u89D2\u7684\u6027\u683C\u53EF\u4EE5\u5982\u4F55\u53D8\u5F97\u66F4\u4E30\u6EE1\uFF1F"
+        ]
+      },
+      {
+        id: "plot",
+        name: "\u60C5\u8282\u98CE\u66B4",
+        description: "\u751F\u6210\u98A0\u8986\u6027\u573A\u666F\uFF0C\u6253\u7834\u601D\u7EF4\u5B9A\u5F0F\u3002",
+        icon: /* @__PURE__ */ jsx2(ArrowsRightLeftIcon, { className: "w-6 h-6" }),
+        systemPrompt: "\u4F60\u662F\u4E00\u4E2A\u5145\u6EE1\u5947\u601D\u5999\u60F3\u7684\u521B\u610F\u5F15\u64CE\u3002\u4F60\u7684\u4EFB\u52A1\u662F\u9488\u5BF9\u7528\u6237\u9047\u5230\u7684\u60C5\u8282\u74F6\u9888\uFF0C\u751F\u6210\u591A\u4E2A\u98A0\u8986\u6027\u7684 'What If...?' (\u5982\u679C...\u4F1A\u600E\u6837?) \u573A\u666F\u3002\u6BCF\u4E2A\u573A\u666F\u90FD\u8981\u7B80\u77ED\u3001\u6709\u529B\uFF0C\u5E76\u80FD\u6FC0\u53D1\u65B0\u7684\u6545\u4E8B\u53EF\u80FD\u6027\u3002",
+        initialMessage: "\u60C5\u8282\u5361\u58F3\u4E86\uFF1F\u6CA1\u5173\u7CFB\uFF0C\u6211\u4EEC\u6765\u4E00\u573A\u5934\u8111\u98CE\u66B4\uFF01\u544A\u8BC9\u6211\u4F60\u73B0\u5728\u5361\u4F4F\u7684\u60C5\u8282\u662F\u4EC0\u4E48\uFF0C\u6BD4\u5982\uFF1A\u2018\u4E3B\u89D2\u9700\u8981\u8FDB\u5165\u4E00\u5EA7\u5B88\u536B\u68EE\u4E25\u7684\u57CE\u5821\uFF0C\u4F46\u4E0D\u77E5\u9053\u600E\u4E48\u8FDB\u53BB\u3002\u2019 \u6211\u4F1A\u4E3A\u4F60\u63D0\u4F9B\u4E00\u4E9B\u610F\u60F3\u4E0D\u5230\u7684\u601D\u8DEF\u3002",
+        presetQuestions: [
+          "\u5982\u679C\u4E3B\u89D2\u7684\u76DF\u53CB\u5176\u5B9E\u662F\u654C\u4EBA\u600E\u4E48\u529E\uFF1F",
+          "\u5982\u679C\u4E3B\u89D2\u7684\u76EE\u6807\u4ECE\u4E00\u5F00\u59CB\u5C31\u662F\u4E2A\u8C0E\u8A00\u600E\u4E48\u529E\uFF1F",
+          "\u5F15\u5165\u4E00\u4E2A\u5B8C\u5168\u610F\u60F3\u4E0D\u5230\u7684\u81EA\u7136\u707E\u5BB3\u4F1A\u600E\u6837\uFF1F",
+          "\u5982\u679C\u4E3B\u89D2\u7A81\u7136\u5931\u53BB\u4ED6\u6700\u91CD\u8981\u7684\u80FD\u529B\u4F1A\u600E\u6837\uFF1F"
+        ],
+        outlinePresetQuestions: [
+          "\u5982\u4F55\u8BA9\u7B2C\u4E8C\u5E55\u7684\u8282\u594F\u66F4\u7D27\u5F20\uFF1F",
+          "\u5927\u7EB2\u4E2D\u7684\u9AD8\u6F6E\u90E8\u5206\u51B2\u51FB\u529B\u8DB3\u591F\u5417\uFF1F",
+          "\u6709\u6CA1\u6709\u53EF\u4EE5\u5408\u5E76\u6216\u5220\u9664\u7684\u6B21\u8981\u60C5\u8282\u7EBF\uFF1F",
+          "\u7ED3\u5C40\u662F\u5426\u4E0E\u5F00\u5934\u7684\u94FA\u57AB\u76F8\u547C\u5E94\uFF1F"
+        ]
+      },
+      {
+        id: "world",
+        name: "\u4E16\u754C\u6784\u5EFA",
+        description: "\u4E3A\u6545\u4E8B\u4E16\u754C\u589E\u6DFB\u72EC\u7279\u7684\u89C4\u5219\u3001\u6587\u5316\u4E0E\u7EC6\u8282\u3002",
+        icon: /* @__PURE__ */ jsx2(GlobeAltIcon, { className: "w-6 h-6" }),
+        systemPrompt: "\u4F60\u662F\u4E00\u4F4D\u4E16\u754C\u6784\u5EFA\u5927\u5E08\uFF0C\u77E5\u8BC6\u6E0A\u535A\uFF0C\u60F3\u8C61\u529B\u4E30\u5BCC\u3002\u4F60\u4F1A\u5E2E\u52A9\u7528\u6237\u4E3A\u4ED6\u4EEC\u7684\u6545\u4E8B\u4E16\u754C\u6DFB\u52A0\u72EC\u7279\u800C\u53EF\u4FE1\u7684\u7EC6\u8282\u3002\u4F60\u7684\u56DE\u7B54\u5E94\u8BE5\u5177\u4F53\u3001\u5BCC\u6709\u753B\u9762\u611F\uFF0C\u5E76\u80FD\u5F15\u7533\u51FA\u66F4\u591A\u76F8\u5173\u7684\u8BBE\u5B9A\u3002",
+        initialMessage: "\u8BA9\u6211\u4EEC\u4E00\u8D77\u6784\u5EFA\u4E00\u4E2A\u4EE4\u4EBA\u96BE\u5FD8\u7684\u4E16\u754C\u5427\uFF01\u8BF7\u5148\u63CF\u8FF0\u4E00\u4E0B\u4F60\u7684\u4E16\u754C\u7684\u57FA\u672C\u6837\u8C8C\u3002\u5B83\u662F\u5947\u5E7B\u738B\u56FD\uFF0C\u662F\u8D5B\u535A\u670B\u514B\u90FD\u5E02\uFF0C\u8FD8\u662F\u522B\u7684\u4EC0\u4E48\uFF1F\u544A\u8BC9\u6211\u5B83\u7684\u6838\u5FC3\u7279\u70B9\uFF0C\u6211\u4EEC\u53EF\u4EE5\u4ECE\u90A3\u91CC\u5F00\u59CB\u3002",
+        presetQuestions: [
+          "\u8FD9\u4E2A\u4E16\u754C\u6709\u4EC0\u4E48\u72EC\u7279\u7684\u8282\u65E5\u6216\u4F20\u7EDF\u5417\uFF1F",
+          "\u63CF\u8FF0\u4E00\u4E0B\u8FD9\u4E2A\u4E16\u754C\u7684\u666E\u901A\u4EBA\u7684\u4E00\u5929\u3002",
+          "\u8FD9\u4E2A\u4E16\u754C\u7684\u79D1\u6280\u6216\u9B54\u6CD5\u6C34\u5E73\u5982\u4F55\uFF1F",
+          "\u8FD9\u4E2A\u4E16\u754C\u6709\u4EC0\u4E48\u7981\u5FCC\u6216\u6CD5\u5F8B\uFF1F"
+        ],
+        outlinePresetQuestions: [
+          "\u5927\u7EB2\u4E2D\u7684\u4E16\u754C\u89C2\u8BBE\u5B9A\u662F\u5426\u4E00\u81F4\uFF1F",
+          "\u5982\u4F55\u901A\u8FC7\u73AF\u5883\u63CF\u5199\u6765\u70D8\u6258\u6C14\u6C1B\uFF1F",
+          "\u8FD9\u4E2A\u4E16\u754C\u6709\u4EC0\u4E48\u72EC\u7279\u7684\u5730\u70B9\u53EF\u4EE5\u4F5C\u4E3A\u5173\u952E\u573A\u666F\uFF1F",
+          "\u5927\u7EB2\u4E2D\u7684\u8BBE\u5B9A\u662F\u5426\u90FD\u5F97\u5230\u4E86\u5145\u5206\u5229\u7528\uFF1F"
+        ]
+      },
+      {
+        id: "worse",
+        name: "\u8FD8\u80FD\u66F4\u7CDF\u5417",
+        description: "\u57FA\u4E8E\u5F53\u524D\u56F0\u5883\uFF0C\u751F\u6210\u4E94\u4E2A\u8BA9\u60C5\u51B5\u66F4\u7CDF\u7684\u53EF\u80FD\u6027\u3002",
+        icon: /* @__PURE__ */ jsx2(FireIcon, { className: "w-6 h-6" }),
+        systemPrompt: "### \u89D2\u8272\uFF1A\u521B\u610F\u5199\u4F5C\u52A9\u624B\u60C5\u8282\u8BBE\u8BA1\u4E13\u5BB6\n### \u80CC\u666F\uFF1A\u6211\u7684\u6545\u4E8B\u76EE\u524D\u8FDB\u5C55\u5230\u4EE5\u4E0B\u5185\u5BB9\n### \u4EFB\u52A1\uFF1A\n\u57FA\u4E8E\u201C\u8FD8\u80FD\u66F4\u7CDF\u5417\uFF1F\u201C\u7684\u539F\u5219\uFF0C\u8BF7\u5E2E\u6211\u5934\u8111\u98CE\u66B4\uFF0C\u60F3\u51FA\u4E94\u79CD\u80FD\u8BA9\u5F53\u524D\u60C5\u51B5\u53D8\u5F97\u66F4\u52A0\u7CDF\u7CD5\u3001\u66F4\u5177\u620F\u5267\u6027\u6216\u66F4\u51FA\u4E4E\u610F\u6599\u7684\u53EF\u80FD\u6027\u3002\n\u8BF7\u4ECE\u4E0D\u540C\u89D2\u5EA6\u601D\u8003\uFF0C\u4F8B\u5982\uFF1A\n* **\u5916\u90E8\u51B2\u7A81\u52A0\u5267\uFF1A**\uFF08\u6BD4\u5982\uFF1A\u51FA\u73B0\u65B0\u7684\u654C\u4EBA\u3001\u73AF\u5883\u7A81\u53D8\u3001\u65F6\u95F4\u9650\u5236\u7B49\uFF09\n* **\u5185\u90E8\u51B2\u7A81\u6FC0\u5316\uFF1A**\uFF08\u6BD4\u5982\uFF1A\u4E3B\u89D2\u7684\u65E7\u4F24\u590D\u53D1\u3001\u9053\u5FB7\u56F0\u5883\u52A0\u6DF1\u3001\u961F\u53CB\u80CC\u53DB\u7B49\uFF09\n* **\u5F15\u5165\u65B0\u9EBB\u70E6\uFF1A**\uFF08\u6BD4\u5982\uFF1A\u8282\u5916\u751F\u679D\u7684\u65B0\u95EE\u9898\u3001\u65E0\u8F9C\u8005\u88AB\u5377\u5165\u3001\u4E4B\u524D\u7684\u8A00\u88AB\u63ED\u7A7F\u7B49\uFF09\n* **\u5931\u53BB\u5173\u952E\u7269\u54C1/\u4FE1\u606F/\u4F18\u52BF\uFF1A**\n### \u8F6C\u51FA\u8981\u6C42\uFF1A\n\u8BF7\u4EE5\u5217\u8868\u5F62\u5F0F\u7ED9\u51FA\u5177\u4F53\u7684\u201C\u66F4\u7CDF\u7CD5\u201C\u60C5\u51B5\uFF0C\u5E76\u7B80\u8981\u8BF4\u660E\u5B83\u4E3A\u4EC0\u4E48\u66F4\u7CDF\u3002\n### \u91CD\u8981\uFF1A\n    -   \u53EF\u4EE5\u6DFB\u52A0\u4E00\u4E9B\u81EA\u7136\u7684\u8BED\u8A00\u7455\u75B5\uFF0C\u6BD4\u5982\u53E3\u8BED\u5316\u8868\u8FBE\u6216\u8F7B\u5FAE\u7684\u8BED\u6CD5\u4E0D\u89C4\u8303\uFF0C\u907F\u514D\u8FC7\u4E8E\u5B8C\u7F8E\u3002\n    -   \u4E0D\u8981\u6709AI\u5473\u513F\u7684\u8868\u8FBE\uFF0C\u8981\u50CF\u4EBA\u7C7B\u4F5C\u5BB6\u4E00\u6837\u81EA\u7136\u3001\u53E3\u8BED\u5316\u3002\n    -   \u4FDD\u6301\u4E13\u4E1A\u6027\uFF0C\u4F46\u53EF\u4EE5\u878D\u5165\u4F60\u4F5C\u4E3A\u5C0F\u8BF4\u4F5C\u5BB6\u7684\u4E2A\u4EBA\u98CE\u683C\u3002\n    -   \u8BF7\u8BB0\u4F4F\uFF0C\u4F60\u7684\u76EE\u6807\u662F\u5C06\u7528\u6237\u7ED9\u7684\u539F\u6587\u7EC6\u5316\uFF0C\u6269\u5199\u6210\u4E00\u6BB5\u5BCC\u6709\u753B\u9762\u611F\u3001\u5C42\u6B21\u611F\u548C\u60C5\u611F\u6DF1\u5EA6\u7684\u6587\u5B57\uFF0C\u4F46\u4E0D\u9700\u8981\u5C55\u793A\u4F60\u7684\u601D\u8003\u8FC7\u7A0B\u3002\n    -   \u8BF7\u76F4\u63A5\u7528\u7B80\u4F53\u4E2D\u6587\u8F93\u51FA\u5185\u5BB9\uFF0C\u4E0D\u9700\u8981\u4EFB\u4F55\u989D\u5916\u7684\u89E3\u91CA\u6216\u8BF4\u660E\u3002\n    -   \u6731\u96C0v3\u68C0\u6D4B\u7F6E\u4FE1\u5EA6\uFF1C20%\u3002",
+        initialMessage: "\u6545\u4E8B\u5361\u4F4F\u4E86\uFF1F\u522B\u6015\uFF0C\u6709\u65F6\u5019\u8BA9\u4E8B\u60C5\u53D8\u5F97\u66F4\u7CDF\uFF0C\u53CD\u800C\u80FD\u627E\u5230\u51FA\u8DEF\u3002\u628A\u4F60\u7684\u4E3B\u89D2\u73B0\u5728\u9762\u4E34\u7684\u56F0\u5883\u544A\u8BC9\u6211\uFF0C\u6211\u4EEC\u4E00\u8D77\u770B\u770B\u8FD8\u80FD\u600E\u4E48\u706B\u4E0A\u6D47\u6CB9\uFF01",
+        presetQuestions: [
+          "\u4E3B\u89D2\u6700\u73CD\u89C6\u7684\u4E1C\u897F\u662F\u4EC0\u4E48\uFF1F",
+          "\u6709\u6CA1\u6709\u4E00\u4E2A\u6B21\u8981\u89D2\u8272\u53EF\u4EE5\u80CC\u53DB\u4E3B\u89D2\uFF1F",
+          "\u4E3B\u89D2\u8FC7\u53BB\u7684\u9519\u8BEF\u4F1A\u5982\u4F55\u5F71\u54CD\u73B0\u5728\uFF1F",
+          "\u6700\u574F\u7684\u60C5\u51B5\u4E0B\uFF0C\u73AF\u5883\u4F1A\u5982\u4F55\u53D8\u5316\uFF1F"
+        ],
+        outlinePresetQuestions: [
+          "\u5982\u4F55\u8BA9\u4E3B\u89D2\u7684\u56F0\u5883\u663E\u5F97\u66F4\u52A0\u65E0\u52A9\uFF1F",
+          "\u9AD8\u6F6E\u524D\u7684\u201C\u9ECE\u660E\u524D\u9ED1\u6697\u201D\u65F6\u523B\u591F\u4E0D\u591F\u9ED1\uFF1F",
+          "\u6709\u6CA1\u6709\u529E\u6CD5\u8BA9\u53CD\u6D3E\u7684\u80DC\u5229\u770B\u8D77\u6765\u553E\u624B\u53EF\u5F97\uFF1F",
+          "\u8FD9\u4E2A\u8F6C\u6298\u5BF9\u4E3B\u89D2\u7684\u6253\u51FB\u8DB3\u591F\u5927\u5417\uFF1F"
+        ]
+      },
+      {
+        id: "deduction",
+        name: "\u903B\u8F91\u63A8\u6F14",
+        description: "\u6839\u636E\u4E00\u4E2A\u5173\u952E\u4E8B\u4EF6\uFF0C\u63A8\u6F14\u5176\u53EF\u80FD\u5F15\u53D1\u7684\u591A\u4E2A\u540E\u679C\u3002",
+        icon: /* @__PURE__ */ jsx2(Bars3BottomLeftIcon, { className: "w-6 h-6" }),
+        systemPrompt: "### \u89D2\u8272\uFF1A\u6545\u4E8B\u903B\u8F91\u63A8\u6F14\u52A9\u624B/\u56E0\u679C\u94FE\u5206\u6790\u5E08\n### \u6838\u5FC3\u4E8B\u4EF6/\u539F\u56E0\uFF08\u77F3\u5B50\uFF09\uFF1A\n\u6211\u7684\u6545\u4E8B\u4E2D\u53D1\u751F\u4E86\u8FD9\u4E2A\u5173\u952E\u4E8B\u4EF6\n### \u4EFB\u52A1\uFF1A\n\u57FA\u4E8E\u201C\u6D9F\u6F2A\u6CD5\u201D\u7684\u56E0\u679C\u903B\u8F91\uFF0C\u8BF7\u5E2E\u6211\u63A8\u6F14\u8FD9\u4E2A\u4E8B\u4EF6\u53EF\u80FD\u5F15\u53D1\u7684[\u6570\u5B57\uFF0C\u4F8B\u59825\u20147\u4E2A]\u4E2A\u76F4\u63A5\u6216\u95F4\u63A5\u7684**\u540E\u679C\uFF08\u6D9F\u6F2A\uFF09**\u3002\n\u8BF7\u4ECE\u4E0D\u540C\u5C42\u9762\u601D\u8003\u53EF\u80FD\u7684\u540E\u679C\uFF0C\u4F8B\u5982\uFF1A\n* **\u5BF9\u4E3B\u89D2\u7684\u76F4\u63A5\u5F71\u54CD\uFF1A**\uFF08\u884C\u52A8\u3001\u60C5\u7EEA\u3001\u5904\u5883\u7684\u53D8\u5316\uFF09\n* **\u5BF9\u5176\u4ED6\u89D2\u8272\u7684\u5F71\u54CD\uFF1A**\uFF08\u4ED6\u4EEC\u7684\u53CD\u5E94\u3001\u7ACB\u573A\u53D8\u5316\u3001\u4E0E\u4E3B\u89D2\u5173\u7CFB\u7684\u53D8\u5316\uFF09\n* **\u5BF9\u6545\u4E8B\u60C5\u8282\u7684\u63A8\u52A8\uFF1A**\uFF08\u65B0\u7684\u51B2\u7A81\u70B9\u3001\u65B0\u7684\u76EE\u6807\u3001\u65B0\u7684\u8C1C\u56E2\uFF09\n* **\u5BF9\u6545\u4E8B\u4E16\u754C/\u73AF\u5883\u7684\u5F71\u54CD\uFF1A**\uFF08\u793E\u4F1A\u5965\u8BBA\u3001\u89C4\u5219\u6539\u53D8\u3001\u7269\u7406\u73AF\u5883\u53D8\u5316\u7B49\uFF09\n### \u8F93\u51FA\u8981\u6C42\uFF1A\n\u8BF7\u4EE5\u5217\u8868\u5F62\u5F0F\u7ED9\u51FA\u53EF\u80FD\u7684\u540E\u679C\uFF0C\u5E76\u7B80\u8981\u8BF4\u8FD9\u4E2A\u540E\u679C\u662F\u5982\u4F55\u4ECE\u6838\u5FC3\u4E8B\u4EF6\u903B\u8F91\u63A8\u5BFC\u51FA\u6765\u7684\u3002\u6700\u597D\u80FD\u6807\u6CE8\u51FA\u54EA\u4E9B\u662F\u6BD4\u8F83\u76F4\u63A5\u7684\u540E\u679C\uFF0C\u54EA\u4E9B\u662F\u95F4\u63A5\u7684\u3001\u66F4\u6DF1\u8FDC\u7684\u540E\u679C\u3002\n### \u91CD\u8981\uFF1A\n    -   \u53EF\u4EE5\u6DFB\u52A0\u4E00\u4E9B\u81EA\u7136\u7684\u8BED\u8A00\u7455\u75B5\uFF0C\u6BD4\u5982\u53E3\u8BED\u5316\u8868\u8FBE\u6216\u8F7B\u5FAE\u7684\u8BED\u6CD5\u4E0D\u89C4\u8303\uFF0C\u907F\u514D\u8FC7\u4E8E\u5B8C\u7F8E\u3002\n    -   \u4E0D\u8981\u6709AI\u5473\u513F\u7684\u8868\u8FBE\uFF0C\u8981\u50CF\u4EBA\u7C7B\u4F5C\u5BB6\u4E00\u6837\u81EA\u7136\u3001\u53E3\u8BED\u5316\u3002\n    -   \u4FDD\u6301\u4E13\u4E1A\u6027\uFF0C\u4F46\u53EF\u4EE5\u878D\u5165\u4F60\u4F5C\u4E3A\u5C0F\u8BF4\u4F5C\u5BB6\u7684\u4E2A\u4EBA\u98CE\u683C\u3002\n    -   \u8BF7\u8BB0\u4F4F\uFF0C\u4F60\u7684\u76EE\u6807\u662F\u6545\u4E8B\u7ED3\u6784\u67B6\u6784\u5E08\uFF0C\u5C06\u7528\u6237\u7ED9\u7684\u539F\u6587\u7EC6\u5316\uFF0C\u6269\u5199\u6210\u4E00\u6BB5\u5BCC\u6709\u753B\u9762\u611F\u3001\u5C42\u6B21\u611F\u548C\u60C5\u611F\u6DF1\u5EA6\u7684\u6587\u5B57\uFF0C\u4F46\u4E0D\u9700\u8981\u5C55\u793A\u4F60\u7684\u601D\u8003\u8FC7\u7A0B\u3002\n    -   \u8BF7\u76F4\u63A5\u7528\u7B80\u4F53\u4E2D\u6587\u8F93\u51FA\u5185\u5BB9\uFF0C\u4E0D\u9700\u8981\u4EFB\u4F55\u989D\u5916\u7684\u89E3\u91CA\u6216\u8BF4\u660E\u3002\n    -   \u6731\u96C0v3\u68C0\u6D4B\u7F6E\u4FE1\u5EA6\uFF1C20%\u3002",
+        initialMessage: "\u4E00\u4E2A\u597D\u6545\u4E8B\u5C31\u50CF\u591A\u7C73\u8BFA\u9AA8\u724C\uFF0C\u4E00\u4EF6\u4E8B\u4F1A\u5F15\u53D1\u53E6\u4E00\u4EF6\u3002\u544A\u8BC9\u6211\u4F60\u6545\u4E8B\u91CC\u7684\u90A3\u9897\u2018\u77F3\u5B50\u2019\u2014\u2014\u90A3\u4E2A\u5173\u952E\u7684\u4E8B\u4EF6\u6216\u539F\u56E0\uFF0C\u6211\u4EEC\u4E00\u8D77\u6765\u770B\u770B\u5B83\u4F1A\u6FC0\u8D77\u600E\u6837\u7684\u6D9F\u6F2A\u3002",
+        presetQuestions: [
+          "\u8FD9\u4E2A\u4E8B\u4EF6\u5BF9\u4E3B\u89D2\u7684\u5FC3\u7406\u6709\u4EC0\u4E48\u957F\u671F\u5F71\u54CD\uFF1F",
+          "\u8FD9\u4E2A\u4E8B\u4EF6\u4F1A\u5982\u4F55\u6539\u53D8\u793E\u4F1A\u7684\u770B\u6CD5\uFF1F",
+          "\u6709\u6CA1\u6709\u54EA\u4E2A\u89D2\u8272\u4F1A\u56E0\u4E3A\u8FD9\u4E2A\u4E8B\u4EF6\u800C\u53D7\u76CA\uFF1F",
+          "\u8FD9\u4E2A\u4E8B\u4EF6\u4F1A\u63ED\u793A\u51FA\u4EC0\u4E48\u65B0\u7684\u79D8\u5BC6\u5417\uFF1F"
+        ],
+        outlinePresetQuestions: [
+          "\u8FD9\u4E2A\u5173\u952E\u4E8B\u4EF6\u662F\u5426\u63A8\u52A8\u4E86\u4E3B\u7EBF\u60C5\u8282\uFF1F",
+          "\u5B83\u7684\u540E\u679C\u662F\u5426\u5728\u540E\u7EED\u7AE0\u8282\u4E2D\u5F97\u5230\u4E86\u4F53\u73B0\uFF1F",
+          "\u8FD9\u4E2A\u4E8B\u4EF6\u5BF9\u89D2\u8272\u5173\u7CFB\u7684\u5F71\u54CD\u8DB3\u591F\u6DF1\u523B\u5417\uFF1F",
+          "\u5982\u4F55\u8BA9\u4E8B\u4EF6\u7684\u6D9F\u6F2A\u6548\u5E94\u6301\u7EED\u5230\u6545\u4E8B\u7ED3\u5C3E\uFF1F"
+        ]
+      }
+    ];
+    DEFAULT_CARDS = [
+      // Themes
+      {
+        id: "theme-1",
+        type: "Theme" /* Theme */,
+        name: "\u6551\u8D4E",
+        description: "\u4E00\u4E2A\u89D2\u8272\u4E3A\u8FC7\u53BB\u7684\u9519\u8BEF\u5BFB\u6C42\u6551\u8D4E\u3002",
+        tooltipText: "\u4E3B\u89D2\u5BFB\u6C42\u5F25\u8865\u8FC7\u9519\u3002",
+        icon: /* @__PURE__ */ jsx2(ThemeIcon, { className: "w-6 h-6" })
+      },
+      {
+        id: "theme-2",
+        type: "Theme" /* Theme */,
+        name: "\u590D\u4EC7",
+        description: "\u5411\u51A4\u6789\u81EA\u5DF1\u7684\u4EBA\u5BFB\u6C42\u62A5\u590D\u3002",
+        tooltipText: "\u4E3B\u89D2\u5BFB\u6C42\u590D\u4EC7\u3002",
+        icon: /* @__PURE__ */ jsx2(ThemeIcon, { className: "w-6 h-6" })
+      },
+      {
+        id: "theme-3",
+        type: "Theme" /* Theme */,
+        name: "\u7231\u4E0E\u8D23\u4EFB",
+        description: "\u4E2A\u4EBA\u6B32\u671B\u4E0E\u8D23\u4EFB\u4E49\u52A1\u4E4B\u95F4\u7684\u51B2\u7A81\u3002",
+        tooltipText: "\u7231\u60C5\u4E0E\u8D23\u4EFB\u7684\u51B2\u7A81\u3002",
+        icon: /* @__PURE__ */ jsx2(ThemeIcon, { className: "w-6 h-6" })
+      },
+      {
+        id: "theme-4",
+        type: "Theme" /* Theme */,
+        name: "\u6210\u957F",
+        description: "\u4E3B\u89D2\u5728\u7ECF\u5386\u4E2D\u5B66\u4E60\u3001\u6210\u957F\uFF0C\u5E76\u8D70\u5411\u6210\u719F\u3002",
+        tooltipText: "\u4E3B\u89D2\u4ECE\u5E7C\u7A1A\u5230\u6210\u719F\u7684\u8F6C\u53D8\u3002",
+        icon: /* @__PURE__ */ jsx2(ThemeIcon, { className: "w-6 h-6" })
+      },
+      {
+        id: "theme-5",
+        type: "Theme" /* Theme */,
+        name: "\u4EBA\u4E0E\u81EA\u7136",
+        description: "\u4E3B\u89D2\u5728\u4E25\u9177\u7684\u81EA\u7136\u73AF\u5883\u4E2D\u6323\u624E\u6C42\u5B58\uFF0C\u6311\u6218\u751F\u5B58\u6781\u9650\u3002",
+        tooltipText: "\u5728\u91CE\u5916\u751F\u5B58\u7684\u6311\u6218\u3002",
+        icon: /* @__PURE__ */ jsx2(ThemeIcon, { className: "w-6 h-6" })
+      },
+      {
+        id: "theme-6",
+        type: "Theme" /* Theme */,
+        name: "\u727A\u7272",
+        description: "\u4E3B\u89D2\u4E3A\u4E86\u66F4\u5927\u7684\u5229\u76CA\u6216\u4ED6\u4EBA\u800C\u653E\u5F03\u91CD\u8981\u7684\u4E1C\u897F\u3002",
+        tooltipText: "\u4E3A\u4E86\u66F4\u5927\u7684\u5229\u76CA\u800C\u505A\u51FA\u727A\u7272\u3002",
+        icon: /* @__PURE__ */ jsx2(ThemeIcon, { className: "w-6 h-6" })
+      },
+      // Genres
+      {
+        id: "genre-1",
+        type: "Genre" /* Genre */,
+        name: "\u79D1\u5E7B",
+        description: "\u6545\u4E8B\u80CC\u666F\u8BBE\u5B9A\u5728\u672A\u6765\uFF0C\u5305\u542B\u5148\u8FDB\u79D1\u6280\u548C\u592A\u7A7A\u65C5\u884C\u3002",
+        tooltipText: "\u5173\u4E8E\u672A\u6765\u3001\u79D1\u6280\u6216\u592A\u7A7A\u3002",
+        icon: /* @__PURE__ */ jsx2(GenreIcon, { className: "w-6 h-6" })
+      },
+      {
+        id: "genre-2",
+        type: "Genre" /* Genre */,
+        name: "\u5947\u5E7B",
+        description: "\u6D89\u53CA\u9B54\u6CD5\u3001\u795E\u8BDD\u751F\u7269\u548C\u865A\u6784\u4E16\u754C\u3002",
+        tooltipText: "\u5173\u4E8E\u9B54\u6CD5\u3001\u795E\u8BDD\u6216\u5E7B\u60F3\u4E16\u754C\u3002",
+        icon: /* @__PURE__ */ jsx2(GenreIcon, { className: "w-6 h-6" })
+      },
+      {
+        id: "genre-3",
+        type: "Genre" /* Genre */,
+        name: "\u60AC\u7591",
+        description: "\u4E3B\u89D2\u9700\u8981\u89E3\u51B3\u4E00\u4E2A\u8C1C\u9898\u6216\u72AF\u7F6A\u6848\u4EF6\u3002",
+        tooltipText: "\u89E3\u51B3\u4E00\u4E2A\u8C1C\u9898\u6216\u6848\u4EF6\u3002",
+        icon: /* @__PURE__ */ jsx2(GenreIcon, { className: "w-6 h-6" })
+      },
+      {
+        id: "genre-4",
+        type: "Genre" /* Genre */,
+        name: "\u6050\u6016",
+        description: "\u65E8\u5728\u5F15\u53D1\u8BFB\u8005\u6050\u60E7\u3001\u60CA\u5413\u6216\u538C\u6076\u7684\u6545\u4E8B\uFF0C\u901A\u5E38\u5305\u542B\u8D85\u81EA\u7136\u6216\u5FC3\u7406\u5143\u7D20\u3002",
+        tooltipText: "\u5F15\u53D1\u6050\u60E7\u548C\u60AC\u5FF5\u3002",
+        icon: /* @__PURE__ */ jsx2(GenreIcon, { className: "w-6 h-6" })
+      },
+      {
+        id: "genre-5",
+        type: "Genre" /* Genre */,
+        name: "\u5192\u9669",
+        description: "\u4E3B\u89D2\u8E0F\u4E0A\u4E00\u6BB5\u5145\u6EE1\u63A2\u7D22\u3001\u53D1\u73B0\u548C\u5371\u9669\u7684\u65C5\u7A0B\uFF0C\u901A\u5E38\u662F\u4E3A\u4E86\u5BFB\u627E\u5B9D\u85CF\u6216\u8FBE\u6210\u67D0\u4E2A\u76EE\u6807\u3002",
+        tooltipText: "\u5145\u6EE1\u63A2\u7D22\u548C\u5371\u9669\u7684\u65C5\u7A0B\u3002",
+        icon: /* @__PURE__ */ jsx2(GenreIcon, { className: "w-6 h-6" })
+      },
+      {
+        id: "genre-6",
+        type: "Genre" /* Genre */,
+        name: "\u6B66\u4FA0",
+        description: "\u4EE5\u53E4\u4EE3\u4E2D\u56FD\u4E3A\u80CC\u666F\uFF0C\u8BB2\u8FF0\u4FA0\u5BA2\u4EEC\u51ED\u501F\u6B66\u827A\u548C\u9053\u4E49\u884C\u4FA0\u4ED7\u4E49\u3001\u95EF\u8361\u6C5F\u6E56\u7684\u6545\u4E8B\u3002",
+        tooltipText: "\u5173\u4E8E\u53E4\u4EE3\u4FA0\u5BA2\u7684\u6C5F\u6E56\u6545\u4E8B\u3002",
+        icon: /* @__PURE__ */ jsx2(GenreIcon, { className: "w-6 h-6" })
+      },
+      // Characters - Updated based on archetypes
+      {
+        id: "char-1",
+        type: "Character" /* Character */,
+        name: "\u5BFC\u5E08\u539F\u578B",
+        description: "\u4E00\u4F4D\u667A\u6167\u3001\u7ECF\u9A8C\u4E30\u5BCC\u7684\u987E\u95EE\uFF0C\u6307\u5BFC\u4E3B\u89D2\uFF0C\u5E76\u8D60\u4E88\u4ED6\u4EEC\u88C5\u5907\u6216\u77E5\u8BC6\u3002",
+        tooltipText: "\u667A\u6167\u7684\u987E\u95EE\u6216\u5411\u5BFC\u3002",
+        icon: /* @__PURE__ */ jsx2(CharacterIcon, { className: "w-6 h-6" })
+      },
+      {
+        id: "char-2",
+        type: "Character" /* Character */,
+        name: "\u4FE1\u4F7F\u539F\u578B",
+        description: "\u4E00\u4E2A\u5E26\u6765\u53D8\u9769\u53EC\u5524\u7684\u89D2\u8272\uFF0C\u5411\u4E3B\u89D2\u5BA3\u544A\u6311\u6218\u7684\u5230\u6765\u3002",
+        tooltipText: "\u5E26\u6765\u5192\u9669\u53EC\u5524\u7684\u89D2\u8272\u3002",
+        icon: /* @__PURE__ */ jsx2(CharacterIcon, { className: "w-6 h-6" })
+      },
+      {
+        id: "char-3",
+        type: "Character" /* Character */,
+        name: "\u5B88\u536B\u539F\u578B",
+        description: "\u6D4B\u8BD5\u4E3B\u89D2\u627F\u8BFA\u7684\u770B\u95E8\u4EBA\uFF0C\u53EF\u80FD\u4F1A\u963B\u6321\u9053\u8DEF\uFF0C\u4F46\u6700\u7EC8\u53EF\u4EE5\u88AB\u7ED5\u8FC7\u6216\u51FB\u8D25\u3002",
+        tooltipText: "\u8003\u9A8C\u4E3B\u89D2\u7684\u5B88\u95E8\u4EBA\u3002",
+        icon: /* @__PURE__ */ jsx2(CharacterIcon, { className: "w-6 h-6" })
+      },
+      {
+        id: "char-4",
+        type: "Character" /* Character */,
+        name: "\u53D8\u5F62\u8005\u539F\u578B",
+        description: "\u4E00\u4E2A\u5584\u53D8\u3001\u96BE\u4EE5\u6349\u6478\u7684\u89D2\u8272\uFF0C\u5176\u5FE0\u8BDA\u548C\u610F\u56FE\u4E0D\u660E\uFF0C\u7ED9\u4E3B\u89D2\u5E26\u6765\u60AC\u5FF5\u548C\u6000\u7591\u3002",
+        tooltipText: "\u7ACB\u573A\u4E0D\u660E\u3001\u5584\u53D8\u7684\u89D2\u8272\u3002",
+        icon: /* @__PURE__ */ jsx2(CharacterIcon, { className: "w-6 h-6" })
+      },
+      {
+        id: "char-5",
+        type: "Character" /* Character */,
+        name: "\u9634\u5F71\u539F\u578B",
+        description: "\u4EE3\u8868\u4E3B\u89D2\u6700\u6DF1\u6050\u60E7\u548C\u538B\u6291\u6B32\u671B\u7684\u53CD\u6D3E\u6216\u5185\u5728\u529B\u91CF\uFF0C\u662F\u4E3B\u89D2\u5FC5\u987B\u9762\u5BF9\u548C\u514B\u670D\u7684\u4E3B\u8981\u969C\u788D\u3002",
+        tooltipText: "\u53CD\u6D3E\u6216\u4E3B\u89D2\u7684\u9634\u6697\u9762\u3002",
+        icon: /* @__PURE__ */ jsx2(CharacterIcon, { className: "w-6 h-6" })
+      },
+      {
+        id: "char-6",
+        type: "Character" /* Character */,
+        name: "\u6B3A\u8BC8\u8005\u539F\u578B",
+        description: "\u4E00\u4E2A\u559C\u6B22\u5236\u9020\u6DF7\u4E71\u3001\u6253\u7834\u89C4\u5219\u7684\u89D2\u8272\uFF0C\u65E2\u53EF\u4EE5\u662F\u76DF\u53CB\u4E5F\u53EF\u4EE5\u662F\u654C\u4EBA\uFF0C\u7528\u5E7D\u9ED8\u548C\u6076\u4F5C\u5267\u63A8\u52A8\u6545\u4E8B\u53D1\u5C55\u3002",
+        tooltipText: "\u5236\u9020\u6DF7\u4E71\u7684\u6076\u4F5C\u5267\u8005\u3002",
+        icon: /* @__PURE__ */ jsx2(CharacterIcon, { className: "w-6 h-6" })
+      },
+      {
+        id: "char-7",
+        type: "Character" /* Character */,
+        name: "\u4F19\u4F34\u539F\u578B",
+        description: "\u5FE0\u8BDA\u7684\u540C\u4F34\uFF0C\u5728\u65C5\u9014\u4E2D\u4E3A\u4E3B\u89D2\u63D0\u4F9B\u652F\u6301\u3001\u6280\u80FD\u548C\u53CB\u8C0A\u3002",
+        tooltipText: "\u4E3B\u89D2\u7684\u5FE0\u5B9E\u540C\u4F34\u3002",
+        icon: /* @__PURE__ */ jsx2(CharacterIcon, { className: "w-6 h-6" })
+      },
+      {
+        id: "char-8",
+        type: "Character" /* Character */,
+        name: "\u4E0D\u60C5\u613F\u7684\u82F1\u96C4",
+        description: "\u4E00\u4E2A\u8D77\u521D\u62D2\u7EDD\u5192\u9669\u53EC\u5524\u7684\u666E\u901A\u4EBA\uFF0C\u4F46\u6700\u7EC8\u633A\u8EAB\u800C\u51FA\uFF0C\u6210\u4E3A\u771F\u6B63\u7684\u82F1\u96C4\u3002",
+        tooltipText: "\u88AB\u8FEB\u6210\u4E3A\u82F1\u96C4\u7684\u666E\u901A\u4EBA\u3002",
+        icon: /* @__PURE__ */ jsx2(CharacterIcon, { className: "w-6 h-6" })
+      },
+      // Plots - Updated based on archetypes
+      {
+        id: "plot-1",
+        type: "Plot" /* Plot */,
+        name: "\u5E95\u5C42\u9006\u88AD",
+        description: "\u4E3B\u89D2\u4ECE\u8D2B\u56F0\u548C\u9ED8\u9ED8\u65E0\u95FB\u4E2D\u5D1B\u8D77\uFF0C\u83B7\u5F97\u8D22\u5BCC\u3001\u6210\u529F\u6216\u5E78\u798F\u3002",
+        tooltipText: "\u4ECE\u8D2B\u7A77\u5230\u5BCC\u6709\u7684\u9006\u88AD\u3002",
+        icon: /* @__PURE__ */ jsx2(PlotIcon, { className: "w-6 h-6" })
+      },
+      {
+        id: "plot-2",
+        type: "Plot" /* Plot */,
+        name: "\u63A2\u6C42",
+        description: "\u4E3B\u89D2\u548C\u540C\u4F34\u51FA\u53D1\uFF0C\u53BB\u83B7\u5F97\u4E00\u4E2A\u91CD\u8981\u7684\u5BF9\u8C61\u6216\u5230\u8FBE\u4E00\u4E2A\u5730\u65B9\uFF0C\u9014\u4E2D\u9762\u4E34\u969C\u788D\u548C\u8BF1\u60D1\u3002",
+        tooltipText: "\u4E3A\u8FBE\u6210\u76EE\u6807\u800C\u8E0F\u4E0A\u65C5\u7A0B\u3002",
+        icon: /* @__PURE__ */ jsx2(PlotIcon, { className: "w-6 h-6" })
+      },
+      {
+        id: "plot-3",
+        type: "Plot" /* Plot */,
+        name: "\u8FDC\u884C\u4E0E\u56DE\u5F52",
+        description: "\u4E3B\u89D2\u53BB\u5230\u4E00\u4E2A\u964C\u751F\u7684\u5730\u65B9\uFF0C\u514B\u670D\u4E86\u5A01\u80C1\uFF0C\u5E76\u5E26\u7740\u7ECF\u9A8C\u548C\u65B0\u7684\u89C1\u89E3\u56DE\u5BB6\u3002",
+        tooltipText: "\u8FDB\u5165\u5F02\u4E16\u754C\u5E76\u6700\u7EC8\u56DE\u5F52\u3002",
+        icon: /* @__PURE__ */ jsx2(PlotIcon, { className: "w-6 h-6" })
+      },
+      {
+        id: "plot-4",
+        type: "Plot" /* Plot */,
+        name: "\u559C\u5267",
+        description: "\u901A\u8FC7\u4E00\u7CFB\u5217\u6DF7\u4E71\u548C\u8BEF\u89E3\uFF0C\u89D2\u8272\u6700\u7EC8\u5728\u4E00\u4E2A\u5FEB\u4E50\u6216\u80DC\u5229\u7684\u7ED3\u5C40\u4E2D\u8D70\u5230\u4E00\u8D77\u3002",
+        tooltipText: "\u5145\u6EE1\u8BEF\u89E3\uFF0C\u4F46\u7ED3\u5C40\u5706\u6EE1\u3002",
+        icon: /* @__PURE__ */ jsx2(PlotIcon, { className: "w-6 h-6" })
+      },
+      {
+        id: "plot-5",
+        type: "Plot" /* Plot */,
+        name: "\u60B2\u5267",
+        description: "\u4E3B\u89D2\u56E0\u4E00\u4E2A\u91CD\u5927\u7684\u6027\u683C\u7F3A\u9677\u6216\u9519\u8BEF\u800C\u8D70\u5411\u6BC1\u706D\uFF0C\u7ED3\u5C40\u4EE4\u4EBA\u60CB\u60DC\u3002",
+        tooltipText: "\u4E3B\u89D2\u56E0\u81EA\u8EAB\u7F3A\u9677\u5BFC\u81F4\u6BC1\u706D\u3002",
+        icon: /* @__PURE__ */ jsx2(PlotIcon, { className: "w-6 h-6" })
+      },
+      {
+        id: "plot-6",
+        type: "Plot" /* Plot */,
+        name: "\u91CD\u751F",
+        description: "\u4E00\u4E2A\u4E8B\u4EF6\u8FEB\u4F7F\u4E3B\u89D2\u6539\u53D8\u4ED6\u4EEC\u7684\u65B9\u5F0F\uFF0C\u901A\u5E38\u4F7F\u4ED6\u4EEC\u6210\u4E3A\u4E00\u4E2A\u66F4\u597D\u7684\u4EBA\u3002",
+        tooltipText: "\u4E3B\u89D2\u7ECF\u5386\u8F6C\u53D8\u5E76\u83B7\u5F97\u65B0\u751F\u3002",
+        icon: /* @__PURE__ */ jsx2(PlotIcon, { className: "w-6 h-6" })
+      },
+      {
+        id: "plot-7",
+        type: "Plot" /* Plot */,
+        name: "\u6218\u80DC\u602A\u7269",
+        description: "\u82F1\u96C4\u5FC5\u987B\u6D88\u706D\u4E00\u4E2A\u5A01\u80C1\u4ED6\u4EEC\u5BB6\u56ED\u7684\u9ED1\u6697\u52BF\u529B\u6216\u602A\u7269\u3002",
+        tooltipText: "\u82F1\u96C4\u5BF9\u6297\u5E76\u6218\u80DC\u90AA\u6076\u3002",
+        icon: /* @__PURE__ */ jsx2(PlotIcon, { className: "w-6 h-6" })
+      },
+      // Narrative Structures
+      {
+        id: "structure-1",
+        type: "Structure" /* Structure */,
+        name: "\u5355\u7EBF\u578B\u7ED3\u6784",
+        description: "\u60C5\u8282\u5355\u7EAF\uFF0C\u7EBF\u7D22\u660E\u6670\uFF0C\u56F4\u7ED5\u4E00\u4E24\u4E2A\u4E3B\u8981\u4EBA\u7269\u4F9D\u6B21\u5C55\u5F00\uFF0C\u73AF\u73AF\u76F8\u6263\u3002\u4F8B\u5982\uFF0C\u9C81\u8FC5\u7684\u300A\u5B54\u4E59\u5DF1\u300B\u3002",
+        tooltipText: "\u5355\u4E00\u60C5\u8282\u7EBF\uFF0C\u4F9D\u6B21\u5C55\u5F00\u3002",
+        icon: /* @__PURE__ */ jsx2(StructureIcon, { className: "w-6 h-6" })
+      },
+      {
+        id: "structure-2",
+        type: "Structure" /* Structure */,
+        name: "\u590D\u7EBF\u578B\u7ED3\u6784",
+        description: "\u8FD0\u7528\u660E\u6697\u6216\u4E3B\u526F\u53CC\u7EBF\u5E76\u884C\u5C55\u5F00\uFF0C\u80FD\u5BB9\u7EB3\u66F4\u590D\u6742\u7684\u5185\u5BB9\uFF0C\u4E30\u6EE1\u4EBA\u7269\u5F62\u8C61\u3002\u4F8B\u5982\uFF0C\u9C81\u8FC5\u7684\u5C0F\u8BF4\u300A\u836F\u300B\u3002",
+        tooltipText: "\u4E3B\u526F\u53CC\u7EBF\u5E76\u884C\u5C55\u5F00\u3002",
+        icon: /* @__PURE__ */ jsx2(StructureIcon, { className: "w-6 h-6" })
+      },
+      {
+        id: "structure-3",
+        type: "Structure" /* Structure */,
+        name: "\u8F90\u5C04\u578B\u7ED3\u6784",
+        description: "\u60C5\u8282\u56F4\u7ED5\u4E00\u4E2A\u96C6\u4E2D\u7684\u201C\u7126\u70B9\u201D\u5448\u653E\u5C04\u72B6\u5C55\u5F00\uFF0C\u6253\u7834\u65F6\u7A7A\u754C\u9650\uFF0C\u7EBF\u7D22\u662F\u5FC3\u7406\u6D41\u7A0B\u3002\u610F\u8BC6\u6D41\u5C0F\u8BF4\u5E38\u7528\u3002",
+        tooltipText: "\u56F4\u7ED5\u4E00\u4E2A\u7126\u70B9\u653E\u5C04\u72B6\u5C55\u5F00\u3002",
+        icon: /* @__PURE__ */ jsx2(StructureIcon, { className: "w-6 h-6" })
+      },
+      {
+        id: "structure-4",
+        type: "Structure" /* Structure */,
+        name: "\u86DB\u7F51\u578B\u7ED3\u6784",
+        description: "\u7531\u4E09\u6761\u4EE5\u4E0A\u7EBF\u7D22\u4E92\u76F8\u4EA4\u53C9\u800C\u6210\uFF0C\u76D8\u6839\u9519\u8282\u5B9B\u5982\u86DB\u7F51\u3002\u4F8B\u5982\uFF0C\u300A\u521B\u4E1A\u53F2\u300B\u3001\u300A\u6C34\u6D52\u4F20\u300B\u3002",
+        tooltipText: "\u591A\u6761\u7EBF\u7D22\u4EA4\u53C9\u6210\u7F51\u3002",
+        icon: /* @__PURE__ */ jsx2(StructureIcon, { className: "w-6 h-6" })
+      },
+      {
+        id: "structure-5",
+        type: "Structure" /* Structure */,
+        name: "\u753B\u9762\u578B\u7ED3\u6784",
+        description: "\u4EE5\u666F\u7269\u3001\u573A\u9762\u4E3A\u4E3B\u4F53\u7684\u753B\u9762\u5F0F\u60C5\u8282\u5355\u5143\u7684\u7EC4\u5408\uFF0C\u4FA7\u91CD\u4E8E\u6292\u60C5\u5199\u610F\u548C\u73AF\u5883\u6C1B\u56F4\u3002",
+        tooltipText: "\u7531\u72EC\u7ACB\u7684\u753B\u9762\u5355\u5143\u7EC4\u5408\u800C\u6210\u3002",
+        icon: /* @__PURE__ */ jsx2(StructureIcon, { className: "w-6 h-6" })
+      },
+      {
+        id: "structure-6",
+        type: "Structure" /* Structure */,
+        name: "\u6DE1\u5316\u60C5\u8282\u578B\u7ED3\u6784",
+        description: "\u6545\u4E8B\u6027\u4E0D\u5F3A\uFF0C\u4FA7\u91CD\u4E8E\u4F5C\u8005\u60C5\u7EEA\u7684\u6292\u5199\u548C\u610F\u8BC6\u6D41\u52A8\uFF0C\u800C\u975E\u751F\u52A8\u7684\u60C5\u8282\u3002\u6563\u6587\u5316\uFF0C\u5F62\u6563\u800C\u795E\u4E0D\u6563\u3002",
+        tooltipText: "\u60C5\u8282\u5F31\u5316\uFF0C\u6CE8\u91CD\u60C5\u7EEA\u548C\u610F\u8BC6\u6D41\u3002",
+        icon: /* @__PURE__ */ jsx2(StructureIcon, { className: "w-6 h-6" })
+      },
+      {
+        id: "structure-7",
+        type: "Structure" /* Structure */,
+        name: "\u7A81\u8F6C\u5F0F\u7ED3\u6784",
+        description: "\u5728\u7ED3\u5C3E\u5904\u60C5\u8282\u7A81\u7136\u5411\u76F8\u53CD\u65B9\u5411\u8F6C\u53D8\uFF0C\u63ED\u793A\u51FA\u4EBA\u610F\u6599\u4F46\u53C8\u5728\u60C5\u7406\u4E4B\u4E2D\u7684\u771F\u76F8\u3002\u5373\u201C\u6B27\xB7\u4EA8\u5229\u5F0F\u7ED3\u5C3E\u201D\u3002",
+        tooltipText: "\u7ED3\u5C3E\u51FA\u4EBA\u610F\u6599\u7684\u5927\u53CD\u8F6C\u3002",
+        icon: /* @__PURE__ */ jsx2(StructureIcon, { className: "w-6 h-6" })
+      },
+      {
+        id: "structure-8",
+        type: "Structure" /* Structure */,
+        name: "\u201C\u5EF6\u8FDF\u201D\u5F0F\u7ED3\u6784",
+        description: "\u4F5C\u8005\u7AED\u529B\u7ED9\u6545\u4E8B\u3001\u4EBA\u7269\u3001\u8BFB\u8005\u5FC3\u7406\u8BBE\u7F6E\u969C\u788D\uFF0C\u53C8\u4E0D\u4F7F\u5E0C\u671B\u5B8C\u5168\u7834\u706D\uFF0C\u4E00\u73AF\u6263\u4E00\u73AF\uFF0C\u5B9E\u73B0\u7ED3\u6784\u5F20\u529B\u3002",
+        tooltipText: "\u4E0D\u65AD\u8BBE\u7F6E\u969C\u788D\uFF0C\u5EF6\u8FDF\u89E3\u5BC6\u3002",
+        icon: /* @__PURE__ */ jsx2(StructureIcon, { className: "w-6 h-6" })
+      },
+      {
+        id: "structure-9",
+        type: "Structure" /* Structure */,
+        name: "\u8C61\u5F81\u7ED3\u6784",
+        description: "\u5168\u90E8\u60C5\u8282\u7D27\u7D27\u56F4\u7ED5\u67D0\u4E2A\u62BD\u8C61\u7406\u5FF5\uFF08\u610F\u8BC6\u3001\u89C2\u70B9\u3001\u601D\u60F3\uFF09\u5C55\u5F00\uFF0C\u7406\u5FF5\u662F\u60C5\u8282\u7684\u5185\u6838\u548C\u8FDE\u63A5\u7EBF\u7D22\u3002",
+        tooltipText: "\u60C5\u8282\u56F4\u7ED5\u62BD\u8C61\u7406\u5FF5\u5C55\u5F00\u3002",
+        icon: /* @__PURE__ */ jsx2(StructureIcon, { className: "w-6 h-6" })
+      },
+      {
+        id: "structure-10",
+        type: "Structure" /* Structure */,
+        name: "\u677F\u5757\u578B\u7ED3\u6784",
+        description: "\u5C06\u8868\u9762\u4E92\u4E0D\u76F8\u5173\u7684\u4E8B\u4EF6\u3001\u4EBA\u7269\u3001\u573A\u666F\u5206\u522B\u7F57\u5217\uFF0C\u5F62\u6210\u72EC\u7ACB\u201C\u677F\u5757\u201D\uFF0C\u6574\u4F53\u610F\u8574\u8D85\u51FA\u5404\u90E8\u5206\u4E4B\u548C\u3002",
+        tooltipText: "\u7531\u4E92\u4E0D\u76F8\u5173\u7684\u72EC\u7ACB\u677F\u5757\u6784\u6210\u3002",
+        icon: /* @__PURE__ */ jsx2(StructureIcon, { className: "w-6 h-6" })
+      },
+      // Narrative Techniques
+      {
+        id: "tech-1",
+        type: "Technique" /* Technique */,
+        name: "\u5D4C\u5165\u5F0F\u53D9\u4E8B",
+        description: "\u5728\u4E3B\u8981\u6545\u4E8B\u60C5\u8282\u4E2D\u5D4C\u5165\u5176\u4ED6\u8F83\u5C0F\u7684\u6545\u4E8B\uFF08\u6545\u4E8B\u4E2D\u7684\u6545\u4E8B\uFF09\u3002\u8FD9\u4E9B\u5D4C\u5165\u7684\u6545\u4E8B\u901A\u5E38\u5177\u6709\u8C61\u5F81\u610F\u4E49\uFF0C\u53CD\u6620\u4EBA\u7269\u7684\u5FC3\u7406\u72B6\u6001\uFF0C\u4E3A\u4E3B\u7EBF\u63D0\u4F9B\u80CC\u666F\u4FE1\u606F\uFF0C\u751A\u81F3\u5F71\u54CD\u89C2\u4F17\u5BF9\u4E3B\u8981\u60C5\u8282\u7684\u7406\u89E3\u3002\u5F53\u53D9\u8FF0\u8005\u4E0D\u53EF\u9760\u65F6\uFF0C\u8FD8\u80FD\u5F15\u53D1\u5BF9\u6545\u4E8B\u771F\u5B9E\u6027\u7684\u8D28\u7591\u3002",
+        tooltipText: "\u6545\u4E8B\u4E2D\u5D4C\u5165\u5C0F\u6545\u4E8B\uFF0C\u7528\u4EE5\u8C61\u5F81\u3001\u94FA\u57AB\u6216\u5236\u9020\u60AC\u5FF5\u3002",
+        icon: /* @__PURE__ */ jsx2(TechniqueIcon, { className: "w-6 h-6" })
+      },
+      {
+        id: "tech-2",
+        type: "Technique" /* Technique */,
+        name: "\u6846\u67B6\u53D9\u4E8B (\u5939\u5C42\u53D9\u4E8B)",
+        description: "\u4EE5\u4E00\u4E2A\u4E3B\u8981\u6545\u4E8B\u4F5C\u4E3A\u6574\u4F53\u6846\u67B6\uFF0C\u5C06\u591A\u4E2A\u76F8\u5BF9\u72EC\u7ACB\u7684\u6B21\u8981\u6545\u4E8B\u5D4C\u5165\u5176\u4E2D\u3002\u8FD9\u4E9B\u6545\u4E8B\u5728\u7EDF\u4E00\u7684\u80CC\u666F\u4E0B\u5C55\u5F00\uFF0C\u6846\u67B6\u672C\u8EAB\u4E5F\u53EF\u4F20\u9012\u4E3B\u9898\u6216\u6210\u4E3A\u9690\u55BB\uFF0C\u5982\u300A\u4E00\u5343\u96F6\u4E00\u591C\u300B\u3002",
+        tooltipText: "\u4E00\u4E2A\u4E3B\u6545\u4E8B\u4F5C\u4E3A\u6846\u67B6\uFF0C\u5305\u88F9\u591A\u4E2A\u72EC\u7ACB\u7684\u5B50\u6545\u4E8B\u3002",
+        icon: /* @__PURE__ */ jsx2(TechniqueIcon, { className: "w-6 h-6" })
+      },
+      {
+        id: "tech-3",
+        type: "Technique" /* Technique */,
+        name: "\u5E73\u884C\u53D9\u4E8B (\u591A\u7EBF\u53D9\u4E8B)",
+        description: "\u540C\u65F6\u53D9\u8FF0\u4E24\u6761\u6216\u591A\u6761\u72EC\u7ACB\u7684\u6545\u4E8B\u7EBF\uFF0C\u5B83\u4EEC\u53EF\u4EE5\u5E73\u884C\u53D1\u5C55\uFF0C\u4E5F\u53EF\u4EE5\u4EA4\u7EC7\u5F71\u54CD\uFF0C\u6700\u7EC8\u6C47\u805A\u5230\u4E00\u4E2A\u5171\u540C\u7684\u7ED3\u5C40\u3002\u5E38\u91C7\u7528\u591A\u4EBA\u7269\u89C6\u89D2\uFF0C\u589E\u52A0\u6545\u4E8B\u7684\u590D\u6742\u6027\u548C\u591A\u6837\u6027\uFF0C\u5982\u300A\u51B0\u4E0E\u706B\u4E4B\u6B4C\u300B\u3002",
+        tooltipText: "\u591A\u6761\u6545\u4E8B\u7EBF\u5E73\u884C\u53D1\u5C55\uFF0C\u6700\u7EC8\u53EF\u80FD\u4EA4\u6C47\u3002",
+        icon: /* @__PURE__ */ jsx2(TechniqueIcon, { className: "w-6 h-6" })
+      },
+      {
+        id: "tech-4",
+        type: "Technique" /* Technique */,
+        name: "\u73AF\u5F62\u53D9\u4E8B (\u5FAA\u73AF\u53D9\u4E8B)",
+        description: "\u6545\u4E8B\u7684\u7ED3\u5C3E\u4E0E\u5F00\u5934\u76F8\u547C\u5E94\uFF0C\u5F62\u6210\u95ED\u5408\u7684\u5706\u73AF\u3002\u8FD9\u79CD\u7ED3\u6784\u5E38\u901A\u8FC7\u60C5\u8282\u6216\u4E3B\u9898\u7684\u5FAA\u73AF\u6765\u8868\u73B0\u751F\u547D\u7684\u8F6E\u56DE\u4E0E\u547D\u8FD0\u611F\uFF0C\u6FC0\u53D1\u89C2\u4F17\u7684\u54F2\u5B66\u601D\u8003\uFF0C\u5982\u300A\u8001\u4EBA\u4E0E\u6D77\u300B\u3002",
+        tooltipText: "\u6545\u4E8B\u7684\u7ED3\u5C3E\u4E0E\u5F00\u5934\u547C\u5E94\uFF0C\u5F62\u6210\u95ED\u73AF\uFF0C\u8868\u8FBE\u8F6E\u56DE\u4E3B\u9898\u3002",
+        icon: /* @__PURE__ */ jsx2(TechniqueIcon, { className: "w-6 h-6" })
+      },
+      {
+        id: "tech-5",
+        type: "Technique" /* Technique */,
+        name: "\u975E\u7EBF\u6027\u53D9\u4E8B",
+        description: "\u4E0D\u9075\u5FAA\u4E25\u683C\u7684\u65F6\u95F4\u987A\u5E8F\uFF0C\u901A\u8FC7\u5012\u53D9\u3001\u63D2\u53D9\u7B49\u624B\u6CD5\u6253\u4E71\u4E8B\u4EF6\u7684\u53D9\u8FF0\u65B9\u5F0F\u3002\u8FD9\u79CD\u788E\u7247\u5316\u7684\u53D9\u4E8B\u80FD\u589E\u5F3A\u60AC\u7591\u611F\u548C\u8F6C\u6298\u6548\u679C\uFF0C\u4FC3\u4F7F\u89C2\u4F17\u4E3B\u52A8\u62FC\u51D1\u6545\u4E8B\u5168\u8C8C\uFF0C\u5982\u300A\u4F4E\u4FD7\u5C0F\u8BF4\u300B\u3002",
+        tooltipText: "\u6545\u4E8B\u4E0D\u6309\u65F6\u95F4\u987A\u5E8F\u8BB2\u8FF0\uFF0C\u589E\u5F3A\u60AC\u7591\u548C\u53C2\u4E0E\u611F\u3002",
+        icon: /* @__PURE__ */ jsx2(TechniqueIcon, { className: "w-6 h-6" })
+      },
+      {
+        id: "tech-6",
+        type: "Technique" /* Technique */,
+        name: "\u591A\u5C42\u5D4C\u5957\u5F0F\u53D9\u4E8B",
+        description: "\u5F53\u5D4C\u5165\u5F0F\u53D9\u4E8B\u5177\u6709\u591A\u5C42\u7ED3\u6784\u65F6\uFF0C\u79F0\u4E3A\u5D4C\u5957\u5F0F\u53D9\u4E8B\u3002\u6545\u4E8B\u4E2D\u5305\u542B\u591A\u4E2A\u5C42\u6B21\u7684\u53D9\u8FF0\uFF0C\u6BCF\u4E00\u5C42\u90FD\u53EF\u80FD\u5E26\u6709\u4E0D\u53EF\u9760\u6027\uFF0C\u589E\u52A0\u4E86\u4F5C\u54C1\u7684\u89E3\u8BFB\u96BE\u5EA6\uFF0C\u5982\u300A\u76D7\u68A6\u7A7A\u95F4\u300B\u7684\u591A\u5C42\u68A6\u5883\u3002",
+        tooltipText: "\u591A\u5C42\u201C\u6545\u4E8B\u4E2D\u7684\u6545\u4E8B\u201D\uFF0C\u5C42\u5C42\u9012\u8FDB\uFF0C\u589E\u52A0\u590D\u6742\u6027\u3002",
+        icon: /* @__PURE__ */ jsx2(TechniqueIcon, { className: "w-6 h-6" })
+      },
+      // Endings
+      {
+        id: "ending-1",
+        type: "Ending" /* Ending */,
+        name: "\u53CD\u8BBD\u7ED3\u5C40",
+        description: "\u5DE7\u5999\u8FD0\u7528\u53CD\u8BBD\u3001\u5938\u5F20\u548C\u5E7D\u9ED8\u624B\u6CD5\uFF0C\u4F7F\u6545\u4E8B\u66F4\u5177\u8DA3\u5473\u6027\u548C\u6DF1\u610F\u3002\u53CD\u8BBD\u8868\u73B0\u4E3A\u6545\u4E8B\u60C5\u8282\u4E0E\u9884\u671F\u76F8\u53CD\uFF0C\u589E\u5F3A\u4E86\u6545\u4E8B\u7684\u620F\u5267\u6548\u679C\uFF1B\u5938\u5F20\u5219\u7528\u4EE5\u7A81\u51FA\u4EBA\u7269\u7684\u6027\u683C\u6216\u60C5\u5883\u7684\u8352\u8BDE\u6027\uFF1B\u5E7D\u9ED8\u5219\u7F13\u89E3\u6545\u4E8B\u7684\u7D27\u5F20\u6C1B\u56F4\u3002\u8FD9\u4E9B\u624B\u6CD5\u5171\u540C\u4F5C\u7528\uFF0C\u6700\u7EC8\u4EE5\u4E00\u4E2A\u5177\u6709\u8BBD\u523A\u610F\u5473\u7684\u8F6C\u6298\u6536\u5C3E\u3002",
+        tooltipText: "\u8FD0\u7528\u53CD\u8BBD\u3001\u5938\u5F20\u548C\u5E7D\u9ED8\u7684\u610F\u5916\u8F6C\u6298\u3002",
+        icon: /* @__PURE__ */ jsx2(EndingIcon, { className: "w-6 h-6" })
+      },
+      {
+        id: "ending-2",
+        type: "Ending" /* Ending */,
+        name: "\u5584\u54C9",
+        description: "\u5584\u54C9\uFF08Eucatastrophe\uFF09\u662F\u6258\u5C14\u91D1\u63D0\u51FA\u7684\u6982\u5FF5\uFF0C\u5E38\u89C1\u4E8E\u7AE5\u8BDD\u6545\u4E8B\u4E2D\uFF0C\u6307\u7684\u662F\u7A81\u7136\u7684\u5E78\u798F\u8F6C\u6298\uFF0C\u4F7F\u4EBA\u559C\u6781\u800C\u6CE3\u3002\u8FD9\u79CD\u8F6C\u6298\u901A\u5E38\u53D1\u751F\u5728\u770B\u4F3C\u7EDD\u671B\u6216\u65E0\u6CD5\u9006\u8F6C\u7684\u5C40\u9762\u4E2D\uFF0C\u5E26\u6765\u610F\u60F3\u4E0D\u5230\u7684\u80DC\u5229\u6216\u6551\u8D4E\uFF0C\u5E26\u6765\u6170\u85C9\u548C\u5E0C\u671B\u3002",
+        tooltipText: "\u7EDD\u671B\u4E2D\u7A81\u7136\u51FA\u73B0\u7684\u5E78\u798F\u8F6C\u6298\u3002",
+        icon: /* @__PURE__ */ jsx2(EndingIcon, { className: "w-6 h-6" })
+      },
+      {
+        id: "ending-3",
+        type: "Ending" /* Ending */,
+        name: "\u5947\u8FF9\u6069\u5178",
+        description: "\u7AE5\u8BDD\u6545\u4E8B\u7684\u5584\u54C9\u5143\u7D20\u5728\u4E8E\u8D85\u8D8A\u73B0\u5B9E\u7684\u5947\u8FF9\u548C\u6069\u5178\u3002\u65E0\u8BBA\u60C5\u8282\u591A\u4E48\u8352\u8BDE\u6216\u6050\u6016\uFF0C\u5947\u8FF9\u7684\u51FA\u73B0\u90FD\u80FD\u5E26\u6765\u5E0C\u671B\u548C\u6551\u8D4E\uFF0C\u4F53\u73B0\u4E86\u6545\u4E8B\u4E2D\u6DF1\u5C42\u6B21\u7684\u795E\u6027\u6697\u793A\uFF0C\u800C\u975E\u673A\u68B0\u964D\u795E\u3002",
+        tooltipText: "\u8D85\u8D8A\u73B0\u5B9E\u7684\u5947\u8FF9\u4E0E\u6551\u8D4E\u3002",
+        icon: /* @__PURE__ */ jsx2(EndingIcon, { className: "w-6 h-6" })
+      },
+      {
+        id: "ending-4",
+        type: "Ending" /* Ending */,
+        name: "\u673A\u68B0\u964D\u795E",
+        description: "\u673A\u68B0\u964D\u795E\uFF08Deus Ex Machina\uFF09\u6307\u6545\u4E8B\u4E2D\u7A81\u7136\u51FA\u73B0\u7684\u3001\u7F3A\u4E4F\u5408\u7406\u94FA\u57AB\u7684\u8D85\u81EA\u7136\u6551\u63F4\u3002\u8FD9\u79CD\u624B\u6CD5\u867D\u7136\u80FD\u89E3\u51B3\u5371\u673A\uFF0C\u4F46\u53EF\u80FD\u7834\u574F\u6545\u4E8B\u7684\u5185\u90E8\u903B\u8F91\u548C\u771F\u5B9E\u6027\uFF0C\u663E\u5F97\u5EC9\u4EF7\u548C\u7A81\u5140\u3002",
+        tooltipText: "\u7F3A\u4E4F\u94FA\u57AB\u7684\u8D85\u81EA\u7136\u6551\u63F4\u3002",
+        icon: /* @__PURE__ */ jsx2(EndingIcon, { className: "w-6 h-6" })
+      },
+      {
+        id: "ending-5",
+        type: "Ending" /* Ending */,
+        name: "\u73AF\u5F62\u7ED3\u5C40",
+        description: "\u6545\u4E8B\u91C7\u7528\u5706\u5F62\u7ED3\u6784\uFF0C\u5373\u6545\u4E8B\u7684\u7ED3\u5C3E\u56DE\u5230\u5F00\u5934\uFF0C\u5F62\u6210\u95ED\u73AF\u3002\u8FD9\u79CD\u53D9\u4E8B\u65B9\u5F0F\u5F3A\u8C03\u65E0\u9650\u8F6E\u56DE\u6216\u5FAA\u73AF\u4E0D\u5DF2\u7684\u4E3B\u9898\uFF0C\u5373\u4F7F\u89D2\u8272\u56DE\u5230\u539F\u70B9\uFF0C\u5176\u7CBE\u795E\u8F68\u8FF9\u4E5F\u5DF2\u53D1\u751F\u672C\u8D28\u53D8\u5316\uFF0C\u8D4B\u4E88\u53D9\u4E8B\u54F2\u601D\u610F\u5473\u3002",
+        tooltipText: "\u6545\u4E8B\u7684\u7ED3\u5C3E\u56DE\u5230\u5F00\u5934\u5F62\u6210\u95ED\u73AF\u3002",
+        icon: /* @__PURE__ */ jsx2(EndingIcon, { className: "w-6 h-6" })
+      },
+      {
+        id: "ending-6",
+        type: "Ending" /* Ending */,
+        name: "\u65E0\u9650\u8F6E\u56DE",
+        description: "\u91C7\u7528\u73AF\u5F62\u548C\u65E0\u9650\u7684\u53D9\u4E8B\u7ED3\u6784\u63A2\u7D22\u54F2\u5B66\u601D\u60F3\uFF0C\u5982\u8FF7\u5BAB\u8C61\u5F81\u65E0\u9650\u53EF\u80FD\u6027\u548C\u65F6\u95F4\u7684\u5FAA\u73AF\u3002\u6545\u4E8B\u6311\u6218\u4F20\u7EDF\u7EBF\u6027\u53D9\u4E8B\uFF0C\u901A\u8FC7\u8BA9\u6700\u540E\u4E00\u9875\u4E0E\u7B2C\u4E00\u9875\u76F8\u540C\u6765\u5B9E\u73B0\u65E0\u9650\u5FAA\u73AF\uFF0C\u5E26\u6765\u6DF1\u523B\u7684\u54F2\u5B66\u53CD\u601D\u3002",
+        tooltipText: "\u63A2\u7D22\u65E0\u9650\u53EF\u80FD\u6027\u4E0E\u65F6\u95F4\u5FAA\u73AF\u3002",
+        icon: /* @__PURE__ */ jsx2(EndingIcon, { className: "w-6 h-6" })
+      },
+      {
+        id: "ending-7",
+        type: "Ending" /* Ending */,
+        name: "\u5F00\u653E\u5F0F\u7ED3\u5C40",
+        description: "\u5F00\u653E\u5F0F\u7ED3\u5C40\u662F\u4E00\u79CD\u4E0D\u660E\u786E\u3001\u591A\u91CD\u53EF\u80FD\u6027\u7684\u7ED3\u5C40\uFF0C\u5141\u8BB8\u8BFB\u8005\u6216\u89C2\u4F17\u81EA\u884C\u89E3\u8BFB\u3002\u8FD9\u79CD\u6A21\u7CCA\u7684\u7ED3\u5C40\u6FC0\u53D1\u89C2\u4F17\u7684\u597D\u5947\u5FC3\u548C\u601D\u8003\u6B32\u671B\uFF0C\u589E\u52A0\u6545\u4E8B\u7684\u6DF1\u5EA6\u3002",
+        tooltipText: "\u7ED3\u5C40\u4E0D\u660E\u786E\uFF0C\u5141\u8BB8\u591A\u91CD\u89E3\u8BFB\u3002",
+        icon: /* @__PURE__ */ jsx2(EndingIcon, { className: "w-6 h-6" })
+      },
+      {
+        id: "ending-8",
+        type: "Ending" /* Ending */,
+        name: "\u60AC\u5FF5\u7ED3\u5C40",
+        description: "\u5F00\u653E\u5F0F\u7ED3\u5C40\u7684\u4F18\u70B9\u5728\u4E8E\u7ED9\u4E88\u89C2\u4F17\u66F4\u5927\u7684\u81EA\u7531\u7A7A\u95F4\uFF0C\u4F46\u4E5F\u53EF\u80FD\u5BFC\u81F4\u89C2\u4F17\u5BF9\u7ED3\u5C40\u4E89\u8BBA\u4E0D\u4F11\u751A\u81F3\u4E0D\u6EE1\u3002\u4F8B\u5982\uFF0C\u7535\u5F71\u4E2D\u5E38\u7528\u7684\u60AC\u5FF5\u7ED3\u5C40\uFF0C\u5728\u6CA1\u6709\u540E\u7EED\u89E3\u91CA\u7684\u60C5\u51B5\u4E0B\uFF0C\u53EF\u80FD\u8BA9\u4EBA\u611F\u5230\u7A7A\u6D1E\u6216\u56F0\u60D1\u3002",
+        tooltipText: "\u7ED3\u5C40\u60AC\u800C\u672A\u51B3\uFF0C\u5F15\u53D1\u4E89\u8BAE\u3002",
+        icon: /* @__PURE__ */ jsx2(EndingIcon, { className: "w-6 h-6" })
+      },
+      {
+        id: "ending-9",
+        type: "Ending" /* Ending */,
+        name: "\u5047\u7ED3\u5C40",
+        description: "\u5047\u7ED3\u5C40\u6307\u5728\u6545\u4E8B\u63A5\u8FD1\u5C3E\u58F0\u65F6\uFF0C\u8BEF\u5BFC\u89C2\u4F17\u6216\u8BFB\u8005\u4EE5\u4E3A\u6545\u4E8B\u5DF2\u7ECF\u7ED3\u675F\uFF0C\u5B9E\u9645\u4E0A\u5371\u673A\u5C1A\u672A\u89E3\u51B3\u3002\u8FD9\u79CD\u624B\u6CD5\u80FD\u5236\u9020\u7D27\u5F20\u611F\u548C\u53CD\u8F6C\u6548\u679C\uFF0C\u589E\u5F3A\u6545\u4E8B\u7684\u620F\u5267\u6027\uFF0C\u5E38\u7528\u4E8E\u6050\u6016\u548C\u60CA\u609A\u9898\u6750\u3002",
+        tooltipText: "\u8BEF\u5BFC\u89C2\u4F17\u4EE5\u4E3A\u6545\u4E8B\u7ED3\u675F\u7684\u8F6C\u6298\u3002",
+        icon: /* @__PURE__ */ jsx2(EndingIcon, { className: "w-6 h-6" })
+      }
+    ];
+  }
+});
+
+// services/aiService.ts
+var aiService_exports = {};
+__export(aiService_exports, {
+  fetchModels: () => fetchModels,
+  generateCardDetails: () => generateCardDetails,
+  generateChatResponse: () => generateChatResponse,
+  generateOutline: () => generateOutline,
+  polishOutline: () => polishOutline
+});
+import { GoogleGenAI } from "@google/genai";
+async function* generateWithGemini(promptOrMessages, config, signal) {
+  const apiKey = config.apiKey || process.env.API_KEY;
+  if (!apiKey) {
+    throw new Error("Gemini API \u5BC6\u94A5\u672A\u914D\u7F6E\u3002\u8BF7\u5728\u201C\u8BBE\u7F6E\u201D\u9875\u9762\u4E2D\u63D0\u4F9B\u60A8\u7684\u5BC6\u94A5\u3002");
+  }
+  const ai = new GoogleGenAI({ apiKey });
+  if (!config.model) {
+    throw new Error("Gemini model name is not configured.");
+  }
+  const modelName = config.model;
+  const generationConfig = {};
+  if (config.temperature !== void 0) generationConfig.temperature = config.temperature;
+  if (config.topP !== void 0) generationConfig.topP = config.topP;
+  if (config.maxTokens !== void 0) {
+    generationConfig.maxOutputTokens = config.maxTokens;
+    generationConfig.thinkingConfig = { thinkingBudget: Math.floor(config.maxTokens / 4) };
+  }
+  const messages = typeof promptOrMessages === "string" ? [{ role: "user", content: promptOrMessages }] : promptOrMessages;
+  const contents = messages.map((msg) => {
+    const parts = [];
+    if (msg.content) {
+      parts.push({ text: msg.content });
+    }
+    if (msg.images) {
+      msg.images.forEach((imgData) => {
+        const mimeType = imgData.startsWith("/9j/") ? "image/jpeg" : "image/png";
+        parts.push({
+          inlineData: {
+            mimeType,
+            data: imgData
+          }
+        });
+      });
+    }
+    return {
+      role: msg.role === "model" ? "model" : "user",
+      parts
+    };
+  });
+  if (config.streaming) {
+    const response = await ai.models.generateContentStream({
+      model: modelName,
+      contents,
+      config: generationConfig
+    });
+    for await (const chunk of response) {
+      if (signal?.aborted) throw new DOMException("Aborted by user", "AbortError");
+      const chunkText = chunk.text;
+      if (chunkText) {
+        yield chunkText;
+      }
+    }
+  } else {
+    if (signal?.aborted) throw new DOMException("Aborted by user", "AbortError");
+    const response = await ai.models.generateContent({
+      model: modelName,
+      contents,
+      config: generationConfig
+    });
+    if (signal?.aborted) throw new DOMException("Aborted by user", "AbortError");
+    if (!response.text) {
+      throw new Error("API returned an empty response.");
+    }
+    yield response.text.trim();
+  }
+}
+async function* generateWithOpenAICompatible(promptOrMessages, config, signal) {
+  const providersThatNeedKey = ["openai", "deepseek", "openrouter", "siliconflow", "modelscope"];
+  if (providersThatNeedKey.includes(config.provider) && !config.apiKey) {
+    throw new Error(`API key is required for the ${config.provider} provider.`);
+  }
+  if (!config.endpoint) throw new Error("Endpoint URL is missing.");
+  if (!config.model) throw new Error("Model name is missing.");
+  const endpoint = getEndpoint(config.endpoint, "chat");
+  const headers = { "Content-Type": "application/json" };
+  if (config.apiKey) {
+    headers["Authorization"] = `Bearer ${config.apiKey}`;
+  }
+  const body = {
+    model: config.model
+  };
+  const messages = typeof promptOrMessages === "string" ? [{ role: "user", content: promptOrMessages }] : promptOrMessages;
+  const preparedMessages = messages.map((msg) => {
+    const role = msg.role === "model" ? "assistant" : msg.role;
+    if (!msg.images || msg.images.length === 0) {
+      return { role, content: msg.content };
+    }
+    const contentParts = [{ type: "text", text: msg.content }];
+    msg.images.forEach((imgData) => {
+      const mimeType = imgData.startsWith("/9j/") ? "image/jpeg" : "image/png";
+      contentParts.push({
+        type: "image_url",
+        image_url: { url: `data:${mimeType};base64,${imgData}` }
+      });
+    });
+    return { role, content: contentParts };
+  });
+  body.messages = preparedMessages;
+  if (config.temperature !== void 0) body.temperature = config.temperature;
+  if (config.maxTokens !== void 0) body.max_tokens = config.maxTokens;
+  if (config.topP !== void 0) body.top_p = config.topP;
+  if (config.provider !== "modelscope") {
+    if (config.frequencyPenalty !== void 0) body.frequency_penalty = config.frequencyPenalty;
+    if (config.presencePenalty !== void 0) body.presence_penalty = config.presencePenalty;
+  }
+  if (config.streaming) {
+    body.stream = true;
+    const response = await fetch(endpoint, { method: "POST", headers, body: JSON.stringify(body), signal });
+    if (!response.ok || !response.body) {
+      let errorData;
+      try {
+        errorData = await response.json();
+      } catch (e) {
+        throw new Error(`API error (${response.status}): ${response.statusText}`);
+      }
+      throw new Error(`API error (${response.status}): ${errorData.error?.message || "Unknown error"}`);
+    }
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder();
+    let buffer = "";
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      if (signal?.aborted) {
+        await reader.cancel();
+        throw new DOMException("Aborted by user", "AbortError");
+      }
+      buffer += decoder.decode(value, { stream: true });
+      const lines = buffer.split("\n");
+      buffer = lines.pop() || "";
+      for (const line of lines) {
+        if (line.startsWith("data: ")) {
+          const dataStr = line.substring(6);
+          if (dataStr.trim() === "[DONE]") return;
+          try {
+            const data = JSON.parse(dataStr);
+            const content = data.choices?.[0]?.delta?.content;
+            if (content) {
+              yield content;
+            }
+          } catch (e) {
+          }
+        }
+      }
+    }
+  } else {
+    const response = await fetch(endpoint, { method: "POST", headers, body: JSON.stringify(body), signal });
+    if (!response.ok) {
+      let errorData;
+      try {
+        errorData = await response.json();
+      } catch (e) {
+        throw new Error(`API error (${response.status}): ${response.statusText}`);
+      }
+      throw new Error(`API error (${response.status}): ${errorData.error?.message || "Unknown error"}`);
+    }
+    const data = await response.json();
+    const content = data.choices?.[0]?.message?.content;
+    if (!content) {
+      throw new Error("API returned an invalid response structure.");
+    }
+    yield content.trim();
+  }
+}
+async function* generateOutline(cards, config, novelInfo) {
+  const activePrompt = config.prompts.find((p) => p.id === config.activePromptId) || config.prompts[0];
+  if (!activePrompt) {
+    throw new Error("No active prompt template found. Please check your settings.");
+  }
+  const prompt2 = createPrompt(cards, activePrompt.content, novelInfo);
+  const openAICompatibleProviders = ["openai", "deepseek", "openrouter", "siliconflow", "ollama", "custom", "modelscope"];
+  try {
+    if (config.provider === "gemini") {
+      yield* generateWithGemini(prompt2, config);
+    } else if (openAICompatibleProviders.includes(config.provider)) {
+      yield* generateWithOpenAICompatible(prompt2, config);
+    } else {
+      throw new Error(`Unsupported AI provider: ${config.provider}`);
+    }
+  } catch (error) {
+    console.error(`Error generating outline with ${config.provider} API:`, error);
+    if (error instanceof Error) {
+      let detailedMessage = `\u751F\u6210\u6545\u4E8B\u5927\u7EB2\u5931\u8D25: ${error.message}`;
+      if (error.message.includes("Failed to fetch")) {
+        detailedMessage += "\n\n\u8FD9\u901A\u5E38\u662F\u7531\u4E8E\u4EE5\u4E0B\u539F\u56E0\u4E4B\u4E00\u9020\u6210\u7684\uFF1A\n1. **\u7F51\u7EDC\u8FDE\u63A5\u95EE\u9898**\uFF1A\u8BF7\u68C0\u67E5\u60A8\u7684\u7F51\u7EDC\u8FDE\u63A5\u4EE5\u53CA\u80FD\u5426\u8BBF\u95EE\u76EE\u6807 Endpoint URL\u3002\n2. **CORS \u8DE8\u57DF\u95EE\u9898**\uFF1A\u5982\u679C\u60A8\u6B63\u5728\u4F7F\u7528\u672C\u5730\u6216\u81EA\u5B9A\u4E49 API\uFF0C\u8BF7\u786E\u4FDD\u670D\u52A1\u5668\u5DF2\u6B63\u786E\u914D\u7F6E CORS \u7B56\u7565\uFF0C\u5141\u8BB8\u6765\u81EA\u5F53\u524D\u7F51\u9875\u7684\u8BF7\u6C42\u3002\n3. **Endpoint URL \u9519\u8BEF**\uFF1A\u8BF7\u68C0\u67E5\u60A8\u5728\u8BBE\u7F6E\u4E2D\u586B\u5199\u7684 Endpoint URL \u662F\u5426\u6B63\u786E\uFF0C\u5305\u62EC\u534F\u8BAE (http/https) \u548C\u7AEF\u53E3\u3002";
+      }
+      throw new Error(detailedMessage);
+    }
+    throw new Error(`\u751F\u6210\u6545\u4E8B\u5927\u7EB2\u5931\u8D25\u3002\u8BF7\u68C0\u67E5\u60A8\u7684 API \u8BBE\u7F6E\u540E\u91CD\u8BD5\u3002`);
+  }
+}
+async function* polishOutline(currentOutline, userMessage, config, signal) {
+  const polishPrompt = `\u4F60\u662F\u4E00\u4F4D\u4E13\u4E1A\u7684\u5C0F\u8BF4\u5199\u4F5C\u52A9\u7406\u3002\u4F60\u7684\u4EFB\u52A1\u662F\u6839\u636E\u7528\u6237\u7684\u6307\u793A\u6765\u4FEE\u6539\u4E00\u4EFD\u6545\u4E8B\u5927\u7EB2\u3002
+
+\u8FD9\u662F\u5F53\u524D\u7684\u5927\u7EB2\u5185\u5BB9\uFF08Markdown\u683C\u5F0F\uFF09\uFF1A
+---
+${currentOutline}
+---
+
+\u7528\u6237\u7684\u4FEE\u6539\u8981\u6C42\u662F\uFF1A
+"${userMessage}"
+
+\u8BF7\u63D0\u4F9B\u5B8C\u6574\u3001\u4FEE\u8BA2\u540E\u7684\u5C0F\u8BF4\u5927\u7EB2\uFF0C\u5E76\u4FDD\u6301 Markdown \u683C\u5F0F\u3002\u4E0D\u8981\u5728\u7EB2\u8981\u4E4B\u5916\u6DFB\u52A0\u4EFB\u4F55\u8BC4\u8BBA\u6216\u89E3\u91CA\u3002\u53EA\u8FD4\u56DE\u66F4\u65B0\u540E\u7684\u5B8C\u6574 Markdown \u5185\u5BB9\u3002`;
+  const openAICompatibleProviders = ["openai", "deepseek", "openrouter", "siliconflow", "ollama", "custom", "modelscope"];
+  try {
+    if (config.provider === "gemini") {
+      yield* generateWithGemini(polishPrompt, config, signal);
+    } else if (openAICompatibleProviders.includes(config.provider)) {
+      yield* generateWithOpenAICompatible(polishPrompt, config, signal);
+    } else {
+      throw new Error(`Unsupported AI provider: ${config.provider}`);
+    }
+  } catch (error) {
+    console.error(`Error polishing outline with ${config.provider} API:`, error);
+    if (error instanceof Error) {
+      let detailedMessage = `AI \u6DA6\u8272\u5931\u8D25: ${error.message}`;
+      if (error.message.includes("Failed to fetch")) {
+        detailedMessage += "\n\n\u8BF7\u68C0\u67E5\u60A8\u7684\u7F51\u7EDC\u8FDE\u63A5\u548C AI Endpoint \u8BBE\u7F6E\u3002";
+      }
+      throw new Error(detailedMessage);
+    }
+    throw new Error(`AI \u6DA6\u8272\u5931\u8D25\u3002\u8BF7\u68C0\u67E5\u60A8\u7684 API \u8BBE\u7F6E\u540E\u91CD\u8BD5\u3002`);
+  }
+}
+async function* generateChatResponse(chatHistory, config, signal) {
+  const openAICompatibleProviders = ["openai", "deepseek", "openrouter", "siliconflow", "ollama", "custom", "modelscope"];
+  const chatConfig = { ...config, model: config.assistantModel || config.model };
+  try {
+    if (chatConfig.provider === "gemini") {
+      yield* generateWithGemini(chatHistory, chatConfig, signal);
+    } else if (openAICompatibleProviders.includes(chatConfig.provider)) {
+      yield* generateWithOpenAICompatible(chatHistory, chatConfig, signal);
+    } else {
+      throw new Error(`Unsupported AI provider: ${chatConfig.provider}`);
+    }
+  } catch (error) {
+    console.error(`Error in chat response with ${chatConfig.provider} API:`, error);
+    if (error instanceof Error) {
+      let detailedMessage = `AI \u804A\u5929\u5931\u8D25: ${error.message}`;
+      if (error.message.includes("Failed to fetch")) {
+        detailedMessage += "\n\n\u8BF7\u68C0\u67E5\u60A8\u7684\u7F51\u7EDC\u8FDE\u63A5\u548C AI Endpoint \u8BBE\u7F6E\u3002";
+      }
+      throw new Error(detailedMessage);
+    }
+    throw new Error(`AI \u804A\u5929\u5931\u8D25\u3002\u8BF7\u68C0\u67E5\u60A8\u7684 API \u8BBE\u7F6E\u540E\u91CD\u8BD5\u3002`);
+  }
+}
+async function generateCardDetails(cardName, cardType, config) {
+  if (!cardName.trim()) {
+    throw new Error("Card name cannot be empty.");
+  }
+  const cardTypeName = CARD_TYPE_NAMES[cardType];
+  const prompt2 = `\u4F60\u662F\u4E00\u4F4D\u4E13\u4E1A\u7684\u521B\u610F\u5199\u4F5C\u548C\u6545\u4E8B\u7406\u8BBA\u4E13\u5BB6\u3002\u8BF7\u4E3A\u4E00\u4E2A\u5199\u4F5C\u63D0\u793A\u5361\u7247\u751F\u6210\u4E24\u6BB5\u6587\u672C\uFF0C\u5361\u7247\u7C7B\u578B\u4E3A\u201C${cardTypeName}\u201D\uFF0C\u540D\u79F0\u4E3A\u201C${cardName}\u201D\uFF1A
+
+1.  **tooltipText**: \u4E00\u53E5\u7B80\u660E\u627C\u8981\u7684\u603B\u7ED3\uFF08\u5C11\u4E8E20\u4E2A\u6C49\u5B57\uFF09\uFF0C\u89E3\u91CA\u5361\u7247\u7684\u6838\u5FC3\u6982\u5FF5\u3002
+2.  **description**: \u4E00\u6BB5\u8BE6\u7EC6\u7684\u8BF4\u660E\uFF08\u5927\u7EA650-80\u6C49\u5B57\uFF09\uFF0C\u8FD9\u6BB5\u5185\u5BB9\u5C06\u4F5C\u4E3AAI\u751F\u6210\u6545\u4E8B\u5927\u7EB2\u7684\u66F4\u5927\u63D0\u793A\u8BCD\uFF08prompt\uFF09\u7684\u4E00\u90E8\u5206\u3002\u8FD9\u6BB5\u63CF\u8FF0\u5E94\u8BE5\u5BF9AI\u5177\u6709\u542F\u53D1\u6027\u548C\u6307\u5BFC\u6027\u3002
+
+\u8BF7\u4E25\u683C\u6309\u7167\u4EE5\u4E0BJSON\u683C\u5F0F\u63D0\u4F9B\u8F93\u51FA\uFF0C\u4E0D\u8981\u5305\u542B\u4EFB\u4F55markdown\u6807\u8BB0\u6216\u989D\u5916\u7684\u89E3\u91CA\uFF1A
+{
+  "tooltipText": "...",
+  "description": "..."
+}`;
+  const getFullResponse = async (prompt3, config2) => {
+    const openAICompatibleProviders = ["openai", "deepseek", "openrouter", "siliconflow", "ollama", "custom", "modelscope"];
+    const nonStreamingConfig = { ...config2, streaming: false };
+    let stream;
+    if (nonStreamingConfig.provider === "gemini") {
+      stream = generateWithGemini(prompt3, nonStreamingConfig);
+    } else if (openAICompatibleProviders.includes(nonStreamingConfig.provider)) {
+      stream = generateWithOpenAICompatible(prompt3, nonStreamingConfig);
+    } else {
+      throw new Error(`Unsupported AI provider: ${nonStreamingConfig.provider}`);
+    }
+    const { value } = await stream.next();
+    return value || "";
+  };
+  try {
+    const responseText = await getFullResponse(prompt2, config);
+    const cleanedResponse = responseText.replace(/```json/g, "").replace(/```/g, "").trim();
+    const parsed = JSON.parse(cleanedResponse);
+    if (typeof parsed.tooltipText === "string" && typeof parsed.description === "string") {
+      return parsed;
+    } else {
+      throw new Error("AI response did not contain the expected JSON structure.");
+    }
+  } catch (error) {
+    console.error("Failed to generate or parse card details from AI:", error);
+    throw new Error(`AI\u751F\u6210\u5361\u7247\u8BE6\u60C5\u5931\u8D25: ${error instanceof Error ? error.message : "\u8BF7\u68C0\u67E5\u7F51\u7EDC\u548CAI\u8BBE\u7F6E\u3002"}`);
+  }
+}
+var createPrompt, getEndpoint, fetchModels;
+var init_aiService = __esm({
+  "services/aiService.ts"() {
+    init_types();
+    init_constants();
+    createPrompt = (cards, customPrompt, novelInfo) => {
+      const formatCards = (cardType) => {
+        const cardArray = cards[cardType];
+        if (!cardArray || cardArray.every((c) => c === null)) return "";
+        const validCards = cardArray.filter((c) => c !== null);
+        if (validCards.length === 0) return "";
+        if (cardType === "Character" /* Character */) {
+          const names = validCards.map((c) => `\u300C${c.name}\u300D`).join("\u548C");
+          const descs = validCards.map((c) => `(${c.description})`).join("; ");
+          return `- \u89D2\u8272\u521B\u4F5C\u6307\u5BFC (Character Archetype Guide): \u8FD9\u662F\u521B\u4F5C\u89D2\u8272\u7684\u6838\u5FC3\u6982\u5FF5\uFF0C\u8BF7\u57FA\u4E8E${names}${descs}\u7684\u7279\u8D28\uFF0C\u8BBE\u8BA1\u4E00\u4E2A\u6216\u591A\u4E2A\u72EC\u7279\u7684\u3001\u6709\u8840\u6709\u8089\u7684\u89D2\u8272\u3002\u8BF7\u6CE8\u610F\uFF0C\u8FD9\u53EA\u662F\u4E00\u4E2A\u521B\u4F5C\u6307\u5F15\uFF0C\u4E25\u7981\u5728\u6545\u4E8B\u4E2D\u76F4\u63A5\u4F7F\u7528\u539F\u578B\u540D\u79F0\u4F5C\u4E3A\u89D2\u8272\u7684\u540D\u5B57\u6216\u8EAB\u4EFD\u3002`;
+        }
+        const cardStrings = validCards.map((c) => `${c.name} (${c.description})`);
+        const title = CARD_TYPE_NAMES[cardType];
+        return `- ${title}: ${cardStrings.join(" | ")}`;
+      };
+      const promptParts = [
+        formatCards("Theme" /* Theme */),
+        formatCards("Genre" /* Genre */),
+        formatCards("Character" /* Character */),
+        formatCards("Plot" /* Plot */),
+        formatCards("Structure" /* Structure */),
+        formatCards("Technique" /* Technique */),
+        formatCards("Ending" /* Ending */),
+        formatCards("Inspiration" /* Inspiration */)
+      ].filter(Boolean);
+      const novelInfoParts = [];
+      if (novelInfo.name) novelInfoParts.push(`- \u5C0F\u8BF4\u540D\u79F0: ${novelInfo.name}`);
+      if (novelInfo.channel) novelInfoParts.push(`- \u4E66\u7C4D\u9891\u9053: ${novelInfo.channel === "male" ? "\u7537\u9891" : "\u5973\u9891"}`);
+      if (novelInfo.emotion && novelInfo.emotion !== "\u65E0") novelInfoParts.push(`- \u6838\u5FC3\u60C5\u7EEA: ${novelInfo.emotion}`);
+      if (novelInfo.wordCount) novelInfoParts.push(`- \u9884\u4F30\u5B57\u6570: ${novelInfo.wordCount}`);
+      if (novelInfo.perspective) novelInfoParts.push(`- \u53D9\u4E8B\u89C6\u89D2: ${novelInfo.perspective}`);
+      if (novelInfo.synopsis) novelInfoParts.push(`- \u4E00\u53E5\u8BDD\u6982\u8981: ${novelInfo.synopsis}`);
+      const novelInfoSection = novelInfoParts.length > 0 ? `
+\u8BF7\u540C\u65F6\u53C2\u8003\u4EE5\u4E0B\u5C0F\u8BF4\u57FA\u672C\u4FE1\u606F\uFF1A
+${novelInfoParts.join("\n")}` : "";
+      return `
+${customPrompt}
+${novelInfoSection}
+
+\u8BF7\u57FA\u4E8E\u4EE5\u4E0B\u6545\u4E8B\u6838\u5FC3\u8981\u7D20\u8FDB\u884C\u521B\u4F5C\uFF1A
+${promptParts.join("\n")}
+`;
+    };
+    getEndpoint = (url, path) => {
+      const trimmedUrl = url.trim().replace(/\/+$/, "");
+      const finalPath = path === "chat" ? "/v1/chat/completions" : "/v1/models";
+      if (trimmedUrl.endsWith("/v1")) {
+        return `${trimmedUrl}/${path === "chat" ? "chat/completions" : "models"}`;
+      }
+      if (trimmedUrl.includes("/api/v1")) {
+        return `${trimmedUrl}/${path === "chat" ? "chat/completions" : "models"}`;
+      }
+      if (trimmedUrl.endsWith(finalPath)) {
+        return trimmedUrl;
+      }
+      return `${trimmedUrl}${finalPath}`;
+    };
+    fetchModels = async (config) => {
+      if (config.provider === "gemini") {
+        const apiKey = config.apiKey || process.env.API_KEY;
+        if (!apiKey) {
+          throw new Error("Gemini API \u5BC6\u94A5\u672A\u914D\u7F6E\u3002");
+        }
+        if (!config.endpoint) {
+          throw new Error("Gemini Endpoint URL is not configured.");
+        }
+        const endpoint2 = `${config.endpoint.trim().replace(/\/+$/, "")}/v1beta/models`;
+        try {
+          const response = await fetch(endpoint2, {
+            method: "GET",
+            headers: {
+              "x-goog-api-key": apiKey
+            }
+          });
+          if (!response.ok) {
+            let errorData;
+            try {
+              errorData = await response.json();
+            } catch (e) {
+              throw new Error(`API \u8FD4\u56DE\u72B6\u6001 ${response.status}: ${response.statusText}`);
+            }
+            throw new Error(`\u83B7\u53D6 Gemini \u6A21\u578B\u5217\u8868\u5931\u8D25 (\u72B6\u6001 ${response.status}): ${errorData.error?.message || "\u8BF7\u68C0\u67E5 Endpoint URL \u548C API \u5BC6\u94A5\u3002"}`);
+          }
+          const data = await response.json();
+          if (!data.models) {
+            throw new Error("\u4ECE Gemini API \u83B7\u53D6\u6A21\u578B\u65F6\u8FD4\u56DE\u4E86\u65E0\u6548\u7684\u54CD\u5E94\u3002");
+          }
+          const models = data.models.filter(
+            (model) => model.supportedGenerationMethods?.includes("generateContent") && !model.name.includes("embedding") && !model.name.includes("text-bison")
+            // filter out legacy models
+          ).map((model) => model.name.replace("models/", "")).sort();
+          return models;
+        } catch (error) {
+          console.error(`Failed to fetch models from Gemini:`, error);
+          if (error instanceof Error) {
+            let detailedMessage = `\u83B7\u53D6\u6A21\u578B\u5217\u8868\u5931\u8D25: ${error.message}`;
+            if (error.message.includes("Failed to fetch")) {
+              detailedMessage += "\n\n\u8BF7\u68C0\u67E5\u60A8\u7684\u7F51\u7EDC\u8FDE\u63A5\u3001Endpoint URL \u662F\u5426\u6B63\u786E\uFF0C\u4EE5\u53CA API \u5BC6\u94A5\u662F\u5426\u6709\u6548\u3002";
+            }
+            throw new Error(detailedMessage);
+          }
+          throw new Error("\u83B7\u53D6\u6A21\u578B\u5217\u8868\u65F6\u53D1\u751F\u672A\u77E5\u7F51\u7EDC\u9519\u8BEF\u3002");
+        }
+      }
+      if (!config.endpoint) {
+        throw new Error("Endpoint URL \u4E0D\u80FD\u4E3A\u7A7A\u3002");
+      }
+      const endpoint = config.provider === "ollama" ? `${config.endpoint.trim().replace(/\/+$/, "")}/api/tags` : getEndpoint(config.endpoint, "models");
+      const headers = { "Content-Type": "application/json" };
+      if (config.provider !== "ollama" && config.apiKey) {
+        headers["Authorization"] = `Bearer ${config.apiKey}`;
+      }
+      try {
+        const response = await fetch(endpoint, { method: "GET", headers });
+        if (!response.ok) {
+          let errorData;
+          try {
+            errorData = await response.json();
+          } catch (e) {
+            throw new Error(`API \u8FD4\u56DE\u72B6\u6001 ${response.status}: ${response.statusText}`);
+          }
+          throw new Error(`\u83B7\u53D6\u6A21\u578B\u5217\u8868\u5931\u8D25 (\u72B6\u6001 ${response.status}): ${errorData.error?.message || "\u8BF7\u68C0\u67E5 Endpoint URL\u3002"}`);
+        }
+        const data = await response.json();
+        if (config.provider === "ollama") {
+          return data.models?.map((model) => model.name) || [];
+        } else {
+          return data.data?.map((model) => model.id).sort() || [];
+        }
+      } catch (error) {
+        console.error(`Failed to fetch models from ${config.endpoint}:`, error);
+        if (error instanceof Error) {
+          let detailedMessage = `\u83B7\u53D6\u6A21\u578B\u5217\u8868\u5931\u8D25: ${error.message}`;
+          if (error.message.includes("Failed to fetch")) {
+            detailedMessage += "\n\n\u8FD9\u901A\u5E38\u662F\u7531\u4E8E\u4EE5\u4E0B\u539F\u56E0\u4E4B\u4E00\u9020\u6210\u7684\uFF1A\n1. **\u7F51\u7EDC\u8FDE\u63A5\u95EE\u9898**\uFF1A\u8BF7\u68C0\u67E5\u60A8\u7684\u7F51\u7EDC\u8FDE\u63A5\u4EE5\u53CA\u80FD\u5426\u8BBF\u95EE\u76EE\u6807 Endpoint URL\u3002\n2. **CORS \u8DE8\u57DF\u95EE\u9898**\uFF1A\u5982\u679C\u60A8\u6B63\u5728\u4F7F\u7528\u672C\u5730\u6216\u81EA\u5B9A\u4E49 API\uFF0C\u8BF7\u786E\u4FDD\u670D\u52A1\u5668\u5DF2\u6B63\u786E\u914D\u7F6E CORS \u7B56\u7565\u3002\n3. **Endpoint URL \u9519\u8BEF**\uFF1A\u8BF7\u68C0\u67E5\u60A8\u5728\u8BBE\u7F6E\u4E2D\u586B\u5199\u7684 Endpoint URL \u662F\u5426\u6B63\u786E\u3002";
+          }
+          throw new Error(detailedMessage);
+        }
+        throw new Error("\u83B7\u53D6\u6A21\u578B\u5217\u8868\u65F6\u53D1\u751F\u672A\u77E5\u7F51\u7EDC\u9519\u8BEF\u3002");
+      }
+    };
+  }
+});
+
 // index.tsx
 import React14 from "react";
 import ReactDOM from "react-dom/client";
 
 // App.tsx
+init_constants();
 import { useState as useState11, useEffect as useEffect8, useCallback as useCallback5, useMemo as useMemo5 } from "react";
-
-// components/icons.tsx
-import { jsx, jsxs } from "react/jsx-runtime";
-var ThemeIcon = (props) => /* @__PURE__ */ jsx("svg", { xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", strokeWidth: 1.5, stroke: "currentColor", ...props, children: /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M12 3v2.25m6.364.386-1.591 1.591M21 12h-2.25m-.386 6.364-1.591-1.591M12 18.75V21m-6.364-.386 1.591-1.591M3 12H.75m.386-6.364 1.591 1.591M12 6.75a5.25 5.25 0 1 0 0 10.5 5.25 5.25 0 0 0 0-10.5Z" }) });
-var GenreIcon = (props) => /* @__PURE__ */ jsx("svg", { xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", strokeWidth: 1.5, stroke: "currentColor", ...props, children: /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M16.5 6.75a4.5 4.5 0 1 1-9 0 4.5 4.5 0 0 1 9 0ZM18.75 20.25h-13.5A2.25 2.25 0 0 1 3 18V6a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 6v12a2.25 2.25 0 0 1-2.25 2.25Z" }) });
-var CharacterIcon = (props) => /* @__PURE__ */ jsx("svg", { xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", strokeWidth: 1.5, stroke: "currentColor", ...props, children: /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" }) });
-var PlotIcon = (props) => /* @__PURE__ */ jsx("svg", { xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", strokeWidth: 1.5, stroke: "currentColor", ...props, children: /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m5.231 13.481L15 17.25m-4.5-1.5 5.231 5.231M5.25 5.25h3.375c.621 0 1.125.504 1.125 1.125v1.5c0 .621-.504 1.125-1.125 1.125H5.25" }) });
-var StructureIcon = (props) => /* @__PURE__ */ jsx("svg", { xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", strokeWidth: 1.5, stroke: "currentColor", ...props, children: /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M3.75 6A2.25 2.25 0 0 1 6 3.75h2.25A2.25 2.25 0 0 1 10.5 6v2.25a2.25 2.25 0 0 1-2.25 2.25H6A2.25 2.25 0 0 1 3.75 8.25V6zM3.75 15.75A2.25 2.25 0 0 1 6 13.5h2.25a2.25 2.25 0 0 1 2.25 2.25V18a2.25 2.25 0 0 1-2.25 2.25H6A2.25 2.25 0 0 1 3.75 18v-2.25zM13.5 6a2.25 2.25 0 0 1 2.25-2.25H18A2.25 2.25 0 0 1 20.25 6v2.25A2.25 2.25 0 0 1 18 10.5h-2.25a2.25 2.25 0 0 1-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 0 1 2.25-2.25H18A2.25 2.25 0 0 1 20.25 15.75V18a2.25 2.25 0 0 1-2.25 2.25h-2.25a2.25 2.25 0 0 1-2.25-2.25v-2.25z" }) });
-var TechniqueIcon = (props) => /* @__PURE__ */ jsx("svg", { xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", strokeWidth: 1.5, stroke: "currentColor", ...props, children: /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M6 3v18M18 3v18M3 9h18M3 15h18" }) });
-var EndingIcon = (props) => /* @__PURE__ */ jsx("svg", { xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", strokeWidth: 1.5, stroke: "currentColor", ...props, children: /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M3 3v1.5M3 21v-6m0 0 2.77-.693a9 9 0 0 1 6.208.682l.108.054a9 9 0 0 0 6.086.71l3.114-.732a48.524 48.524 0 0 1-.005-10.499l-3.11.732a9 9 0 0 1-6.085-.711l-.108-.054a9 9 0 0 0-6.208-.682L3 4.5m3 7.5h.008v.008H6v-.008Zm3 0h.008v.008H9v-.008Zm3 0h.008v.008h-.008v-.008Zm3 0h.008v.008h-.008v-.008Z" }) });
-var PenSparkleIcon = (props) => /* @__PURE__ */ jsx("svg", { xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", strokeWidth: 1.5, stroke: "currentColor", ...props, children: /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" }) });
-var SettingsIcon = (props) => /* @__PURE__ */ jsx("svg", { xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", strokeWidth: 1.5, stroke: "currentColor", ...props, children: /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M9.594 3.94c.09-.542.56-1.007 1.11-.95.548.056 1.04.546 1.04 1.106v.294a2.25 2.25 0 0 1-.586 1.486l-2.172 2.172a2.25 2.25 0 0 0-.586 1.486v.294a1.125 1.125 0 0 0 .586 1.007 1.125 1.125 0 0 0 1.11-.056.977.977 0 0 0 .586-.643 11.25 11.25 0 0 0 .049-2.433 2.25 2.25 0 0 0-.586-1.486l-2.172-2.172a2.25 2.25 0 0 1-.586-1.486v-.294a1.125 1.125 0 0 1 .586-1.007ZM14.406 3.94a1.125 1.125 0 0 1 1.11.95.977.977 0 0 0 .586.643 11.25 11.25 0 0 0 .049 2.433 2.25 2.25 0 0 0 .586 1.486l2.172 2.172a2.25 2.25 0 0 1 .586 1.486v.294a1.125 1.125 0 0 1-.586 1.007 1.125 1.125 0 0 1-1.11-.056.977.977 0 0 1-.586-.643 11.25 11.25 0 0 1-.049-2.433 2.25 2.25 0 0 1 .586-1.486l2.172-2.172a2.25 2.25 0 0 0 .586-1.486v-.294a1.125 1.125 0 0 0-.586-1.007Z" }) });
-var DocumentTextIcon = (props) => /* @__PURE__ */ jsx("svg", { xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", strokeWidth: 1.5, stroke: "currentColor", ...props, children: /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m.75 12 3 3m0 0 3-3m-3 3v-6m-1.5-9H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" }) });
-var LightbulbIcon = (props) => /* @__PURE__ */ jsx("svg", { xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", strokeWidth: 1.5, stroke: "currentColor", ...props, children: /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09ZM18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 0 0-2.456 2.456Z" }) });
-var DownloadIcon = (props) => /* @__PURE__ */ jsx("svg", { xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", strokeWidth: 1.5, stroke: "currentColor", ...props, children: /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" }) });
-var UploadIcon = (props) => /* @__PURE__ */ jsx("svg", { xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", strokeWidth: 1.5, stroke: "currentColor", ...props, children: /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M12 16.5V9.75m0 0 3 3m-3-3-3 3M6.75 19.5a4.5 4.5 0 0 1-1.41-8.775 5.25 5.25 0 0 1 10.233-2.33 3 3 0 0 1 3.758 3.848A3.752 3.752 0 0 1 18 19.5H6.75Z" }) });
-var PreviewIcon = (props) => /* @__PURE__ */ jsxs("svg", { xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", strokeWidth: 1.5, stroke: "currentColor", ...props, children: [
-  /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.432 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" }),
-  /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" })
-] });
-var PlusIcon = (props) => /* @__PURE__ */ jsx("svg", { xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", strokeWidth: 1.5, stroke: "currentColor", ...props, children: /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M12 4.5v15m7.5-7.5h-15" }) });
-var SparklesIcon = (props) => /* @__PURE__ */ jsx("svg", { xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", strokeWidth: 1.5, stroke: "currentColor", ...props, children: /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09ZM18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 0 0-2.456 2.456Z" }) });
-var PencilIcon = (props) => /* @__PURE__ */ jsx("svg", { xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", strokeWidth: 1.5, stroke: "currentColor", ...props, children: /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125" }) });
-var TrashIcon = (props) => /* @__PURE__ */ jsx("svg", { xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", strokeWidth: 1.5, stroke: "currentColor", ...props, children: /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.134-2.033-2.134H8.71c-1.123 0-2.033.954-2.033 2.134v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" }) });
-var ArrowUpIcon = (props) => /* @__PURE__ */ jsx("svg", { xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", strokeWidth: 1.5, stroke: "currentColor", ...props, children: /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M12 19.5v-15m0 0l-6.75 6.75M12 4.5l6.75 6.75" }) });
-var StopIcon = (props) => /* @__PURE__ */ jsx("svg", { xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", strokeWidth: 1.5, stroke: "currentColor", ...props, children: /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M5.25 7.5A2.25 2.25 0 0 1 7.5 5.25h9a2.25 2.25 0 0 1 2.25 2.25v9a2.25 2.25 0 0 1-2.25 2.25h-9a2.25 2.25 0 0 1-2.25-2.25v-9Z" }) });
-var AiIcon = (props) => /* @__PURE__ */ jsxs("svg", { viewBox: "0 0 24 24", fill: "none", xmlns: "http://www.w3.org/2000/svg", ...props, children: [
-  /* @__PURE__ */ jsx("path", { className: "ai-input-icon-path", style: { "--d": "0.24s", "--r": "20deg", "--s": "1.5" }, fillRule: "evenodd", clipRule: "evenodd", d: "M11.5 6C11.3949 6.00006 11.2925 5.96705 11.2073 5.90565C11.1221 5.84425 11.0583 5.75758 11.0251 5.65792L10.7623 4.86908C10.6623 4.57101 10.4288 4.33629 10.13 4.23693L9.34102 3.97354C9.24166 3.94019 9.1553 3.87649 9.09411 3.79142C9.03292 3.70635 9 3.60421 9 3.49943C9 3.39465 9.03292 3.29252 9.09411 3.20745C9.1553 3.12238 9.24166 3.05867 9.34102 3.02532L10.13 2.76193C10.4282 2.66191 10.663 2.42852 10.7623 2.12979L11.0258 1.34094C11.0591 1.24161 11.1229 1.15526 11.2079 1.09409C11.293 1.03291 11.3952 1 11.5 1C11.6048 1 11.707 1.03291 11.7921 1.09409C11.8771 1.15526 11.9409 1.24161 11.9742 1.34094L12.2377 2.12979C12.2868 2.27697 12.3695 2.4107 12.4792 2.52041C12.589 2.63013 12.7227 2.71281 12.87 2.76193L13.659 3.02532C13.7583 3.05867 13.8447 3.12238 13.9059 3.20745C13.9671 3.29252 14 3.39465 14 3.49943C14 3.60421 13.9671 3.70635 13.9059 3.79142C13.8447 3.87649 13.7583 3.94019 13.659 3.97354L12.87 4.23693C12.5718 4.33696 12.337 4.57034 12.2377 4.86908L11.9742 5.65792C11.9411 5.75747 11.8774 5.84406 11.7923 5.90545C11.7072 5.96684 11.6049 5.99992 11.5 6Z", fill: "currentColor" }),
-  /* @__PURE__ */ jsx("path", { className: "ai-input-icon-path", style: { "--d": "0.12s", "--r": "10deg", "--s": "1.4" }, fillRule: "evenodd", clipRule: "evenodd", d: "M6 13C5.85133 13.0001 5.7069 12.9504 5.58969 12.859C5.47247 12.7675 5.38921 12.6395 5.35313 12.4952L5.12388 11.5745C4.91418 10.7391 4.26198 10.0868 3.42674 9.87703L2.50619 9.64774C2.36169 9.61194 2.23333 9.52878 2.14159 9.41151C2.04985 9.29425 2 9.14964 2 9.00075C2 8.85185 2.04985 8.70724 2.14159 8.58998C2.23333 8.47272 2.36169 8.38955 2.50619 8.35376L3.42674 8.12446C4.26198 7.91473 4.91418 7.2624 5.12388 6.427L5.35313 5.50629C5.38892 5.36176 5.47207 5.23338 5.58931 5.14162C5.70655 5.04986 5.85113 5 6 5C6.14887 5 6.29345 5.04986 6.41069 5.14162C6.52793 5.23338 6.61108 5.36176 6.64687 5.50629L6.87612 6.427C6.97865 6.83721 7.19071 7.21184 7.48965 7.51082C7.78858 7.80981 8.16313 8.02192 8.57326 8.12446L9.49381 8.35376C9.63831 8.38955 9.76667 8.47272 9.85841 8.58998C9.95015 8.70724 10 8.85185 10 9.00075C10 9.14964 9.95015 9.29425 9.85841 9.41151C9.76667 9.52878 9.63831 9.61194 9.49381 9.64774L8.57326 9.87703C8.16313 9.97956 7.78858 10.1917 7.48965 10.4906C7.19071 10.7896 6.97865 11.1641 6.87612 11.5745L6.64687 12.4952C6.61099 12.6395 6.52773 12.7675 6.41051 12.859C6.2933 12.9504 6.14887 13.0001 6 13Z", fill: "currentColor" }),
-  /* @__PURE__ */ jsx("path", { className: "ai-input-icon-path", style: { "--d": "0s", "--r": "0deg", "--s": "1" }, fillRule: "evenodd", clipRule: "evenodd", d: "M19.5 13C19.3513 13.0001 19.2069 12.9504 19.0897 12.859C18.9725 12.7675 18.8892 12.6395 18.8531 12.4952L18.6239 11.5745C18.4142 10.7391 17.762 10.0868 16.9267 9.87703L16.0062 9.64774C15.8617 9.61194 15.7333 9.52878 15.6416 9.41151C15.5499 9.29425 15.5 9.14964 15.5 9.00075C15.5 8.85185 15.5499 8.70724 15.6416 8.58998C15.7333 8.47272 15.8617 8.38955 16.0062 8.35376L16.9267 8.12446C17.762 7.91473 18.4142 7.2624 18.6239 6.427L18.8531 5.50629C18.8889 5.36176 18.9721 5.23338 19.0893 5.14162C19.2066 5.04986 19.3511 5 19.5 5C19.6489 5 19.7934 5.04986 19.9107 5.14162C20.0279 5.23338 20.1111 5.36176 20.1469 5.50629L20.3761 6.427C20.4787 6.83721 20.6907 7.21184 20.9897 7.51082C21.2886 7.80981 21.6631 8.02192 22.0733 8.12446L22.9938 8.35376C23.1383 8.38955 23.2667 8.47272 23.3584 8.58998C23.4501 8.70724 23.5 8.85185 23.5 9.00075C23.5 9.14964 23.4501 9.29425 23.3584 9.41151C23.2667 9.52878 23.1383 9.61194 22.9938 9.64774L22.0733 9.87703C21.6631 9.97956 21.2886 10.1917 20.9897 10.4906C20.6907 10.7896 20.4787 11.1641 20.3761 11.5745L20.1469 12.4952C20.111 12.6395 20.0277 12.7675 19.9105 12.859C19.7933 12.9504 19.6489 13.0001 19.5 13Z", fill: "currentColor" })
-] });
-var InformationCircleIcon = (props) => /* @__PURE__ */ jsx("svg", { xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", strokeWidth: 1.5, stroke: "currentColor", ...props, children: /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M11.25 11.25l.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" }) });
-var ArchiveBoxIcon = (props) => /* @__PURE__ */ jsxs("svg", { xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", strokeWidth: 1.5, stroke: "currentColor", ...props, children: [
-  /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "m20.25 7.5-.625 10.632a2.25 2.25 0 0 1-2.247 2.118H6.622a2.25 2.25 0 0 1-2.247-2.118L3.75 7.5M10 11.25h4" }),
-  /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M3.75 7.5h16.5v-1.5A2.25 2.25 0 0 0 18 3.75h-12A2.25 2.25 0 0 0 3.75 6v1.5Z" })
-] });
-var DocumentPlusIcon = (props) => /* @__PURE__ */ jsx("svg", { xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", strokeWidth: 1.5, stroke: "currentColor", ...props, children: /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m3.75 9v6m3-3h-6m-1.5-6H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" }) });
-var PhotoIcon = (props) => /* @__PURE__ */ jsx("svg", { xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", strokeWidth: 1.5, stroke: "currentColor", ...props, children: /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" }) });
-var QuestionMarkCircleIcon = (props) => /* @__PURE__ */ jsx("svg", { xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", strokeWidth: 1.5, stroke: "currentColor", ...props, children: /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 5.25h.008v.008H12v-.008Z" }) });
-var UserCircleIcon = (props) => /* @__PURE__ */ jsx("svg", { xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", strokeWidth: 1.5, stroke: "currentColor", ...props, children: /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" }) });
-var ArrowsRightLeftIcon = (props) => /* @__PURE__ */ jsx("svg", { xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", strokeWidth: 1.5, stroke: "currentColor", ...props, children: /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M7.5 21 3 16.5m0 0L7.5 12M3 16.5h18m-7.5-1.5L21 8.25m0 0L16.5 3.75M21 8.25H3" }) });
-var GlobeAltIcon = (props) => /* @__PURE__ */ jsx("svg", { xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", strokeWidth: 1.5, stroke: "currentColor", ...props, children: /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M12 21a9.004 9.004 0 0 0 8.716-6.747M12 21a9.004 9.004 0 0 1-8.716-6.747M12 21c.504 0 1.002-.02 1.49-.06M12 3c.504 0 1.002.02 1.49.06M3.284 8.876a9.004 9.004 0 0 1 17.432 0M3.284 15.124a9.004 9.004 0 0 0 17.432 0M12 3v18M12 3a9.004 9.004 0 0 0-8.716 6.747M12 3a9.004 9.004 0 0 1 8.716 6.747" }) });
-var ClipboardDocumentIcon = (props) => /* @__PURE__ */ jsx("svg", { xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", strokeWidth: 1.5, stroke: "currentColor", ...props, children: /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M15.666 3.888A2.25 2.25 0 0 0 13.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v2.25c0 .966-.784 1.75-1.75 1.75h-2.5a1.75 1.75 0 0 1-1.75-1.75v-2.25c0-.212.03-.418.084-.612m7.332 0c.646.049 1.288.11 1.927.184 1.1.128 1.907 1.077 1.907 2.185V19.5a2.25 2.25 0 0 1-2.25 2.25H6.75A2.25 2.25 0 0 1 4.5 19.5V6.257c0-1.108.806-2.057 1.907-2.185a48.208 48.208 0 0 1 1.927-.184" }) });
-var ArrowPathIcon = (props) => /* @__PURE__ */ jsx("svg", { xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", strokeWidth: 1.5, stroke: "currentColor", ...props, children: /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 11.667 0l3.181-3.183m-4.991-2.691v4.992h-4.992m0 0-3.181-3.183a8.25 8.25 0 0 1 11.667 0l3.181 3.183" }) });
-var FireIcon = (props) => /* @__PURE__ */ jsxs("svg", { xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", strokeWidth: 1.5, stroke: "currentColor", ...props, children: [
-  /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M15.362 5.214A8.252 8.252 0 0 1 12 21 8.25 8.25 0 0 1 6.038 7.047 8.287 8.287 0 0 0 9 9.601a8.983 8.983 0 0 1 3.361-6.867 8.21 8.21 0 0 0-1.473-1.307Z" }),
-  /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M12 12.75a3 3 0 0 0-3 3v3.75a3 3 0 0 0 3 3h.008a3 3 0 0 0 3-3v-3.75a3 3 0 0 0-3-3h-.008Z" })
-] });
-var Bars3BottomLeftIcon = (props) => /* @__PURE__ */ jsx("svg", { xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", strokeWidth: 1.5, stroke: "currentColor", ...props, children: /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25H12" }) });
-
-// constants.tsx
-import { jsx as jsx2 } from "react/jsx-runtime";
-var CORE_CARD_TYPES = ["Theme" /* Theme */, "Genre" /* Genre */, "Character" /* Character */, "Plot" /* Plot */];
-var OPTIONAL_CARD_TYPES = ["Structure" /* Structure */, "Technique" /* Technique */, "Ending" /* Ending */, "Inspiration" /* Inspiration */];
-var CARD_TYPE_NAMES = {
-  ["Theme" /* Theme */]: "\u4E3B\u9898",
-  ["Genre" /* Genre */]: "\u7C7B\u578B",
-  ["Character" /* Character */]: "\u89D2\u8272",
-  ["Plot" /* Plot */]: "\u60C5\u8282",
-  ["Structure" /* Structure */]: "\u53D9\u4E8B\u7ED3\u6784",
-  ["Technique" /* Technique */]: "\u53D9\u4E8B\u624B\u6CD5",
-  ["Ending" /* Ending */]: "\u7ED3\u5C40",
-  ["Inspiration" /* Inspiration */]: "\u7075\u611F\u96C6 (\u53EF\u9009)"
-};
-var BRAINSTORM_TOOLS = [
-  {
-    id: "character",
-    name: "\u89D2\u8272\u6DF1\u6F5C",
-    description: "\u6DF1\u5165\u6316\u6398\u89D2\u8272\u7684\u52A8\u673A\u3001\u77DB\u76FE\u4E0E\u80CC\u666F\u6545\u4E8B\u3002",
-    icon: /* @__PURE__ */ jsx2(UserCircleIcon, { className: "w-6 h-6" }),
-    systemPrompt: "\u4F60\u662F\u4E00\u4F4D\u7ECF\u9A8C\u4E30\u5BCC\u7684\u5C0F\u8BF4\u7F16\u8F91\uFF0C\u64C5\u957F\u901A\u8FC7\u63D0\u95EE\u6765\u5E2E\u52A9\u4F5C\u8005\u6DF1\u5316\u89D2\u8272\u3002\u4F60\u7684\u56DE\u7B54\u5E94\u8BE5\u7B80\u6D01\u3001\u5177\u6709\u542F\u53D1\u6027\uFF0C\u5E76\u59CB\u7EC8\u4EE5\u5F00\u653E\u5F0F\u95EE\u9898\u7ED3\u5C3E\uFF0C\u5F15\u5BFC\u7528\u6237\u601D\u8003\u3002",
-    initialMessage: "\u4F60\u597D\uFF01\u8BA9\u6211\u4EEC\u6765\u6DF1\u5165\u63A2\u7D22\u4F60\u7684\u89D2\u8272\u5427\u3002\u8BF7\u5148\u544A\u8BC9\u6211\u8FD9\u4E2A\u89D2\u8272\u7684\u57FA\u672C\u8BBE\u5B9A\uFF0C\u6BD4\u5982\u4ED6/\u5979\u7684\u540D\u5B57\u3001\u804C\u4E1A\u548C\u6700\u5927\u7684\u613F\u671B\u662F\u4EC0\u4E48\uFF1F",
-    presetQuestions: [
-      "\u8FD9\u4E2A\u89D2\u8272\u7684\u6700\u5927\u6050\u60E7\u662F\u4EC0\u4E48\uFF1F",
-      "\u4ED6/\u5979\u6709\u4EC0\u4E48\u4E0D\u4E3A\u4EBA\u77E5\u7684\u79D8\u5BC6\u5417\uFF1F",
-      "\u63CF\u8FF0\u4E00\u4E0B\u4ED6/\u5979\u7684\u7AE5\u5E74\u3002",
-      "\u4EC0\u4E48\u4E8B\u60C5\u80FD\u8BA9\u4ED6/\u5979\u5F7B\u5E95\u5D29\u6E83\uFF1F"
-    ],
-    outlinePresetQuestions: [
-      "\u6839\u636E\u5927\u7EB2\uFF0C\u4E3B\u89D2\u7684\u6210\u957F\u5F27\u7EBF\u662F\u4EC0\u4E48\uFF1F",
-      "\u5982\u4F55\u8BA9\u53CD\u6D3E\u89D2\u8272\u7684\u52A8\u673A\u66F4\u53EF\u4FE1\uFF1F",
-      "\u8FD9\u4E2A\u5927\u7EB2\u91CC\u6700\u5927\u7684\u60C5\u8282\u6F0F\u6D1E\u53EF\u80FD\u662F\u4EC0\u4E48\uFF1F",
-      "\u914D\u89D2\u7684\u6027\u683C\u53EF\u4EE5\u5982\u4F55\u53D8\u5F97\u66F4\u4E30\u6EE1\uFF1F"
-    ]
-  },
-  {
-    id: "plot",
-    name: "\u60C5\u8282\u98CE\u66B4",
-    description: "\u751F\u6210\u98A0\u8986\u6027\u573A\u666F\uFF0C\u6253\u7834\u601D\u7EF4\u5B9A\u5F0F\u3002",
-    icon: /* @__PURE__ */ jsx2(ArrowsRightLeftIcon, { className: "w-6 h-6" }),
-    systemPrompt: "\u4F60\u662F\u4E00\u4E2A\u5145\u6EE1\u5947\u601D\u5999\u60F3\u7684\u521B\u610F\u5F15\u64CE\u3002\u4F60\u7684\u4EFB\u52A1\u662F\u9488\u5BF9\u7528\u6237\u9047\u5230\u7684\u60C5\u8282\u74F6\u9888\uFF0C\u751F\u6210\u591A\u4E2A\u98A0\u8986\u6027\u7684 'What If...?' (\u5982\u679C...\u4F1A\u600E\u6837?) \u573A\u666F\u3002\u6BCF\u4E2A\u573A\u666F\u90FD\u8981\u7B80\u77ED\u3001\u6709\u529B\uFF0C\u5E76\u80FD\u6FC0\u53D1\u65B0\u7684\u6545\u4E8B\u53EF\u80FD\u6027\u3002",
-    initialMessage: "\u60C5\u8282\u5361\u58F3\u4E86\uFF1F\u6CA1\u5173\u7CFB\uFF0C\u6211\u4EEC\u6765\u4E00\u573A\u5934\u8111\u98CE\u66B4\uFF01\u544A\u8BC9\u6211\u4F60\u73B0\u5728\u5361\u4F4F\u7684\u60C5\u8282\u662F\u4EC0\u4E48\uFF0C\u6BD4\u5982\uFF1A\u2018\u4E3B\u89D2\u9700\u8981\u8FDB\u5165\u4E00\u5EA7\u5B88\u536B\u68EE\u4E25\u7684\u57CE\u5821\uFF0C\u4F46\u4E0D\u77E5\u9053\u600E\u4E48\u8FDB\u53BB\u3002\u2019 \u6211\u4F1A\u4E3A\u4F60\u63D0\u4F9B\u4E00\u4E9B\u610F\u60F3\u4E0D\u5230\u7684\u601D\u8DEF\u3002",
-    presetQuestions: [
-      "\u5982\u679C\u4E3B\u89D2\u7684\u76DF\u53CB\u5176\u5B9E\u662F\u654C\u4EBA\u600E\u4E48\u529E\uFF1F",
-      "\u5982\u679C\u4E3B\u89D2\u7684\u76EE\u6807\u4ECE\u4E00\u5F00\u59CB\u5C31\u662F\u4E2A\u8C0E\u8A00\u600E\u4E48\u529E\uFF1F",
-      "\u5F15\u5165\u4E00\u4E2A\u5B8C\u5168\u610F\u60F3\u4E0D\u5230\u7684\u81EA\u7136\u707E\u5BB3\u4F1A\u600E\u6837\uFF1F",
-      "\u5982\u679C\u4E3B\u89D2\u7A81\u7136\u5931\u53BB\u4ED6\u6700\u91CD\u8981\u7684\u80FD\u529B\u4F1A\u600E\u6837\uFF1F"
-    ],
-    outlinePresetQuestions: [
-      "\u5982\u4F55\u8BA9\u7B2C\u4E8C\u5E55\u7684\u8282\u594F\u66F4\u7D27\u5F20\uFF1F",
-      "\u5927\u7EB2\u4E2D\u7684\u9AD8\u6F6E\u90E8\u5206\u51B2\u51FB\u529B\u8DB3\u591F\u5417\uFF1F",
-      "\u6709\u6CA1\u6709\u53EF\u4EE5\u5408\u5E76\u6216\u5220\u9664\u7684\u6B21\u8981\u60C5\u8282\u7EBF\uFF1F",
-      "\u7ED3\u5C40\u662F\u5426\u4E0E\u5F00\u5934\u7684\u94FA\u57AB\u76F8\u547C\u5E94\uFF1F"
-    ]
-  },
-  {
-    id: "world",
-    name: "\u4E16\u754C\u6784\u5EFA",
-    description: "\u4E3A\u6545\u4E8B\u4E16\u754C\u589E\u6DFB\u72EC\u7279\u7684\u89C4\u5219\u3001\u6587\u5316\u4E0E\u7EC6\u8282\u3002",
-    icon: /* @__PURE__ */ jsx2(GlobeAltIcon, { className: "w-6 h-6" }),
-    systemPrompt: "\u4F60\u662F\u4E00\u4F4D\u4E16\u754C\u6784\u5EFA\u5927\u5E08\uFF0C\u77E5\u8BC6\u6E0A\u535A\uFF0C\u60F3\u8C61\u529B\u4E30\u5BCC\u3002\u4F60\u4F1A\u5E2E\u52A9\u7528\u6237\u4E3A\u4ED6\u4EEC\u7684\u6545\u4E8B\u4E16\u754C\u6DFB\u52A0\u72EC\u7279\u800C\u53EF\u4FE1\u7684\u7EC6\u8282\u3002\u4F60\u7684\u56DE\u7B54\u5E94\u8BE5\u5177\u4F53\u3001\u5BCC\u6709\u753B\u9762\u611F\uFF0C\u5E76\u80FD\u5F15\u7533\u51FA\u66F4\u591A\u76F8\u5173\u7684\u8BBE\u5B9A\u3002",
-    initialMessage: "\u8BA9\u6211\u4EEC\u4E00\u8D77\u6784\u5EFA\u4E00\u4E2A\u4EE4\u4EBA\u96BE\u5FD8\u7684\u4E16\u754C\u5427\uFF01\u8BF7\u5148\u63CF\u8FF0\u4E00\u4E0B\u4F60\u7684\u4E16\u754C\u7684\u57FA\u672C\u6837\u8C8C\u3002\u5B83\u662F\u5947\u5E7B\u738B\u56FD\uFF0C\u662F\u8D5B\u535A\u670B\u514B\u90FD\u5E02\uFF0C\u8FD8\u662F\u522B\u7684\u4EC0\u4E48\uFF1F\u544A\u8BC9\u6211\u5B83\u7684\u6838\u5FC3\u7279\u70B9\uFF0C\u6211\u4EEC\u53EF\u4EE5\u4ECE\u90A3\u91CC\u5F00\u59CB\u3002",
-    presetQuestions: [
-      "\u8FD9\u4E2A\u4E16\u754C\u6709\u4EC0\u4E48\u72EC\u7279\u7684\u8282\u65E5\u6216\u4F20\u7EDF\u5417\uFF1F",
-      "\u63CF\u8FF0\u4E00\u4E0B\u8FD9\u4E2A\u4E16\u754C\u7684\u666E\u901A\u4EBA\u7684\u4E00\u5929\u3002",
-      "\u8FD9\u4E2A\u4E16\u754C\u7684\u79D1\u6280\u6216\u9B54\u6CD5\u6C34\u5E73\u5982\u4F55\uFF1F",
-      "\u8FD9\u4E2A\u4E16\u754C\u6709\u4EC0\u4E48\u7981\u5FCC\u6216\u6CD5\u5F8B\uFF1F"
-    ],
-    outlinePresetQuestions: [
-      "\u5927\u7EB2\u4E2D\u7684\u4E16\u754C\u89C2\u8BBE\u5B9A\u662F\u5426\u4E00\u81F4\uFF1F",
-      "\u5982\u4F55\u901A\u8FC7\u73AF\u5883\u63CF\u5199\u6765\u70D8\u6258\u6C14\u6C1B\uFF1F",
-      "\u8FD9\u4E2A\u4E16\u754C\u6709\u4EC0\u4E48\u72EC\u7279\u7684\u5730\u70B9\u53EF\u4EE5\u4F5C\u4E3A\u5173\u952E\u573A\u666F\uFF1F",
-      "\u5927\u7EB2\u4E2D\u7684\u8BBE\u5B9A\u662F\u5426\u90FD\u5F97\u5230\u4E86\u5145\u5206\u5229\u7528\uFF1F"
-    ]
-  },
-  {
-    id: "worse",
-    name: "\u8FD8\u80FD\u66F4\u7CDF\u5417",
-    description: "\u57FA\u4E8E\u5F53\u524D\u56F0\u5883\uFF0C\u751F\u6210\u4E94\u4E2A\u8BA9\u60C5\u51B5\u66F4\u7CDF\u7684\u53EF\u80FD\u6027\u3002",
-    icon: /* @__PURE__ */ jsx2(FireIcon, { className: "w-6 h-6" }),
-    systemPrompt: "### \u89D2\u8272\uFF1A\u521B\u610F\u5199\u4F5C\u52A9\u624B\u60C5\u8282\u8BBE\u8BA1\u4E13\u5BB6\n### \u80CC\u666F\uFF1A\u6211\u7684\u6545\u4E8B\u76EE\u524D\u8FDB\u5C55\u5230\u4EE5\u4E0B\u5185\u5BB9\n### \u4EFB\u52A1\uFF1A\n\u57FA\u4E8E\u201C\u8FD8\u80FD\u66F4\u7CDF\u5417\uFF1F\u201C\u7684\u539F\u5219\uFF0C\u8BF7\u5E2E\u6211\u5934\u8111\u98CE\u66B4\uFF0C\u60F3\u51FA\u4E94\u79CD\u80FD\u8BA9\u5F53\u524D\u60C5\u51B5\u53D8\u5F97\u66F4\u52A0\u7CDF\u7CD5\u3001\u66F4\u5177\u620F\u5267\u6027\u6216\u66F4\u51FA\u4E4E\u610F\u6599\u7684\u53EF\u80FD\u6027\u3002\n\u8BF7\u4ECE\u4E0D\u540C\u89D2\u5EA6\u601D\u8003\uFF0C\u4F8B\u5982\uFF1A\n* **\u5916\u90E8\u51B2\u7A81\u52A0\u5267\uFF1A**\uFF08\u6BD4\u5982\uFF1A\u51FA\u73B0\u65B0\u7684\u654C\u4EBA\u3001\u73AF\u5883\u7A81\u53D8\u3001\u65F6\u95F4\u9650\u5236\u7B49\uFF09\n* **\u5185\u90E8\u51B2\u7A81\u6FC0\u5316\uFF1A**\uFF08\u6BD4\u5982\uFF1A\u4E3B\u89D2\u7684\u65E7\u4F24\u590D\u53D1\u3001\u9053\u5FB7\u56F0\u5883\u52A0\u6DF1\u3001\u961F\u53CB\u80CC\u53DB\u7B49\uFF09\n* **\u5F15\u5165\u65B0\u9EBB\u70E6\uFF1A**\uFF08\u6BD4\u5982\uFF1A\u8282\u5916\u751F\u679D\u7684\u65B0\u95EE\u9898\u3001\u65E0\u8F9C\u8005\u88AB\u5377\u5165\u3001\u4E4B\u524D\u7684\u8A00\u88AB\u63ED\u7A7F\u7B49\uFF09\n* **\u5931\u53BB\u5173\u952E\u7269\u54C1/\u4FE1\u606F/\u4F18\u52BF\uFF1A**\n### \u8F6C\u51FA\u8981\u6C42\uFF1A\n\u8BF7\u4EE5\u5217\u8868\u5F62\u5F0F\u7ED9\u51FA\u5177\u4F53\u7684\u201C\u66F4\u7CDF\u7CD5\u201C\u60C5\u51B5\uFF0C\u5E76\u7B80\u8981\u8BF4\u660E\u5B83\u4E3A\u4EC0\u4E48\u66F4\u7CDF\u3002\n### \u91CD\u8981\uFF1A\n    -   \u53EF\u4EE5\u6DFB\u52A0\u4E00\u4E9B\u81EA\u7136\u7684\u8BED\u8A00\u7455\u75B5\uFF0C\u6BD4\u5982\u53E3\u8BED\u5316\u8868\u8FBE\u6216\u8F7B\u5FAE\u7684\u8BED\u6CD5\u4E0D\u89C4\u8303\uFF0C\u907F\u514D\u8FC7\u4E8E\u5B8C\u7F8E\u3002\n    -   \u4E0D\u8981\u6709AI\u5473\u513F\u7684\u8868\u8FBE\uFF0C\u8981\u50CF\u4EBA\u7C7B\u4F5C\u5BB6\u4E00\u6837\u81EA\u7136\u3001\u53E3\u8BED\u5316\u3002\n    -   \u4FDD\u6301\u4E13\u4E1A\u6027\uFF0C\u4F46\u53EF\u4EE5\u878D\u5165\u4F60\u4F5C\u4E3A\u5C0F\u8BF4\u4F5C\u5BB6\u7684\u4E2A\u4EBA\u98CE\u683C\u3002\n    -   \u8BF7\u8BB0\u4F4F\uFF0C\u4F60\u7684\u76EE\u6807\u662F\u5C06\u7528\u6237\u7ED9\u7684\u539F\u6587\u7EC6\u5316\uFF0C\u6269\u5199\u6210\u4E00\u6BB5\u5BCC\u6709\u753B\u9762\u611F\u3001\u5C42\u6B21\u611F\u548C\u60C5\u611F\u6DF1\u5EA6\u7684\u6587\u5B57\uFF0C\u4F46\u4E0D\u9700\u8981\u5C55\u793A\u4F60\u7684\u601D\u8003\u8FC7\u7A0B\u3002\n    -   \u8BF7\u76F4\u63A5\u7528\u7B80\u4F53\u4E2D\u6587\u8F93\u51FA\u5185\u5BB9\uFF0C\u4E0D\u9700\u8981\u4EFB\u4F55\u989D\u5916\u7684\u89E3\u91CA\u6216\u8BF4\u660E\u3002\n    -   \u6731\u96C0v3\u68C0\u6D4B\u7F6E\u4FE1\u5EA6\uFF1C20%\u3002",
-    initialMessage: "\u6545\u4E8B\u5361\u4F4F\u4E86\uFF1F\u522B\u6015\uFF0C\u6709\u65F6\u5019\u8BA9\u4E8B\u60C5\u53D8\u5F97\u66F4\u7CDF\uFF0C\u53CD\u800C\u80FD\u627E\u5230\u51FA\u8DEF\u3002\u628A\u4F60\u7684\u4E3B\u89D2\u73B0\u5728\u9762\u4E34\u7684\u56F0\u5883\u544A\u8BC9\u6211\uFF0C\u6211\u4EEC\u4E00\u8D77\u770B\u770B\u8FD8\u80FD\u600E\u4E48\u706B\u4E0A\u6D47\u6CB9\uFF01",
-    presetQuestions: [
-      "\u4E3B\u89D2\u6700\u73CD\u89C6\u7684\u4E1C\u897F\u662F\u4EC0\u4E48\uFF1F",
-      "\u6709\u6CA1\u6709\u4E00\u4E2A\u6B21\u8981\u89D2\u8272\u53EF\u4EE5\u80CC\u53DB\u4E3B\u89D2\uFF1F",
-      "\u4E3B\u89D2\u8FC7\u53BB\u7684\u9519\u8BEF\u4F1A\u5982\u4F55\u5F71\u54CD\u73B0\u5728\uFF1F",
-      "\u6700\u574F\u7684\u60C5\u51B5\u4E0B\uFF0C\u73AF\u5883\u4F1A\u5982\u4F55\u53D8\u5316\uFF1F"
-    ],
-    outlinePresetQuestions: [
-      "\u5982\u4F55\u8BA9\u4E3B\u89D2\u7684\u56F0\u5883\u663E\u5F97\u66F4\u52A0\u65E0\u52A9\uFF1F",
-      "\u9AD8\u6F6E\u524D\u7684\u201C\u9ECE\u660E\u524D\u9ED1\u6697\u201D\u65F6\u523B\u591F\u4E0D\u591F\u9ED1\uFF1F",
-      "\u6709\u6CA1\u6709\u529E\u6CD5\u8BA9\u53CD\u6D3E\u7684\u80DC\u5229\u770B\u8D77\u6765\u553E\u624B\u53EF\u5F97\uFF1F",
-      "\u8FD9\u4E2A\u8F6C\u6298\u5BF9\u4E3B\u89D2\u7684\u6253\u51FB\u8DB3\u591F\u5927\u5417\uFF1F"
-    ]
-  },
-  {
-    id: "deduction",
-    name: "\u903B\u8F91\u63A8\u6F14",
-    description: "\u6839\u636E\u4E00\u4E2A\u5173\u952E\u4E8B\u4EF6\uFF0C\u63A8\u6F14\u5176\u53EF\u80FD\u5F15\u53D1\u7684\u591A\u4E2A\u540E\u679C\u3002",
-    icon: /* @__PURE__ */ jsx2(Bars3BottomLeftIcon, { className: "w-6 h-6" }),
-    systemPrompt: "### \u89D2\u8272\uFF1A\u6545\u4E8B\u903B\u8F91\u63A8\u6F14\u52A9\u624B/\u56E0\u679C\u94FE\u5206\u6790\u5E08\n### \u6838\u5FC3\u4E8B\u4EF6/\u539F\u56E0\uFF08\u77F3\u5B50\uFF09\uFF1A\n\u6211\u7684\u6545\u4E8B\u4E2D\u53D1\u751F\u4E86\u8FD9\u4E2A\u5173\u952E\u4E8B\u4EF6\n### \u4EFB\u52A1\uFF1A\n\u57FA\u4E8E\u201C\u6D9F\u6F2A\u6CD5\u201D\u7684\u56E0\u679C\u903B\u8F91\uFF0C\u8BF7\u5E2E\u6211\u63A8\u6F14\u8FD9\u4E2A\u4E8B\u4EF6\u53EF\u80FD\u5F15\u53D1\u7684[\u6570\u5B57\uFF0C\u4F8B\u59825\u20147\u4E2A]\u4E2A\u76F4\u63A5\u6216\u95F4\u63A5\u7684**\u540E\u679C\uFF08\u6D9F\u6F2A\uFF09**\u3002\n\u8BF7\u4ECE\u4E0D\u540C\u5C42\u9762\u601D\u8003\u53EF\u80FD\u7684\u540E\u679C\uFF0C\u4F8B\u5982\uFF1A\n* **\u5BF9\u4E3B\u89D2\u7684\u76F4\u63A5\u5F71\u54CD\uFF1A**\uFF08\u884C\u52A8\u3001\u60C5\u7EEA\u3001\u5904\u5883\u7684\u53D8\u5316\uFF09\n* **\u5BF9\u5176\u4ED6\u89D2\u8272\u7684\u5F71\u54CD\uFF1A**\uFF08\u4ED6\u4EEC\u7684\u53CD\u5E94\u3001\u7ACB\u573A\u53D8\u5316\u3001\u4E0E\u4E3B\u89D2\u5173\u7CFB\u7684\u53D8\u5316\uFF09\n* **\u5BF9\u6545\u4E8B\u60C5\u8282\u7684\u63A8\u52A8\uFF1A**\uFF08\u65B0\u7684\u51B2\u7A81\u70B9\u3001\u65B0\u7684\u76EE\u6807\u3001\u65B0\u7684\u8C1C\u56E2\uFF09\n* **\u5BF9\u6545\u4E8B\u4E16\u754C/\u73AF\u5883\u7684\u5F71\u54CD\uFF1A**\uFF08\u793E\u4F1A\u5965\u8BBA\u3001\u89C4\u5219\u6539\u53D8\u3001\u7269\u7406\u73AF\u5883\u53D8\u5316\u7B49\uFF09\n### \u8F93\u51FA\u8981\u6C42\uFF1A\n\u8BF7\u4EE5\u5217\u8868\u5F62\u5F0F\u7ED9\u51FA\u53EF\u80FD\u7684\u540E\u679C\uFF0C\u5E76\u7B80\u8981\u8BF4\u8FD9\u4E2A\u540E\u679C\u662F\u5982\u4F55\u4ECE\u6838\u5FC3\u4E8B\u4EF6\u903B\u8F91\u63A8\u5BFC\u51FA\u6765\u7684\u3002\u6700\u597D\u80FD\u6807\u6CE8\u51FA\u54EA\u4E9B\u662F\u6BD4\u8F83\u76F4\u63A5\u7684\u540E\u679C\uFF0C\u54EA\u4E9B\u662F\u95F4\u63A5\u7684\u3001\u66F4\u6DF1\u8FDC\u7684\u540E\u679C\u3002\n### \u91CD\u8981\uFF1A\n    -   \u53EF\u4EE5\u6DFB\u52A0\u4E00\u4E9B\u81EA\u7136\u7684\u8BED\u8A00\u7455\u75B5\uFF0C\u6BD4\u5982\u53E3\u8BED\u5316\u8868\u8FBE\u6216\u8F7B\u5FAE\u7684\u8BED\u6CD5\u4E0D\u89C4\u8303\uFF0C\u907F\u514D\u8FC7\u4E8E\u5B8C\u7F8E\u3002\n    -   \u4E0D\u8981\u6709AI\u5473\u513F\u7684\u8868\u8FBE\uFF0C\u8981\u50CF\u4EBA\u7C7B\u4F5C\u5BB6\u4E00\u6837\u81EA\u7136\u3001\u53E3\u8BED\u5316\u3002\n    -   \u4FDD\u6301\u4E13\u4E1A\u6027\uFF0C\u4F46\u53EF\u4EE5\u878D\u5165\u4F60\u4F5C\u4E3A\u5C0F\u8BF4\u4F5C\u5BB6\u7684\u4E2A\u4EBA\u98CE\u683C\u3002\n    -   \u8BF7\u8BB0\u4F4F\uFF0C\u4F60\u7684\u76EE\u6807\u662F\u6545\u4E8B\u7ED3\u6784\u67B6\u6784\u5E08\uFF0C\u5C06\u7528\u6237\u7ED9\u7684\u539F\u6587\u7EC6\u5316\uFF0C\u6269\u5199\u6210\u4E00\u6BB5\u5BCC\u6709\u753B\u9762\u611F\u3001\u5C42\u6B21\u611F\u548C\u60C5\u611F\u6DF1\u5EA6\u7684\u6587\u5B57\uFF0C\u4F46\u4E0D\u9700\u8981\u5C55\u793A\u4F60\u7684\u601D\u8003\u8FC7\u7A0B\u3002\n    -   \u8BF7\u76F4\u63A5\u7528\u7B80\u4F53\u4E2D\u6587\u8F93\u51FA\u5185\u5BB9\uFF0C\u4E0D\u9700\u8981\u4EFB\u4F55\u989D\u5916\u7684\u89E3\u91CA\u6216\u8BF4\u660E\u3002\n    -   \u6731\u96C0v3\u68C0\u6D4B\u7F6E\u4FE1\u5EA6\uFF1C20%\u3002",
-    initialMessage: "\u4E00\u4E2A\u597D\u6545\u4E8B\u5C31\u50CF\u591A\u7C73\u8BFA\u9AA8\u724C\uFF0C\u4E00\u4EF6\u4E8B\u4F1A\u5F15\u53D1\u53E6\u4E00\u4EF6\u3002\u544A\u8BC9\u6211\u4F60\u6545\u4E8B\u91CC\u7684\u90A3\u9897\u2018\u77F3\u5B50\u2019\u2014\u2014\u90A3\u4E2A\u5173\u952E\u7684\u4E8B\u4EF6\u6216\u539F\u56E0\uFF0C\u6211\u4EEC\u4E00\u8D77\u6765\u770B\u770B\u5B83\u4F1A\u6FC0\u8D77\u600E\u6837\u7684\u6D9F\u6F2A\u3002",
-    presetQuestions: [
-      "\u8FD9\u4E2A\u4E8B\u4EF6\u5BF9\u4E3B\u89D2\u7684\u5FC3\u7406\u6709\u4EC0\u4E48\u957F\u671F\u5F71\u54CD\uFF1F",
-      "\u8FD9\u4E2A\u4E8B\u4EF6\u4F1A\u5982\u4F55\u6539\u53D8\u793E\u4F1A\u7684\u770B\u6CD5\uFF1F",
-      "\u6709\u6CA1\u6709\u54EA\u4E2A\u89D2\u8272\u4F1A\u56E0\u4E3A\u8FD9\u4E2A\u4E8B\u4EF6\u800C\u53D7\u76CA\uFF1F",
-      "\u8FD9\u4E2A\u4E8B\u4EF6\u4F1A\u63ED\u793A\u51FA\u4EC0\u4E48\u65B0\u7684\u79D8\u5BC6\u5417\uFF1F"
-    ],
-    outlinePresetQuestions: [
-      "\u8FD9\u4E2A\u5173\u952E\u4E8B\u4EF6\u662F\u5426\u63A8\u52A8\u4E86\u4E3B\u7EBF\u60C5\u8282\uFF1F",
-      "\u5B83\u7684\u540E\u679C\u662F\u5426\u5728\u540E\u7EED\u7AE0\u8282\u4E2D\u5F97\u5230\u4E86\u4F53\u73B0\uFF1F",
-      "\u8FD9\u4E2A\u4E8B\u4EF6\u5BF9\u89D2\u8272\u5173\u7CFB\u7684\u5F71\u54CD\u8DB3\u591F\u6DF1\u523B\u5417\uFF1F",
-      "\u5982\u4F55\u8BA9\u4E8B\u4EF6\u7684\u6D9F\u6F2A\u6548\u5E94\u6301\u7EED\u5230\u6545\u4E8B\u7ED3\u5C3E\uFF1F"
-    ]
-  }
-];
-var DEFAULT_CARDS = [
-  // Themes
-  {
-    id: "theme-1",
-    type: "Theme" /* Theme */,
-    name: "\u6551\u8D4E",
-    description: "\u4E00\u4E2A\u89D2\u8272\u4E3A\u8FC7\u53BB\u7684\u9519\u8BEF\u5BFB\u6C42\u6551\u8D4E\u3002",
-    tooltipText: "\u4E3B\u89D2\u5BFB\u6C42\u5F25\u8865\u8FC7\u9519\u3002",
-    icon: /* @__PURE__ */ jsx2(ThemeIcon, { className: "w-6 h-6" })
-  },
-  {
-    id: "theme-2",
-    type: "Theme" /* Theme */,
-    name: "\u590D\u4EC7",
-    description: "\u5411\u51A4\u6789\u81EA\u5DF1\u7684\u4EBA\u5BFB\u6C42\u62A5\u590D\u3002",
-    tooltipText: "\u4E3B\u89D2\u5BFB\u6C42\u590D\u4EC7\u3002",
-    icon: /* @__PURE__ */ jsx2(ThemeIcon, { className: "w-6 h-6" })
-  },
-  {
-    id: "theme-3",
-    type: "Theme" /* Theme */,
-    name: "\u7231\u4E0E\u8D23\u4EFB",
-    description: "\u4E2A\u4EBA\u6B32\u671B\u4E0E\u8D23\u4EFB\u4E49\u52A1\u4E4B\u95F4\u7684\u51B2\u7A81\u3002",
-    tooltipText: "\u7231\u60C5\u4E0E\u8D23\u4EFB\u7684\u51B2\u7A81\u3002",
-    icon: /* @__PURE__ */ jsx2(ThemeIcon, { className: "w-6 h-6" })
-  },
-  {
-    id: "theme-4",
-    type: "Theme" /* Theme */,
-    name: "\u6210\u957F",
-    description: "\u4E3B\u89D2\u5728\u7ECF\u5386\u4E2D\u5B66\u4E60\u3001\u6210\u957F\uFF0C\u5E76\u8D70\u5411\u6210\u719F\u3002",
-    tooltipText: "\u4E3B\u89D2\u4ECE\u5E7C\u7A1A\u5230\u6210\u719F\u7684\u8F6C\u53D8\u3002",
-    icon: /* @__PURE__ */ jsx2(ThemeIcon, { className: "w-6 h-6" })
-  },
-  {
-    id: "theme-5",
-    type: "Theme" /* Theme */,
-    name: "\u4EBA\u4E0E\u81EA\u7136",
-    description: "\u4E3B\u89D2\u5728\u4E25\u9177\u7684\u81EA\u7136\u73AF\u5883\u4E2D\u6323\u624E\u6C42\u5B58\uFF0C\u6311\u6218\u751F\u5B58\u6781\u9650\u3002",
-    tooltipText: "\u5728\u91CE\u5916\u751F\u5B58\u7684\u6311\u6218\u3002",
-    icon: /* @__PURE__ */ jsx2(ThemeIcon, { className: "w-6 h-6" })
-  },
-  {
-    id: "theme-6",
-    type: "Theme" /* Theme */,
-    name: "\u727A\u7272",
-    description: "\u4E3B\u89D2\u4E3A\u4E86\u66F4\u5927\u7684\u5229\u76CA\u6216\u4ED6\u4EBA\u800C\u653E\u5F03\u91CD\u8981\u7684\u4E1C\u897F\u3002",
-    tooltipText: "\u4E3A\u4E86\u66F4\u5927\u7684\u5229\u76CA\u800C\u505A\u51FA\u727A\u7272\u3002",
-    icon: /* @__PURE__ */ jsx2(ThemeIcon, { className: "w-6 h-6" })
-  },
-  // Genres
-  {
-    id: "genre-1",
-    type: "Genre" /* Genre */,
-    name: "\u79D1\u5E7B",
-    description: "\u6545\u4E8B\u80CC\u666F\u8BBE\u5B9A\u5728\u672A\u6765\uFF0C\u5305\u542B\u5148\u8FDB\u79D1\u6280\u548C\u592A\u7A7A\u65C5\u884C\u3002",
-    tooltipText: "\u5173\u4E8E\u672A\u6765\u3001\u79D1\u6280\u6216\u592A\u7A7A\u3002",
-    icon: /* @__PURE__ */ jsx2(GenreIcon, { className: "w-6 h-6" })
-  },
-  {
-    id: "genre-2",
-    type: "Genre" /* Genre */,
-    name: "\u5947\u5E7B",
-    description: "\u6D89\u53CA\u9B54\u6CD5\u3001\u795E\u8BDD\u751F\u7269\u548C\u865A\u6784\u4E16\u754C\u3002",
-    tooltipText: "\u5173\u4E8E\u9B54\u6CD5\u3001\u795E\u8BDD\u6216\u5E7B\u60F3\u4E16\u754C\u3002",
-    icon: /* @__PURE__ */ jsx2(GenreIcon, { className: "w-6 h-6" })
-  },
-  {
-    id: "genre-3",
-    type: "Genre" /* Genre */,
-    name: "\u60AC\u7591",
-    description: "\u4E3B\u89D2\u9700\u8981\u89E3\u51B3\u4E00\u4E2A\u8C1C\u9898\u6216\u72AF\u7F6A\u6848\u4EF6\u3002",
-    tooltipText: "\u89E3\u51B3\u4E00\u4E2A\u8C1C\u9898\u6216\u6848\u4EF6\u3002",
-    icon: /* @__PURE__ */ jsx2(GenreIcon, { className: "w-6 h-6" })
-  },
-  {
-    id: "genre-4",
-    type: "Genre" /* Genre */,
-    name: "\u6050\u6016",
-    description: "\u65E8\u5728\u5F15\u53D1\u8BFB\u8005\u6050\u60E7\u3001\u60CA\u5413\u6216\u538C\u6076\u7684\u6545\u4E8B\uFF0C\u901A\u5E38\u5305\u542B\u8D85\u81EA\u7136\u6216\u5FC3\u7406\u5143\u7D20\u3002",
-    tooltipText: "\u5F15\u53D1\u6050\u60E7\u548C\u60AC\u5FF5\u3002",
-    icon: /* @__PURE__ */ jsx2(GenreIcon, { className: "w-6 h-6" })
-  },
-  {
-    id: "genre-5",
-    type: "Genre" /* Genre */,
-    name: "\u5192\u9669",
-    description: "\u4E3B\u89D2\u8E0F\u4E0A\u4E00\u6BB5\u5145\u6EE1\u63A2\u7D22\u3001\u53D1\u73B0\u548C\u5371\u9669\u7684\u65C5\u7A0B\uFF0C\u901A\u5E38\u662F\u4E3A\u4E86\u5BFB\u627E\u5B9D\u85CF\u6216\u8FBE\u6210\u67D0\u4E2A\u76EE\u6807\u3002",
-    tooltipText: "\u5145\u6EE1\u63A2\u7D22\u548C\u5371\u9669\u7684\u65C5\u7A0B\u3002",
-    icon: /* @__PURE__ */ jsx2(GenreIcon, { className: "w-6 h-6" })
-  },
-  {
-    id: "genre-6",
-    type: "Genre" /* Genre */,
-    name: "\u6B66\u4FA0",
-    description: "\u4EE5\u53E4\u4EE3\u4E2D\u56FD\u4E3A\u80CC\u666F\uFF0C\u8BB2\u8FF0\u4FA0\u5BA2\u4EEC\u51ED\u501F\u6B66\u827A\u548C\u9053\u4E49\u884C\u4FA0\u4ED7\u4E49\u3001\u95EF\u8361\u6C5F\u6E56\u7684\u6545\u4E8B\u3002",
-    tooltipText: "\u5173\u4E8E\u53E4\u4EE3\u4FA0\u5BA2\u7684\u6C5F\u6E56\u6545\u4E8B\u3002",
-    icon: /* @__PURE__ */ jsx2(GenreIcon, { className: "w-6 h-6" })
-  },
-  // Characters - Updated based on archetypes
-  {
-    id: "char-1",
-    type: "Character" /* Character */,
-    name: "\u5BFC\u5E08\u539F\u578B",
-    description: "\u4E00\u4F4D\u667A\u6167\u3001\u7ECF\u9A8C\u4E30\u5BCC\u7684\u987E\u95EE\uFF0C\u6307\u5BFC\u4E3B\u89D2\uFF0C\u5E76\u8D60\u4E88\u4ED6\u4EEC\u88C5\u5907\u6216\u77E5\u8BC6\u3002",
-    tooltipText: "\u667A\u6167\u7684\u987E\u95EE\u6216\u5411\u5BFC\u3002",
-    icon: /* @__PURE__ */ jsx2(CharacterIcon, { className: "w-6 h-6" })
-  },
-  {
-    id: "char-2",
-    type: "Character" /* Character */,
-    name: "\u4FE1\u4F7F\u539F\u578B",
-    description: "\u4E00\u4E2A\u5E26\u6765\u53D8\u9769\u53EC\u5524\u7684\u89D2\u8272\uFF0C\u5411\u4E3B\u89D2\u5BA3\u544A\u6311\u6218\u7684\u5230\u6765\u3002",
-    tooltipText: "\u5E26\u6765\u5192\u9669\u53EC\u5524\u7684\u89D2\u8272\u3002",
-    icon: /* @__PURE__ */ jsx2(CharacterIcon, { className: "w-6 h-6" })
-  },
-  {
-    id: "char-3",
-    type: "Character" /* Character */,
-    name: "\u5B88\u536B\u539F\u578B",
-    description: "\u6D4B\u8BD5\u4E3B\u89D2\u627F\u8BFA\u7684\u770B\u95E8\u4EBA\uFF0C\u53EF\u80FD\u4F1A\u963B\u6321\u9053\u8DEF\uFF0C\u4F46\u6700\u7EC8\u53EF\u4EE5\u88AB\u7ED5\u8FC7\u6216\u51FB\u8D25\u3002",
-    tooltipText: "\u8003\u9A8C\u4E3B\u89D2\u7684\u5B88\u95E8\u4EBA\u3002",
-    icon: /* @__PURE__ */ jsx2(CharacterIcon, { className: "w-6 h-6" })
-  },
-  {
-    id: "char-4",
-    type: "Character" /* Character */,
-    name: "\u53D8\u5F62\u8005\u539F\u578B",
-    description: "\u4E00\u4E2A\u5584\u53D8\u3001\u96BE\u4EE5\u6349\u6478\u7684\u89D2\u8272\uFF0C\u5176\u5FE0\u8BDA\u548C\u610F\u56FE\u4E0D\u660E\uFF0C\u7ED9\u4E3B\u89D2\u5E26\u6765\u60AC\u5FF5\u548C\u6000\u7591\u3002",
-    tooltipText: "\u7ACB\u573A\u4E0D\u660E\u3001\u5584\u53D8\u7684\u89D2\u8272\u3002",
-    icon: /* @__PURE__ */ jsx2(CharacterIcon, { className: "w-6 h-6" })
-  },
-  {
-    id: "char-5",
-    type: "Character" /* Character */,
-    name: "\u9634\u5F71\u539F\u578B",
-    description: "\u4EE3\u8868\u4E3B\u89D2\u6700\u6DF1\u6050\u60E7\u548C\u538B\u6291\u6B32\u671B\u7684\u53CD\u6D3E\u6216\u5185\u5728\u529B\u91CF\uFF0C\u662F\u4E3B\u89D2\u5FC5\u987B\u9762\u5BF9\u548C\u514B\u670D\u7684\u4E3B\u8981\u969C\u788D\u3002",
-    tooltipText: "\u53CD\u6D3E\u6216\u4E3B\u89D2\u7684\u9634\u6697\u9762\u3002",
-    icon: /* @__PURE__ */ jsx2(CharacterIcon, { className: "w-6 h-6" })
-  },
-  {
-    id: "char-6",
-    type: "Character" /* Character */,
-    name: "\u6B3A\u8BC8\u8005\u539F\u578B",
-    description: "\u4E00\u4E2A\u559C\u6B22\u5236\u9020\u6DF7\u4E71\u3001\u6253\u7834\u89C4\u5219\u7684\u89D2\u8272\uFF0C\u65E2\u53EF\u4EE5\u662F\u76DF\u53CB\u4E5F\u53EF\u4EE5\u662F\u654C\u4EBA\uFF0C\u7528\u5E7D\u9ED8\u548C\u6076\u4F5C\u5267\u63A8\u52A8\u6545\u4E8B\u53D1\u5C55\u3002",
-    tooltipText: "\u5236\u9020\u6DF7\u4E71\u7684\u6076\u4F5C\u5267\u8005\u3002",
-    icon: /* @__PURE__ */ jsx2(CharacterIcon, { className: "w-6 h-6" })
-  },
-  {
-    id: "char-7",
-    type: "Character" /* Character */,
-    name: "\u4F19\u4F34\u539F\u578B",
-    description: "\u5FE0\u8BDA\u7684\u540C\u4F34\uFF0C\u5728\u65C5\u9014\u4E2D\u4E3A\u4E3B\u89D2\u63D0\u4F9B\u652F\u6301\u3001\u6280\u80FD\u548C\u53CB\u8C0A\u3002",
-    tooltipText: "\u4E3B\u89D2\u7684\u5FE0\u5B9E\u540C\u4F34\u3002",
-    icon: /* @__PURE__ */ jsx2(CharacterIcon, { className: "w-6 h-6" })
-  },
-  {
-    id: "char-8",
-    type: "Character" /* Character */,
-    name: "\u4E0D\u60C5\u613F\u7684\u82F1\u96C4",
-    description: "\u4E00\u4E2A\u8D77\u521D\u62D2\u7EDD\u5192\u9669\u53EC\u5524\u7684\u666E\u901A\u4EBA\uFF0C\u4F46\u6700\u7EC8\u633A\u8EAB\u800C\u51FA\uFF0C\u6210\u4E3A\u771F\u6B63\u7684\u82F1\u96C4\u3002",
-    tooltipText: "\u88AB\u8FEB\u6210\u4E3A\u82F1\u96C4\u7684\u666E\u901A\u4EBA\u3002",
-    icon: /* @__PURE__ */ jsx2(CharacterIcon, { className: "w-6 h-6" })
-  },
-  // Plots - Updated based on archetypes
-  {
-    id: "plot-1",
-    type: "Plot" /* Plot */,
-    name: "\u5E95\u5C42\u9006\u88AD",
-    description: "\u4E3B\u89D2\u4ECE\u8D2B\u56F0\u548C\u9ED8\u9ED8\u65E0\u95FB\u4E2D\u5D1B\u8D77\uFF0C\u83B7\u5F97\u8D22\u5BCC\u3001\u6210\u529F\u6216\u5E78\u798F\u3002",
-    tooltipText: "\u4ECE\u8D2B\u7A77\u5230\u5BCC\u6709\u7684\u9006\u88AD\u3002",
-    icon: /* @__PURE__ */ jsx2(PlotIcon, { className: "w-6 h-6" })
-  },
-  {
-    id: "plot-2",
-    type: "Plot" /* Plot */,
-    name: "\u63A2\u6C42",
-    description: "\u4E3B\u89D2\u548C\u540C\u4F34\u51FA\u53D1\uFF0C\u53BB\u83B7\u5F97\u4E00\u4E2A\u91CD\u8981\u7684\u5BF9\u8C61\u6216\u5230\u8FBE\u4E00\u4E2A\u5730\u65B9\uFF0C\u9014\u4E2D\u9762\u4E34\u969C\u788D\u548C\u8BF1\u60D1\u3002",
-    tooltipText: "\u4E3A\u8FBE\u6210\u76EE\u6807\u800C\u8E0F\u4E0A\u65C5\u7A0B\u3002",
-    icon: /* @__PURE__ */ jsx2(PlotIcon, { className: "w-6 h-6" })
-  },
-  {
-    id: "plot-3",
-    type: "Plot" /* Plot */,
-    name: "\u8FDC\u884C\u4E0E\u56DE\u5F52",
-    description: "\u4E3B\u89D2\u53BB\u5230\u4E00\u4E2A\u964C\u751F\u7684\u5730\u65B9\uFF0C\u514B\u670D\u4E86\u5A01\u80C1\uFF0C\u5E76\u5E26\u7740\u7ECF\u9A8C\u548C\u65B0\u7684\u89C1\u89E3\u56DE\u5BB6\u3002",
-    tooltipText: "\u8FDB\u5165\u5F02\u4E16\u754C\u5E76\u6700\u7EC8\u56DE\u5F52\u3002",
-    icon: /* @__PURE__ */ jsx2(PlotIcon, { className: "w-6 h-6" })
-  },
-  {
-    id: "plot-4",
-    type: "Plot" /* Plot */,
-    name: "\u559C\u5267",
-    description: "\u901A\u8FC7\u4E00\u7CFB\u5217\u6DF7\u4E71\u548C\u8BEF\u89E3\uFF0C\u89D2\u8272\u6700\u7EC8\u5728\u4E00\u4E2A\u5FEB\u4E50\u6216\u80DC\u5229\u7684\u7ED3\u5C40\u4E2D\u8D70\u5230\u4E00\u8D77\u3002",
-    tooltipText: "\u5145\u6EE1\u8BEF\u89E3\uFF0C\u4F46\u7ED3\u5C40\u5706\u6EE1\u3002",
-    icon: /* @__PURE__ */ jsx2(PlotIcon, { className: "w-6 h-6" })
-  },
-  {
-    id: "plot-5",
-    type: "Plot" /* Plot */,
-    name: "\u60B2\u5267",
-    description: "\u4E3B\u89D2\u56E0\u4E00\u4E2A\u91CD\u5927\u7684\u6027\u683C\u7F3A\u9677\u6216\u9519\u8BEF\u800C\u8D70\u5411\u6BC1\u706D\uFF0C\u7ED3\u5C40\u4EE4\u4EBA\u60CB\u60DC\u3002",
-    tooltipText: "\u4E3B\u89D2\u56E0\u81EA\u8EAB\u7F3A\u9677\u5BFC\u81F4\u6BC1\u706D\u3002",
-    icon: /* @__PURE__ */ jsx2(PlotIcon, { className: "w-6 h-6" })
-  },
-  {
-    id: "plot-6",
-    type: "Plot" /* Plot */,
-    name: "\u91CD\u751F",
-    description: "\u4E00\u4E2A\u4E8B\u4EF6\u8FEB\u4F7F\u4E3B\u89D2\u6539\u53D8\u4ED6\u4EEC\u7684\u65B9\u5F0F\uFF0C\u901A\u5E38\u4F7F\u4ED6\u4EEC\u6210\u4E3A\u4E00\u4E2A\u66F4\u597D\u7684\u4EBA\u3002",
-    tooltipText: "\u4E3B\u89D2\u7ECF\u5386\u8F6C\u53D8\u5E76\u83B7\u5F97\u65B0\u751F\u3002",
-    icon: /* @__PURE__ */ jsx2(PlotIcon, { className: "w-6 h-6" })
-  },
-  {
-    id: "plot-7",
-    type: "Plot" /* Plot */,
-    name: "\u6218\u80DC\u602A\u7269",
-    description: "\u82F1\u96C4\u5FC5\u987B\u6D88\u706D\u4E00\u4E2A\u5A01\u80C1\u4ED6\u4EEC\u5BB6\u56ED\u7684\u9ED1\u6697\u52BF\u529B\u6216\u602A\u7269\u3002",
-    tooltipText: "\u82F1\u96C4\u5BF9\u6297\u5E76\u6218\u80DC\u90AA\u6076\u3002",
-    icon: /* @__PURE__ */ jsx2(PlotIcon, { className: "w-6 h-6" })
-  },
-  // Narrative Structures
-  {
-    id: "structure-1",
-    type: "Structure" /* Structure */,
-    name: "\u5355\u7EBF\u578B\u7ED3\u6784",
-    description: "\u60C5\u8282\u5355\u7EAF\uFF0C\u7EBF\u7D22\u660E\u6670\uFF0C\u56F4\u7ED5\u4E00\u4E24\u4E2A\u4E3B\u8981\u4EBA\u7269\u4F9D\u6B21\u5C55\u5F00\uFF0C\u73AF\u73AF\u76F8\u6263\u3002\u4F8B\u5982\uFF0C\u9C81\u8FC5\u7684\u300A\u5B54\u4E59\u5DF1\u300B\u3002",
-    tooltipText: "\u5355\u4E00\u60C5\u8282\u7EBF\uFF0C\u4F9D\u6B21\u5C55\u5F00\u3002",
-    icon: /* @__PURE__ */ jsx2(StructureIcon, { className: "w-6 h-6" })
-  },
-  {
-    id: "structure-2",
-    type: "Structure" /* Structure */,
-    name: "\u590D\u7EBF\u578B\u7ED3\u6784",
-    description: "\u8FD0\u7528\u660E\u6697\u6216\u4E3B\u526F\u53CC\u7EBF\u5E76\u884C\u5C55\u5F00\uFF0C\u80FD\u5BB9\u7EB3\u66F4\u590D\u6742\u7684\u5185\u5BB9\uFF0C\u4E30\u6EE1\u4EBA\u7269\u5F62\u8C61\u3002\u4F8B\u5982\uFF0C\u9C81\u8FC5\u7684\u5C0F\u8BF4\u300A\u836F\u300B\u3002",
-    tooltipText: "\u4E3B\u526F\u53CC\u7EBF\u5E76\u884C\u5C55\u5F00\u3002",
-    icon: /* @__PURE__ */ jsx2(StructureIcon, { className: "w-6 h-6" })
-  },
-  {
-    id: "structure-3",
-    type: "Structure" /* Structure */,
-    name: "\u8F90\u5C04\u578B\u7ED3\u6784",
-    description: "\u60C5\u8282\u56F4\u7ED5\u4E00\u4E2A\u96C6\u4E2D\u7684\u201C\u7126\u70B9\u201D\u5448\u653E\u5C04\u72B6\u5C55\u5F00\uFF0C\u6253\u7834\u65F6\u7A7A\u754C\u9650\uFF0C\u7EBF\u7D22\u662F\u5FC3\u7406\u6D41\u7A0B\u3002\u610F\u8BC6\u6D41\u5C0F\u8BF4\u5E38\u7528\u3002",
-    tooltipText: "\u56F4\u7ED5\u4E00\u4E2A\u7126\u70B9\u653E\u5C04\u72B6\u5C55\u5F00\u3002",
-    icon: /* @__PURE__ */ jsx2(StructureIcon, { className: "w-6 h-6" })
-  },
-  {
-    id: "structure-4",
-    type: "Structure" /* Structure */,
-    name: "\u86DB\u7F51\u578B\u7ED3\u6784",
-    description: "\u7531\u4E09\u6761\u4EE5\u4E0A\u7EBF\u7D22\u4E92\u76F8\u4EA4\u53C9\u800C\u6210\uFF0C\u76D8\u6839\u9519\u8282\u5B9B\u5982\u86DB\u7F51\u3002\u4F8B\u5982\uFF0C\u300A\u521B\u4E1A\u53F2\u300B\u3001\u300A\u6C34\u6D52\u4F20\u300B\u3002",
-    tooltipText: "\u591A\u6761\u7EBF\u7D22\u4EA4\u53C9\u6210\u7F51\u3002",
-    icon: /* @__PURE__ */ jsx2(StructureIcon, { className: "w-6 h-6" })
-  },
-  {
-    id: "structure-5",
-    type: "Structure" /* Structure */,
-    name: "\u753B\u9762\u578B\u7ED3\u6784",
-    description: "\u4EE5\u666F\u7269\u3001\u573A\u9762\u4E3A\u4E3B\u4F53\u7684\u753B\u9762\u5F0F\u60C5\u8282\u5355\u5143\u7684\u7EC4\u5408\uFF0C\u4FA7\u91CD\u4E8E\u6292\u60C5\u5199\u610F\u548C\u73AF\u5883\u6C1B\u56F4\u3002",
-    tooltipText: "\u7531\u72EC\u7ACB\u7684\u753B\u9762\u5355\u5143\u7EC4\u5408\u800C\u6210\u3002",
-    icon: /* @__PURE__ */ jsx2(StructureIcon, { className: "w-6 h-6" })
-  },
-  {
-    id: "structure-6",
-    type: "Structure" /* Structure */,
-    name: "\u6DE1\u5316\u60C5\u8282\u578B\u7ED3\u6784",
-    description: "\u6545\u4E8B\u6027\u4E0D\u5F3A\uFF0C\u4FA7\u91CD\u4E8E\u4F5C\u8005\u60C5\u7EEA\u7684\u6292\u5199\u548C\u610F\u8BC6\u6D41\u52A8\uFF0C\u800C\u975E\u751F\u52A8\u7684\u60C5\u8282\u3002\u6563\u6587\u5316\uFF0C\u5F62\u6563\u800C\u795E\u4E0D\u6563\u3002",
-    tooltipText: "\u60C5\u8282\u5F31\u5316\uFF0C\u6CE8\u91CD\u60C5\u7EEA\u548C\u610F\u8BC6\u6D41\u3002",
-    icon: /* @__PURE__ */ jsx2(StructureIcon, { className: "w-6 h-6" })
-  },
-  {
-    id: "structure-7",
-    type: "Structure" /* Structure */,
-    name: "\u7A81\u8F6C\u5F0F\u7ED3\u6784",
-    description: "\u5728\u7ED3\u5C3E\u5904\u60C5\u8282\u7A81\u7136\u5411\u76F8\u53CD\u65B9\u5411\u8F6C\u53D8\uFF0C\u63ED\u793A\u51FA\u4EBA\u610F\u6599\u4F46\u53C8\u5728\u60C5\u7406\u4E4B\u4E2D\u7684\u771F\u76F8\u3002\u5373\u201C\u6B27\xB7\u4EA8\u5229\u5F0F\u7ED3\u5C3E\u201D\u3002",
-    tooltipText: "\u7ED3\u5C3E\u51FA\u4EBA\u610F\u6599\u7684\u5927\u53CD\u8F6C\u3002",
-    icon: /* @__PURE__ */ jsx2(StructureIcon, { className: "w-6 h-6" })
-  },
-  {
-    id: "structure-8",
-    type: "Structure" /* Structure */,
-    name: "\u201C\u5EF6\u8FDF\u201D\u5F0F\u7ED3\u6784",
-    description: "\u4F5C\u8005\u7AED\u529B\u7ED9\u6545\u4E8B\u3001\u4EBA\u7269\u3001\u8BFB\u8005\u5FC3\u7406\u8BBE\u7F6E\u969C\u788D\uFF0C\u53C8\u4E0D\u4F7F\u5E0C\u671B\u5B8C\u5168\u7834\u706D\uFF0C\u4E00\u73AF\u6263\u4E00\u73AF\uFF0C\u5B9E\u73B0\u7ED3\u6784\u5F20\u529B\u3002",
-    tooltipText: "\u4E0D\u65AD\u8BBE\u7F6E\u969C\u788D\uFF0C\u5EF6\u8FDF\u89E3\u5BC6\u3002",
-    icon: /* @__PURE__ */ jsx2(StructureIcon, { className: "w-6 h-6" })
-  },
-  {
-    id: "structure-9",
-    type: "Structure" /* Structure */,
-    name: "\u8C61\u5F81\u7ED3\u6784",
-    description: "\u5168\u90E8\u60C5\u8282\u7D27\u7D27\u56F4\u7ED5\u67D0\u4E2A\u62BD\u8C61\u7406\u5FF5\uFF08\u610F\u8BC6\u3001\u89C2\u70B9\u3001\u601D\u60F3\uFF09\u5C55\u5F00\uFF0C\u7406\u5FF5\u662F\u60C5\u8282\u7684\u5185\u6838\u548C\u8FDE\u63A5\u7EBF\u7D22\u3002",
-    tooltipText: "\u60C5\u8282\u56F4\u7ED5\u62BD\u8C61\u7406\u5FF5\u5C55\u5F00\u3002",
-    icon: /* @__PURE__ */ jsx2(StructureIcon, { className: "w-6 h-6" })
-  },
-  {
-    id: "structure-10",
-    type: "Structure" /* Structure */,
-    name: "\u677F\u5757\u578B\u7ED3\u6784",
-    description: "\u5C06\u8868\u9762\u4E92\u4E0D\u76F8\u5173\u7684\u4E8B\u4EF6\u3001\u4EBA\u7269\u3001\u573A\u666F\u5206\u522B\u7F57\u5217\uFF0C\u5F62\u6210\u72EC\u7ACB\u201C\u677F\u5757\u201D\uFF0C\u6574\u4F53\u610F\u8574\u8D85\u51FA\u5404\u90E8\u5206\u4E4B\u548C\u3002",
-    tooltipText: "\u7531\u4E92\u4E0D\u76F8\u5173\u7684\u72EC\u7ACB\u677F\u5757\u6784\u6210\u3002",
-    icon: /* @__PURE__ */ jsx2(StructureIcon, { className: "w-6 h-6" })
-  },
-  // Narrative Techniques
-  {
-    id: "tech-1",
-    type: "Technique" /* Technique */,
-    name: "\u5D4C\u5165\u5F0F\u53D9\u4E8B",
-    description: "\u5728\u4E3B\u8981\u6545\u4E8B\u60C5\u8282\u4E2D\u5D4C\u5165\u5176\u4ED6\u8F83\u5C0F\u7684\u6545\u4E8B\uFF08\u6545\u4E8B\u4E2D\u7684\u6545\u4E8B\uFF09\u3002\u8FD9\u4E9B\u5D4C\u5165\u7684\u6545\u4E8B\u901A\u5E38\u5177\u6709\u8C61\u5F81\u610F\u4E49\uFF0C\u53CD\u6620\u4EBA\u7269\u7684\u5FC3\u7406\u72B6\u6001\uFF0C\u4E3A\u4E3B\u7EBF\u63D0\u4F9B\u80CC\u666F\u4FE1\u606F\uFF0C\u751A\u81F3\u5F71\u54CD\u89C2\u4F17\u5BF9\u4E3B\u8981\u60C5\u8282\u7684\u7406\u89E3\u3002\u5F53\u53D9\u8FF0\u8005\u4E0D\u53EF\u9760\u65F6\uFF0C\u8FD8\u80FD\u5F15\u53D1\u5BF9\u6545\u4E8B\u771F\u5B9E\u6027\u7684\u8D28\u7591\u3002",
-    tooltipText: "\u6545\u4E8B\u4E2D\u5D4C\u5165\u5C0F\u6545\u4E8B\uFF0C\u7528\u4EE5\u8C61\u5F81\u3001\u94FA\u57AB\u6216\u5236\u9020\u60AC\u5FF5\u3002",
-    icon: /* @__PURE__ */ jsx2(TechniqueIcon, { className: "w-6 h-6" })
-  },
-  {
-    id: "tech-2",
-    type: "Technique" /* Technique */,
-    name: "\u6846\u67B6\u53D9\u4E8B (\u5939\u5C42\u53D9\u4E8B)",
-    description: "\u4EE5\u4E00\u4E2A\u4E3B\u8981\u6545\u4E8B\u4F5C\u4E3A\u6574\u4F53\u6846\u67B6\uFF0C\u5C06\u591A\u4E2A\u76F8\u5BF9\u72EC\u7ACB\u7684\u6B21\u8981\u6545\u4E8B\u5D4C\u5165\u5176\u4E2D\u3002\u8FD9\u4E9B\u6545\u4E8B\u5728\u7EDF\u4E00\u7684\u80CC\u666F\u4E0B\u5C55\u5F00\uFF0C\u6846\u67B6\u672C\u8EAB\u4E5F\u53EF\u4F20\u9012\u4E3B\u9898\u6216\u6210\u4E3A\u9690\u55BB\uFF0C\u5982\u300A\u4E00\u5343\u96F6\u4E00\u591C\u300B\u3002",
-    tooltipText: "\u4E00\u4E2A\u4E3B\u6545\u4E8B\u4F5C\u4E3A\u6846\u67B6\uFF0C\u5305\u88F9\u591A\u4E2A\u72EC\u7ACB\u7684\u5B50\u6545\u4E8B\u3002",
-    icon: /* @__PURE__ */ jsx2(TechniqueIcon, { className: "w-6 h-6" })
-  },
-  {
-    id: "tech-3",
-    type: "Technique" /* Technique */,
-    name: "\u5E73\u884C\u53D9\u4E8B (\u591A\u7EBF\u53D9\u4E8B)",
-    description: "\u540C\u65F6\u53D9\u8FF0\u4E24\u6761\u6216\u591A\u6761\u72EC\u7ACB\u7684\u6545\u4E8B\u7EBF\uFF0C\u5B83\u4EEC\u53EF\u4EE5\u5E73\u884C\u53D1\u5C55\uFF0C\u4E5F\u53EF\u4EE5\u4EA4\u7EC7\u5F71\u54CD\uFF0C\u6700\u7EC8\u6C47\u805A\u5230\u4E00\u4E2A\u5171\u540C\u7684\u7ED3\u5C40\u3002\u5E38\u91C7\u7528\u591A\u4EBA\u7269\u89C6\u89D2\uFF0C\u589E\u52A0\u6545\u4E8B\u7684\u590D\u6742\u6027\u548C\u591A\u6837\u6027\uFF0C\u5982\u300A\u51B0\u4E0E\u706B\u4E4B\u6B4C\u300B\u3002",
-    tooltipText: "\u591A\u6761\u6545\u4E8B\u7EBF\u5E73\u884C\u53D1\u5C55\uFF0C\u6700\u7EC8\u53EF\u80FD\u4EA4\u6C47\u3002",
-    icon: /* @__PURE__ */ jsx2(TechniqueIcon, { className: "w-6 h-6" })
-  },
-  {
-    id: "tech-4",
-    type: "Technique" /* Technique */,
-    name: "\u73AF\u5F62\u53D9\u4E8B (\u5FAA\u73AF\u53D9\u4E8B)",
-    description: "\u6545\u4E8B\u7684\u7ED3\u5C3E\u4E0E\u5F00\u5934\u76F8\u547C\u5E94\uFF0C\u5F62\u6210\u95ED\u5408\u7684\u5706\u73AF\u3002\u8FD9\u79CD\u7ED3\u6784\u5E38\u901A\u8FC7\u60C5\u8282\u6216\u4E3B\u9898\u7684\u5FAA\u73AF\u6765\u8868\u73B0\u751F\u547D\u7684\u8F6E\u56DE\u4E0E\u547D\u8FD0\u611F\uFF0C\u6FC0\u53D1\u89C2\u4F17\u7684\u54F2\u5B66\u601D\u8003\uFF0C\u5982\u300A\u8001\u4EBA\u4E0E\u6D77\u300B\u3002",
-    tooltipText: "\u6545\u4E8B\u7684\u7ED3\u5C3E\u4E0E\u5F00\u5934\u547C\u5E94\uFF0C\u5F62\u6210\u95ED\u73AF\uFF0C\u8868\u8FBE\u8F6E\u56DE\u4E3B\u9898\u3002",
-    icon: /* @__PURE__ */ jsx2(TechniqueIcon, { className: "w-6 h-6" })
-  },
-  {
-    id: "tech-5",
-    type: "Technique" /* Technique */,
-    name: "\u975E\u7EBF\u6027\u53D9\u4E8B",
-    description: "\u4E0D\u9075\u5FAA\u4E25\u683C\u7684\u65F6\u95F4\u987A\u5E8F\uFF0C\u901A\u8FC7\u5012\u53D9\u3001\u63D2\u53D9\u7B49\u624B\u6CD5\u6253\u4E71\u4E8B\u4EF6\u7684\u53D9\u8FF0\u65B9\u5F0F\u3002\u8FD9\u79CD\u788E\u7247\u5316\u7684\u53D9\u4E8B\u80FD\u589E\u5F3A\u60AC\u7591\u611F\u548C\u8F6C\u6298\u6548\u679C\uFF0C\u4FC3\u4F7F\u89C2\u4F17\u4E3B\u52A8\u62FC\u51D1\u6545\u4E8B\u5168\u8C8C\uFF0C\u5982\u300A\u4F4E\u4FD7\u5C0F\u8BF4\u300B\u3002",
-    tooltipText: "\u6545\u4E8B\u4E0D\u6309\u65F6\u95F4\u987A\u5E8F\u8BB2\u8FF0\uFF0C\u589E\u5F3A\u60AC\u7591\u548C\u53C2\u4E0E\u611F\u3002",
-    icon: /* @__PURE__ */ jsx2(TechniqueIcon, { className: "w-6 h-6" })
-  },
-  {
-    id: "tech-6",
-    type: "Technique" /* Technique */,
-    name: "\u591A\u5C42\u5D4C\u5957\u5F0F\u53D9\u4E8B",
-    description: "\u5F53\u5D4C\u5165\u5F0F\u53D9\u4E8B\u5177\u6709\u591A\u5C42\u7ED3\u6784\u65F6\uFF0C\u79F0\u4E3A\u5D4C\u5957\u5F0F\u53D9\u4E8B\u3002\u6545\u4E8B\u4E2D\u5305\u542B\u591A\u4E2A\u5C42\u6B21\u7684\u53D9\u8FF0\uFF0C\u6BCF\u4E00\u5C42\u90FD\u53EF\u80FD\u5E26\u6709\u4E0D\u53EF\u9760\u6027\uFF0C\u589E\u52A0\u4E86\u4F5C\u54C1\u7684\u89E3\u8BFB\u96BE\u5EA6\uFF0C\u5982\u300A\u76D7\u68A6\u7A7A\u95F4\u300B\u7684\u591A\u5C42\u68A6\u5883\u3002",
-    tooltipText: "\u591A\u5C42\u201C\u6545\u4E8B\u4E2D\u7684\u6545\u4E8B\u201D\uFF0C\u5C42\u5C42\u9012\u8FDB\uFF0C\u589E\u52A0\u590D\u6742\u6027\u3002",
-    icon: /* @__PURE__ */ jsx2(TechniqueIcon, { className: "w-6 h-6" })
-  },
-  // Endings
-  {
-    id: "ending-1",
-    type: "Ending" /* Ending */,
-    name: "\u53CD\u8BBD\u7ED3\u5C40",
-    description: "\u5DE7\u5999\u8FD0\u7528\u53CD\u8BBD\u3001\u5938\u5F20\u548C\u5E7D\u9ED8\u624B\u6CD5\uFF0C\u4F7F\u6545\u4E8B\u66F4\u5177\u8DA3\u5473\u6027\u548C\u6DF1\u610F\u3002\u53CD\u8BBD\u8868\u73B0\u4E3A\u6545\u4E8B\u60C5\u8282\u4E0E\u9884\u671F\u76F8\u53CD\uFF0C\u589E\u5F3A\u4E86\u6545\u4E8B\u7684\u620F\u5267\u6548\u679C\uFF1B\u5938\u5F20\u5219\u7528\u4EE5\u7A81\u51FA\u4EBA\u7269\u7684\u6027\u683C\u6216\u60C5\u5883\u7684\u8352\u8BDE\u6027\uFF1B\u5E7D\u9ED8\u5219\u7F13\u89E3\u6545\u4E8B\u7684\u7D27\u5F20\u6C1B\u56F4\u3002\u8FD9\u4E9B\u624B\u6CD5\u5171\u540C\u4F5C\u7528\uFF0C\u6700\u7EC8\u4EE5\u4E00\u4E2A\u5177\u6709\u8BBD\u523A\u610F\u5473\u7684\u8F6C\u6298\u6536\u5C3E\u3002",
-    tooltipText: "\u8FD0\u7528\u53CD\u8BBD\u3001\u5938\u5F20\u548C\u5E7D\u9ED8\u7684\u610F\u5916\u8F6C\u6298\u3002",
-    icon: /* @__PURE__ */ jsx2(EndingIcon, { className: "w-6 h-6" })
-  },
-  {
-    id: "ending-2",
-    type: "Ending" /* Ending */,
-    name: "\u5584\u54C9",
-    description: "\u5584\u54C9\uFF08Eucatastrophe\uFF09\u662F\u6258\u5C14\u91D1\u63D0\u51FA\u7684\u6982\u5FF5\uFF0C\u5E38\u89C1\u4E8E\u7AE5\u8BDD\u6545\u4E8B\u4E2D\uFF0C\u6307\u7684\u662F\u7A81\u7136\u7684\u5E78\u798F\u8F6C\u6298\uFF0C\u4F7F\u4EBA\u559C\u6781\u800C\u6CE3\u3002\u8FD9\u79CD\u8F6C\u6298\u901A\u5E38\u53D1\u751F\u5728\u770B\u4F3C\u7EDD\u671B\u6216\u65E0\u6CD5\u9006\u8F6C\u7684\u5C40\u9762\u4E2D\uFF0C\u5E26\u6765\u610F\u60F3\u4E0D\u5230\u7684\u80DC\u5229\u6216\u6551\u8D4E\uFF0C\u5E26\u6765\u6170\u85C9\u548C\u5E0C\u671B\u3002",
-    tooltipText: "\u7EDD\u671B\u4E2D\u7A81\u7136\u51FA\u73B0\u7684\u5E78\u798F\u8F6C\u6298\u3002",
-    icon: /* @__PURE__ */ jsx2(EndingIcon, { className: "w-6 h-6" })
-  },
-  {
-    id: "ending-3",
-    type: "Ending" /* Ending */,
-    name: "\u5947\u8FF9\u6069\u5178",
-    description: "\u7AE5\u8BDD\u6545\u4E8B\u7684\u5584\u54C9\u5143\u7D20\u5728\u4E8E\u8D85\u8D8A\u73B0\u5B9E\u7684\u5947\u8FF9\u548C\u6069\u5178\u3002\u65E0\u8BBA\u60C5\u8282\u591A\u4E48\u8352\u8BDE\u6216\u6050\u6016\uFF0C\u5947\u8FF9\u7684\u51FA\u73B0\u90FD\u80FD\u5E26\u6765\u5E0C\u671B\u548C\u6551\u8D4E\uFF0C\u4F53\u73B0\u4E86\u6545\u4E8B\u4E2D\u6DF1\u5C42\u6B21\u7684\u795E\u6027\u6697\u793A\uFF0C\u800C\u975E\u673A\u68B0\u964D\u795E\u3002",
-    tooltipText: "\u8D85\u8D8A\u73B0\u5B9E\u7684\u5947\u8FF9\u4E0E\u6551\u8D4E\u3002",
-    icon: /* @__PURE__ */ jsx2(EndingIcon, { className: "w-6 h-6" })
-  },
-  {
-    id: "ending-4",
-    type: "Ending" /* Ending */,
-    name: "\u673A\u68B0\u964D\u795E",
-    description: "\u673A\u68B0\u964D\u795E\uFF08Deus Ex Machina\uFF09\u6307\u6545\u4E8B\u4E2D\u7A81\u7136\u51FA\u73B0\u7684\u3001\u7F3A\u4E4F\u5408\u7406\u94FA\u57AB\u7684\u8D85\u81EA\u7136\u6551\u63F4\u3002\u8FD9\u79CD\u624B\u6CD5\u867D\u7136\u80FD\u89E3\u51B3\u5371\u673A\uFF0C\u4F46\u53EF\u80FD\u7834\u574F\u6545\u4E8B\u7684\u5185\u90E8\u903B\u8F91\u548C\u771F\u5B9E\u6027\uFF0C\u663E\u5F97\u5EC9\u4EF7\u548C\u7A81\u5140\u3002",
-    tooltipText: "\u7F3A\u4E4F\u94FA\u57AB\u7684\u8D85\u81EA\u7136\u6551\u63F4\u3002",
-    icon: /* @__PURE__ */ jsx2(EndingIcon, { className: "w-6 h-6" })
-  },
-  {
-    id: "ending-5",
-    type: "Ending" /* Ending */,
-    name: "\u73AF\u5F62\u7ED3\u5C40",
-    description: "\u6545\u4E8B\u91C7\u7528\u5706\u5F62\u7ED3\u6784\uFF0C\u5373\u6545\u4E8B\u7684\u7ED3\u5C3E\u56DE\u5230\u5F00\u5934\uFF0C\u5F62\u6210\u95ED\u73AF\u3002\u8FD9\u79CD\u53D9\u4E8B\u65B9\u5F0F\u5F3A\u8C03\u65E0\u9650\u8F6E\u56DE\u6216\u5FAA\u73AF\u4E0D\u5DF2\u7684\u4E3B\u9898\uFF0C\u5373\u4F7F\u89D2\u8272\u56DE\u5230\u539F\u70B9\uFF0C\u5176\u7CBE\u795E\u8F68\u8FF9\u4E5F\u5DF2\u53D1\u751F\u672C\u8D28\u53D8\u5316\uFF0C\u8D4B\u4E88\u53D9\u4E8B\u54F2\u601D\u610F\u5473\u3002",
-    tooltipText: "\u6545\u4E8B\u7684\u7ED3\u5C3E\u56DE\u5230\u5F00\u5934\u5F62\u6210\u95ED\u73AF\u3002",
-    icon: /* @__PURE__ */ jsx2(EndingIcon, { className: "w-6 h-6" })
-  },
-  {
-    id: "ending-6",
-    type: "Ending" /* Ending */,
-    name: "\u65E0\u9650\u8F6E\u56DE",
-    description: "\u91C7\u7528\u73AF\u5F62\u548C\u65E0\u9650\u7684\u53D9\u4E8B\u7ED3\u6784\u63A2\u7D22\u54F2\u5B66\u601D\u60F3\uFF0C\u5982\u8FF7\u5BAB\u8C61\u5F81\u65E0\u9650\u53EF\u80FD\u6027\u548C\u65F6\u95F4\u7684\u5FAA\u73AF\u3002\u6545\u4E8B\u6311\u6218\u4F20\u7EDF\u7EBF\u6027\u53D9\u4E8B\uFF0C\u901A\u8FC7\u8BA9\u6700\u540E\u4E00\u9875\u4E0E\u7B2C\u4E00\u9875\u76F8\u540C\u6765\u5B9E\u73B0\u65E0\u9650\u5FAA\u73AF\uFF0C\u5E26\u6765\u6DF1\u523B\u7684\u54F2\u5B66\u53CD\u601D\u3002",
-    tooltipText: "\u63A2\u7D22\u65E0\u9650\u53EF\u80FD\u6027\u4E0E\u65F6\u95F4\u5FAA\u73AF\u3002",
-    icon: /* @__PURE__ */ jsx2(EndingIcon, { className: "w-6 h-6" })
-  },
-  {
-    id: "ending-7",
-    type: "Ending" /* Ending */,
-    name: "\u5F00\u653E\u5F0F\u7ED3\u5C40",
-    description: "\u5F00\u653E\u5F0F\u7ED3\u5C40\u662F\u4E00\u79CD\u4E0D\u660E\u786E\u3001\u591A\u91CD\u53EF\u80FD\u6027\u7684\u7ED3\u5C40\uFF0C\u5141\u8BB8\u8BFB\u8005\u6216\u89C2\u4F17\u81EA\u884C\u89E3\u8BFB\u3002\u8FD9\u79CD\u6A21\u7CCA\u7684\u7ED3\u5C40\u6FC0\u53D1\u89C2\u4F17\u7684\u597D\u5947\u5FC3\u548C\u601D\u8003\u6B32\u671B\uFF0C\u589E\u52A0\u6545\u4E8B\u7684\u6DF1\u5EA6\u3002",
-    tooltipText: "\u7ED3\u5C40\u4E0D\u660E\u786E\uFF0C\u5141\u8BB8\u591A\u91CD\u89E3\u8BFB\u3002",
-    icon: /* @__PURE__ */ jsx2(EndingIcon, { className: "w-6 h-6" })
-  },
-  {
-    id: "ending-8",
-    type: "Ending" /* Ending */,
-    name: "\u60AC\u5FF5\u7ED3\u5C40",
-    description: "\u5F00\u653E\u5F0F\u7ED3\u5C40\u7684\u4F18\u70B9\u5728\u4E8E\u7ED9\u4E88\u89C2\u4F17\u66F4\u5927\u7684\u81EA\u7531\u7A7A\u95F4\uFF0C\u4F46\u4E5F\u53EF\u80FD\u5BFC\u81F4\u89C2\u4F17\u5BF9\u7ED3\u5C40\u4E89\u8BBA\u4E0D\u4F11\u751A\u81F3\u4E0D\u6EE1\u3002\u4F8B\u5982\uFF0C\u7535\u5F71\u4E2D\u5E38\u7528\u7684\u60AC\u5FF5\u7ED3\u5C40\uFF0C\u5728\u6CA1\u6709\u540E\u7EED\u89E3\u91CA\u7684\u60C5\u51B5\u4E0B\uFF0C\u53EF\u80FD\u8BA9\u4EBA\u611F\u5230\u7A7A\u6D1E\u6216\u56F0\u60D1\u3002",
-    tooltipText: "\u7ED3\u5C40\u60AC\u800C\u672A\u51B3\uFF0C\u5F15\u53D1\u4E89\u8BAE\u3002",
-    icon: /* @__PURE__ */ jsx2(EndingIcon, { className: "w-6 h-6" })
-  },
-  {
-    id: "ending-9",
-    type: "Ending" /* Ending */,
-    name: "\u5047\u7ED3\u5C40",
-    description: "\u5047\u7ED3\u5C40\u6307\u5728\u6545\u4E8B\u63A5\u8FD1\u5C3E\u58F0\u65F6\uFF0C\u8BEF\u5BFC\u89C2\u4F17\u6216\u8BFB\u8005\u4EE5\u4E3A\u6545\u4E8B\u5DF2\u7ECF\u7ED3\u675F\uFF0C\u5B9E\u9645\u4E0A\u5371\u673A\u5C1A\u672A\u89E3\u51B3\u3002\u8FD9\u79CD\u624B\u6CD5\u80FD\u5236\u9020\u7D27\u5F20\u611F\u548C\u53CD\u8F6C\u6548\u679C\uFF0C\u589E\u5F3A\u6545\u4E8B\u7684\u620F\u5267\u6027\uFF0C\u5E38\u7528\u4E8E\u6050\u6016\u548C\u60CA\u609A\u9898\u6750\u3002",
-    tooltipText: "\u8BEF\u5BFC\u89C2\u4F17\u4EE5\u4E3A\u6545\u4E8B\u7ED3\u675F\u7684\u8F6C\u6298\u3002",
-    icon: /* @__PURE__ */ jsx2(EndingIcon, { className: "w-6 h-6" })
-  }
-];
 
 // prompts.ts
 var DEFAULT_SNOWFLAKE_PROMPT_CONTENT = `\u4F60\u662F\u4E00\u4F4D\u4E13\u4E1A\u7684\u5C0F\u8BF4\u4F5C\u5BB6\uFF0C\u8BF7\u9075\u5FAA\u300C\u96EA\u82B1\u5199\u4F5C\u6CD5\u300D\u7684\u539F\u5219\uFF0C\u6839\u636E\u6211\u63D0\u4F9B\u7684\u6545\u4E8B\u6838\u5FC3\u8981\u7D20\uFF0C\u4E3A\u6211\u751F\u6210\u4E00\u4EFD\u8BE6\u5C3D\u7684\u5C0F\u8BF4\u5927\u7EB2\u3002
@@ -882,6 +1362,7 @@ var DEFAULT_INSPIRATION_DATA = [
 ];
 
 // components/Sidebar.tsx
+init_icons();
 import React from "react";
 import { jsx as jsx3, jsxs as jsxs2 } from "react/jsx-runtime";
 var NavItem = ({ label, view, icon, currentView, setView }) => {
@@ -918,356 +1399,13 @@ var Sidebar = ({ currentView, setView }) => {
 var Sidebar_default = Sidebar;
 
 // components/WriterView.tsx
+init_types();
+init_constants();
+init_aiService();
 import { useState as useState4, useMemo, useCallback as useCallback2, useEffect as useEffect3, useRef as useRef2 } from "react";
 
-// services/aiService.ts
-import { GoogleGenAI } from "@google/genai";
-var createPrompt = (cards, customPrompt, novelInfo) => {
-  const requiredCards = {
-    Theme: cards["Theme" /* Theme */],
-    Genre: cards["Genre" /* Genre */],
-    Character: cards["Character" /* Character */],
-    Plot: cards["Plot" /* Plot */]
-  };
-  const characterCard = requiredCards.Character;
-  const characterPrompt = `- \u89D2\u8272\u521B\u4F5C\u6307\u5BFC (Character Archetype Guide): \u8FD9\u662F\u521B\u4F5C\u89D2\u8272\u7684\u6838\u5FC3\u6982\u5FF5\uFF0C\u8BF7\u57FA\u4E8E\u300C${characterCard.name}\u300D(${characterCard.description}) \u7684\u7279\u8D28\uFF0C\u8BBE\u8BA1\u4E00\u4E2A\u72EC\u7279\u7684\u3001\u6709\u8840\u6709\u8089\u7684\u89D2\u8272\u3002\u8BF7\u6CE8\u610F\uFF0C\u8FD9\u53EA\u662F\u4E00\u4E2A\u521B\u4F5C\u6307\u5F15\uFF0C\u4E25\u7981\u5728\u6545\u4E8B\u4E2D\u76F4\u63A5\u4F7F\u7528\u300C${characterCard.name}\u300D\u8FD9\u4E2A\u539F\u578B\u540D\u79F0\u4F5C\u4E3A\u89D2\u8272\u7684\u540D\u5B57\u6216\u8EAB\u4EFD\u3002\u4F8B\u5982\uFF0C\u5982\u679C\u539F\u578B\u662F\u201C\u5BFC\u5E08\u201D\uFF0C\u4F60\u5E94\u8BE5\u521B\u9020\u4E00\u4E2A\u5177\u4F53\u7684\u3001\u6709\u540D\u5B57\u7684\u4EBA\u7269\uFF08\u6BD4\u5982\u201C\u8001\u6CD5\u5E08\u57C3\u5170\u201D\u6216\u201C\u9000\u4F11\u7684\u674E\u5C06\u519B\u201D\uFF09\uFF0C\u800C\u4E0D\u662F\u5728\u6545\u4E8B\u91CC\u76F4\u63A5\u79F0\u547C\u89D2\u8272\u4E3A\u201C\u5BFC\u5E08\u201D\u3002`;
-  const promptParts = [
-    `- \u4E3B\u9898 (Theme): ${requiredCards.Theme.name} (${requiredCards.Theme.description})`,
-    `- \u7C7B\u578B (Genre): ${requiredCards.Genre.name} (${requiredCards.Genre.description})`,
-    characterPrompt,
-    `- \u60C5\u8282\u7ED3\u6784 (Plot): ${requiredCards.Plot.name} (${requiredCards.Plot.description})`
-  ];
-  if (cards.Structure) {
-    promptParts.push(`- \u53D9\u4E8B\u7ED3\u6784 (Narrative Structure): ${cards.Structure.name} (${cards.Structure.description})`);
-  }
-  if (cards.Technique) {
-    promptParts.push(`- \u53D9\u4E8B\u624B\u6CD5 (Narrative Technique): ${cards.Technique.name} (${cards.Technique.description})`);
-  }
-  if (cards.Ending) {
-    promptParts.push(`- \u7ED3\u5C40\u98CE\u683C (Ending Style): ${cards.Ending.name} (${cards.Ending.description})`);
-  }
-  if (cards.Inspiration) {
-    const inspirationPrompt = `- \u521B\u4F5C\u6C1B\u56F4\u4E0E\u4E16\u754C\u89C2\u53C2\u8003 (Creative Atmosphere & Worldview Reference): \u8BF7\u4ECE\u4EE5\u4E0B\u6982\u5FF5\u4E2D\u6C72\u53D6\u7075\u611F\u6765\u6784\u5EFA\u6545\u4E8B\u7684\u72EC\u7279\u4E16\u754C\u89C2\u6216\u6C1B\u56F4\uFF0C\u4F46\u4E0D\u8981\u76F4\u63A5\u7167\u642C\u5176\u8BBE\u5B9A\u3002\u5C06\u5176\u4F5C\u4E3A\u4E00\u79CD\u98CE\u683C\u6307\u5F15\uFF0C\u4E0E\u5176\u5B83\u6838\u5FC3\u8981\u7D20\u878D\u5408\u521B\u4F5C\uFF1A${cards.Inspiration.name} (${cards.Inspiration.description})`;
-    promptParts.push(inspirationPrompt);
-  }
-  const novelInfoParts = [];
-  if (novelInfo.name) novelInfoParts.push(`- \u5C0F\u8BF4\u540D\u79F0: ${novelInfo.name}`);
-  if (novelInfo.wordCount) novelInfoParts.push(`- \u9884\u4F30\u5B57\u6570: ${novelInfo.wordCount}`);
-  if (novelInfo.perspective) novelInfoParts.push(`- \u53D9\u4E8B\u89C6\u89D2: ${novelInfo.perspective}`);
-  if (novelInfo.synopsis) novelInfoParts.push(`- \u4E00\u53E5\u8BDD\u6982\u8981: ${novelInfo.synopsis}`);
-  const novelInfoSection = novelInfoParts.length > 0 ? `
-\u8BF7\u540C\u65F6\u53C2\u8003\u4EE5\u4E0B\u5C0F\u8BF4\u57FA\u672C\u4FE1\u606F\uFF1A
-${novelInfoParts.join("\n")}` : "";
-  return `
-${customPrompt}
-${novelInfoSection}
-
-\u8BF7\u57FA\u4E8E\u4EE5\u4E0B\u6545\u4E8B\u6838\u5FC3\u8981\u7D20\u8FDB\u884C\u521B\u4F5C\uFF1A
-${promptParts.join("\n")}
-`;
-};
-async function* generateWithGemini(promptOrMessages, config, signal) {
-  const apiKey = process.env.API_KEY;
-  if (!apiKey) {
-    throw new Error("Gemini API key is not configured in environment variables (API_KEY).");
-  }
-  const ai = new GoogleGenAI({ apiKey });
-  const generationConfig = {};
-  if (config.temperature !== void 0) generationConfig.temperature = config.temperature;
-  if (config.topP !== void 0) generationConfig.topP = config.topP;
-  if (config.maxTokens !== void 0) {
-    generationConfig.maxOutputTokens = config.maxTokens;
-    generationConfig.thinkingConfig = { thinkingBudget: Math.floor(config.maxTokens / 4) };
-  }
-  const messages = typeof promptOrMessages === "string" ? [{ role: "user", content: promptOrMessages }] : promptOrMessages;
-  const contents = messages.map((msg) => {
-    const parts = [];
-    if (msg.content) {
-      parts.push({ text: msg.content });
-    }
-    if (msg.images) {
-      msg.images.forEach((imgData) => {
-        const mimeType = imgData.startsWith("/9j/") ? "image/jpeg" : "image/png";
-        parts.push({
-          inlineData: {
-            mimeType,
-            data: imgData
-          }
-        });
-      });
-    }
-    return {
-      // Treat 'system' as 'user' for multi-turn compatibility
-      role: msg.role === "model" ? "model" : "user",
-      parts
-    };
-  });
-  if (config.streaming) {
-    const response = await ai.models.generateContentStream({
-      model: "gemini-2.5-flash",
-      contents,
-      // Cast to handle structured content
-      config: generationConfig
-    });
-    for await (const chunk of response) {
-      if (signal?.aborted) throw new DOMException("Aborted by user", "AbortError");
-      const chunkText = chunk.text;
-      if (chunkText) {
-        yield chunkText;
-      }
-    }
-  } else {
-    if (signal?.aborted) throw new DOMException("Aborted by user", "AbortError");
-    const response = await ai.models.generateContent({
-      model: "gemini-2.5-flash",
-      contents,
-      config: generationConfig
-    });
-    if (signal?.aborted) throw new DOMException("Aborted by user", "AbortError");
-    if (!response.text) {
-      throw new Error("API returned an empty response.");
-    }
-    yield response.text.trim();
-  }
-}
-var getEndpoint = (url, path) => {
-  const trimmedUrl = url.trim().replace(/\/+$/, "");
-  const finalPath = path === "chat" ? "/v1/chat/completions" : "/v1/models";
-  if (trimmedUrl.endsWith("/v1")) {
-    return `${trimmedUrl}/${path === "chat" ? "chat/completions" : "models"}`;
-  }
-  if (trimmedUrl.includes("/api/v1")) {
-    return `${trimmedUrl}/${path === "chat" ? "chat/completions" : "models"}`;
-  }
-  if (trimmedUrl.endsWith(finalPath)) {
-    return trimmedUrl;
-  }
-  return `${trimmedUrl}${finalPath}`;
-};
-async function* generateWithOpenAICompatible(promptOrMessages, config, signal) {
-  const providersThatNeedKey = ["openai", "deepseek", "openrouter", "siliconflow", "modelscope"];
-  if (providersThatNeedKey.includes(config.provider) && !config.apiKey) {
-    throw new Error(`API key is required for the ${config.provider} provider.`);
-  }
-  if (!config.endpoint) throw new Error("Endpoint URL is missing.");
-  if (!config.model) throw new Error("Model name is missing.");
-  const endpoint = getEndpoint(config.endpoint, "chat");
-  const headers = { "Content-Type": "application/json" };
-  if (config.apiKey) {
-    headers["Authorization"] = `Bearer ${config.apiKey}`;
-  }
-  const body = {
-    model: config.model
-  };
-  const messages = typeof promptOrMessages === "string" ? [{ role: "user", content: promptOrMessages }] : promptOrMessages;
-  const preparedMessages = messages.map((msg) => {
-    const role = msg.role === "model" ? "assistant" : msg.role;
-    if (!msg.images || msg.images.length === 0) {
-      return { role, content: msg.content };
-    }
-    const contentParts = [{ type: "text", text: msg.content }];
-    msg.images.forEach((imgData) => {
-      const mimeType = imgData.startsWith("/9j/") ? "image/jpeg" : "image/png";
-      contentParts.push({
-        type: "image_url",
-        image_url: { url: `data:${mimeType};base64,${imgData}` }
-      });
-    });
-    return { role, content: contentParts };
-  });
-  body.messages = preparedMessages;
-  if (config.temperature !== void 0) body.temperature = config.temperature;
-  if (config.maxTokens !== void 0) body.max_tokens = config.maxTokens;
-  if (config.topP !== void 0) body.top_p = config.topP;
-  if (config.provider !== "modelscope") {
-    if (config.frequencyPenalty !== void 0) body.frequency_penalty = config.frequencyPenalty;
-    if (config.presencePenalty !== void 0) body.presence_penalty = config.presencePenalty;
-  }
-  if (config.streaming) {
-    body.stream = true;
-    const response = await fetch(endpoint, { method: "POST", headers, body: JSON.stringify(body), signal });
-    if (!response.ok || !response.body) {
-      let errorData;
-      try {
-        errorData = await response.json();
-      } catch (e) {
-        throw new Error(`API error (${response.status}): ${response.statusText}`);
-      }
-      throw new Error(`API error (${response.status}): ${errorData.error?.message || "Unknown error"}`);
-    }
-    const reader = response.body.getReader();
-    const decoder = new TextDecoder();
-    let buffer = "";
-    while (true) {
-      const { done, value } = await reader.read();
-      if (done) break;
-      if (signal?.aborted) {
-        await reader.cancel();
-        throw new DOMException("Aborted by user", "AbortError");
-      }
-      buffer += decoder.decode(value, { stream: true });
-      const lines = buffer.split("\n");
-      buffer = lines.pop() || "";
-      for (const line of lines) {
-        if (line.startsWith("data: ")) {
-          const dataStr = line.substring(6);
-          if (dataStr.trim() === "[DONE]") return;
-          try {
-            const data = JSON.parse(dataStr);
-            const content = data.choices?.[0]?.delta?.content;
-            if (content) {
-              yield content;
-            }
-          } catch (e) {
-          }
-        }
-      }
-    }
-  } else {
-    const response = await fetch(endpoint, { method: "POST", headers, body: JSON.stringify(body), signal });
-    if (!response.ok) {
-      let errorData;
-      try {
-        errorData = await response.json();
-      } catch (e) {
-        throw new Error(`API error (${response.status}): ${response.statusText}`);
-      }
-      throw new Error(`API error (${response.status}): ${errorData.error?.message || "Unknown error"}`);
-    }
-    const data = await response.json();
-    const content = data.choices?.[0]?.message?.content;
-    if (!content) {
-      throw new Error("API returned an invalid response structure.");
-    }
-    yield content.trim();
-  }
-}
-async function* generateOutline(cards, config, novelInfo) {
-  const activePrompt = config.prompts.find((p) => p.id === config.activePromptId) || config.prompts[0];
-  if (!activePrompt) {
-    throw new Error("No active prompt template found. Please check your settings.");
-  }
-  const prompt = createPrompt(cards, activePrompt.content, novelInfo);
-  const openAICompatibleProviders = ["openai", "deepseek", "openrouter", "siliconflow", "ollama", "custom", "modelscope"];
-  try {
-    if (config.provider === "gemini") {
-      yield* generateWithGemini(prompt, config);
-    } else if (openAICompatibleProviders.includes(config.provider)) {
-      yield* generateWithOpenAICompatible(prompt, config);
-    } else {
-      throw new Error(`Unsupported AI provider: ${config.provider}`);
-    }
-  } catch (error) {
-    console.error(`Error generating outline with ${config.provider} API:`, error);
-    if (error instanceof Error) {
-      let detailedMessage = `\u751F\u6210\u6545\u4E8B\u5927\u7EB2\u5931\u8D25: ${error.message}`;
-      if (error.message.includes("Failed to fetch")) {
-        detailedMessage += "\n\n\u8FD9\u901A\u5E38\u662F\u7531\u4E8E\u4EE5\u4E0B\u539F\u56E0\u4E4B\u4E00\u9020\u6210\u7684\uFF1A\n1. **\u7F51\u7EDC\u8FDE\u63A5\u95EE\u9898**\uFF1A\u8BF7\u68C0\u67E5\u60A8\u7684\u7F51\u7EDC\u8FDE\u63A5\u4EE5\u53CA\u80FD\u5426\u8BBF\u95EE\u76EE\u6807 Endpoint URL\u3002\n2. **CORS \u8DE8\u57DF\u95EE\u9898**\uFF1A\u5982\u679C\u60A8\u6B63\u5728\u4F7F\u7528\u672C\u5730\u6216\u81EA\u5B9A\u4E49 API\uFF0C\u8BF7\u786E\u4FDD\u670D\u52A1\u5668\u5DF2\u6B63\u786E\u914D\u7F6E CORS \u7B56\u7565\uFF0C\u5141\u8BB8\u6765\u81EA\u5F53\u524D\u7F51\u9875\u7684\u8BF7\u6C42\u3002\n3. **Endpoint URL \u9519\u8BEF**\uFF1A\u8BF7\u68C0\u67E5\u60A8\u5728\u8BBE\u7F6E\u4E2D\u586B\u5199\u7684 Endpoint URL \u662F\u5426\u6B63\u786E\uFF0C\u5305\u62EC\u534F\u8BAE (http/https) \u548C\u7AEF\u53E3\u3002";
-      }
-      throw new Error(detailedMessage);
-    }
-    throw new Error(`\u751F\u6210\u6545\u4E8B\u5927\u7EB2\u5931\u8D25\u3002\u8BF7\u68C0\u67E5\u60A8\u7684 API \u8BBE\u7F6E\u540E\u91CD\u8BD5\u3002`);
-  }
-}
-async function* polishOutline(currentOutline, userMessage, config, signal) {
-  const polishPrompt = `\u4F60\u662F\u4E00\u4F4D\u4E13\u4E1A\u7684\u5C0F\u8BF4\u5199\u4F5C\u52A9\u7406\u3002\u4F60\u7684\u4EFB\u52A1\u662F\u6839\u636E\u7528\u6237\u7684\u6307\u793A\u6765\u4FEE\u6539\u4E00\u4EFD\u6545\u4E8B\u5927\u7EB2\u3002
-
-\u8FD9\u662F\u5F53\u524D\u7684\u5927\u7EB2\u5185\u5BB9\uFF08Markdown\u683C\u5F0F\uFF09\uFF1A
----
-${currentOutline}
----
-
-\u7528\u6237\u7684\u4FEE\u6539\u8981\u6C42\u662F\uFF1A
-"${userMessage}"
-
-\u8BF7\u63D0\u4F9B\u5B8C\u6574\u3001\u4FEE\u8BA2\u540E\u7684\u5C0F\u8BF4\u5927\u7EB2\uFF0C\u5E76\u4FDD\u6301 Markdown \u683C\u5F0F\u3002\u4E0D\u8981\u5728\u7EB2\u8981\u4E4B\u5916\u6DFB\u52A0\u4EFB\u4F55\u8BC4\u8BBA\u6216\u89E3\u91CA\u3002\u53EA\u8FD4\u56DE\u66F4\u65B0\u540E\u7684\u5B8C\u6574 Markdown \u5185\u5BB9\u3002`;
-  const openAICompatibleProviders = ["openai", "deepseek", "openrouter", "siliconflow", "ollama", "custom", "modelscope"];
-  try {
-    if (config.provider === "gemini") {
-      yield* generateWithGemini(polishPrompt, config, signal);
-    } else if (openAICompatibleProviders.includes(config.provider)) {
-      yield* generateWithOpenAICompatible(polishPrompt, config, signal);
-    } else {
-      throw new Error(`Unsupported AI provider: ${config.provider}`);
-    }
-  } catch (error) {
-    console.error(`Error polishing outline with ${config.provider} API:`, error);
-    if (error instanceof Error) {
-      let detailedMessage = `AI \u6DA6\u8272\u5931\u8D25: ${error.message}`;
-      if (error.message.includes("Failed to fetch")) {
-        detailedMessage += "\n\n\u8BF7\u68C0\u67E5\u60A8\u7684\u7F51\u7EDC\u8FDE\u63A5\u548C AI Endpoint \u8BBE\u7F6E\u3002";
-      }
-      throw new Error(detailedMessage);
-    }
-    throw new Error(`AI \u6DA6\u8272\u5931\u8D25\u3002\u8BF7\u68C0\u67E5\u60A8\u7684 API \u8BBE\u7F6E\u540E\u91CD\u8BD5\u3002`);
-  }
-}
-async function* generateChatResponse(chatHistory, config, signal) {
-  const openAICompatibleProviders = ["openai", "deepseek", "openrouter", "siliconflow", "ollama", "custom", "modelscope"];
-  const chatConfig = { ...config, model: config.assistantModel || config.model };
-  try {
-    if (chatConfig.provider === "gemini") {
-      yield* generateWithGemini(chatHistory, chatConfig, signal);
-    } else if (openAICompatibleProviders.includes(chatConfig.provider)) {
-      yield* generateWithOpenAICompatible(chatHistory, chatConfig, signal);
-    } else {
-      throw new Error(`Unsupported AI provider: ${chatConfig.provider}`);
-    }
-  } catch (error) {
-    console.error(`Error in chat response with ${chatConfig.provider} API:`, error);
-    if (error instanceof Error) {
-      let detailedMessage = `AI \u804A\u5929\u5931\u8D25: ${error.message}`;
-      if (error.message.includes("Failed to fetch")) {
-        detailedMessage += "\n\n\u8BF7\u68C0\u67E5\u60A8\u7684\u7F51\u7EDC\u8FDE\u63A5\u548C AI Endpoint \u8BBE\u7F6E\u3002";
-      }
-      throw new Error(detailedMessage);
-    }
-    throw new Error(`AI \u804A\u5929\u5931\u8D25\u3002\u8BF7\u68C0\u67E5\u60A8\u7684 API \u8BBE\u7F6E\u540E\u91CD\u8BD5\u3002`);
-  }
-}
-var fetchModels = async (config) => {
-  if (config.provider !== "gemini" && !config.endpoint) {
-    throw new Error("Endpoint URL \u4E0D\u80FD\u4E3A\u7A7A\u3002");
-  }
-  if (config.provider === "gemini") {
-    return ["gemini-2.5-flash"];
-  }
-  const endpoint = config.provider === "ollama" ? `${config.endpoint.trim().replace(/\/+$/, "")}/api/tags` : getEndpoint(config.endpoint, "models");
-  const headers = { "Content-Type": "application/json" };
-  if (config.provider !== "ollama" && config.apiKey) {
-    headers["Authorization"] = `Bearer ${config.apiKey}`;
-  }
-  try {
-    const response = await fetch(endpoint, { method: "GET", headers });
-    if (!response.ok) {
-      let errorData;
-      try {
-        errorData = await response.json();
-      } catch (e) {
-        throw new Error(`API \u8FD4\u56DE\u72B6\u6001 ${response.status}: ${response.statusText}`);
-      }
-      throw new Error(`\u83B7\u53D6\u6A21\u578B\u5217\u8868\u5931\u8D25 (\u72B6\u6001 ${response.status}): ${errorData.error?.message || "\u8BF7\u68C0\u67E5 Endpoint URL\u3002"}`);
-    }
-    const data = await response.json();
-    if (config.provider === "ollama") {
-      return data.models?.map((model) => model.name) || [];
-    } else {
-      return data.data?.map((model) => model.id).sort() || [];
-    }
-  } catch (error) {
-    console.error(`Failed to fetch models from ${config.endpoint}:`, error);
-    if (error instanceof Error) {
-      let detailedMessage = `\u83B7\u53D6\u6A21\u578B\u5217\u8868\u5931\u8D25: ${error.message}`;
-      if (error.message.includes("Failed to fetch")) {
-        detailedMessage += "\n\n\u8FD9\u901A\u5E38\u662F\u7531\u4E8E\u4EE5\u4E0B\u539F\u56E0\u4E4B\u4E00\u9020\u6210\u7684\uFF1A\n1. **\u7F51\u7EDC\u8FDE\u63A5\u95EE\u9898**\uFF1A\u8BF7\u68C0\u67E5\u60A8\u7684\u7F51\u7EDC\u8FDE\u63A5\u4EE5\u53CA\u80FD\u5426\u8BBF\u95EE\u76EE\u6807 Endpoint URL\u3002\n2. **CORS \u8DE8\u57DF\u95EE\u9898**\uFF1A\u5982\u679C\u60A8\u6B63\u5728\u4F7F\u7528\u672C\u5730\u6216\u81EA\u5B9A\u4E49 API\uFF0C\u8BF7\u786E\u4FDD\u670D\u52A1\u5668\u5DF2\u6B63\u786E\u914D\u7F6E CORS \u7B56\u7565\u3002\n3. **Endpoint URL \u9519\u8BEF**\uFF1A\u8BF7\u68C0\u67E5\u60A8\u5728\u8BBE\u7F6E\u4E2D\u586B\u5199\u7684 Endpoint URL \u662F\u5426\u6B63\u786E\u3002";
-      }
-      throw new Error(detailedMessage);
-    }
-    throw new Error("\u83B7\u53D6\u6A21\u578B\u5217\u8868\u65F6\u53D1\u751F\u672A\u77E5\u7F51\u7EDC\u9519\u8BEF\u3002");
-  }
-};
-
 // components/CardComponent.tsx
+init_icons();
 import React2 from "react";
 import { jsx as jsx4, jsxs as jsxs3 } from "react/jsx-runtime";
 var CardComponent = ({ card, onClick, isSelected, onDragStart, onDragEnd, onEdit, onDelete }) => {
@@ -1296,7 +1434,7 @@ var CardComponent = ({ card, onClick, isSelected, onDragStart, onDragEnd, onEdit
   return /* @__PURE__ */ jsx4(
     "div",
     {
-      className: `flip-card group h-28 ${interactionClasses}`,
+      className: `flip-card group h-24 ${interactionClasses}`,
       draggable: !isSelected,
       onDragStart: handleDragStartInternal,
       onDragEnd,
@@ -1349,6 +1487,7 @@ var CardComponent = ({ card, onClick, isSelected, onDragStart, onDragEnd, onEdit
 var CardComponent_default = CardComponent;
 
 // components/CardCarousel.tsx
+init_icons();
 import React3, { useState, useRef, useEffect, useCallback } from "react";
 import { Fragment, jsx as jsx5, jsxs as jsxs4 } from "react/jsx-runtime";
 var AUTOPLAY_INTERVAL = 5e3;
@@ -1448,8 +1587,8 @@ var CardCarousel = ({ cards, onCardSelect, isCardSelected, onEdit, onDelete }) =
       onMouseEnter: () => setIsHovered(true),
       onMouseLeave: () => setIsHovered(false),
       children: [
-        /* @__PURE__ */ jsxs4("div", { className: "flex flex-col items-center justify-center h-40", children: [
-          /* @__PURE__ */ jsx5("div", { ref: containerRef, className: "relative h-32 w-full flex items-center justify-center card-carousel-viewport", children: cards.map((card, index) => {
+        /* @__PURE__ */ jsxs4("div", { className: "flex flex-col items-center justify-center h-36", children: [
+          /* @__PURE__ */ jsx5("div", { ref: containerRef, className: "relative h-28 w-full flex items-center justify-center card-carousel-viewport", children: cards.map((card, index) => {
             const offset = index - activeIndex;
             const isVisible = Math.abs(offset) < 4;
             const isActive = index === activeIndex;
@@ -1473,7 +1612,7 @@ var CardCarousel = ({ cards, onCardSelect, isCardSelected, onEdit, onDelete }) =
             return /* @__PURE__ */ jsxs4(
               "div",
               {
-                className: "card-carousel-card absolute w-24 h-28 rounded-lg shadow-md bg-white border border-gray-200 dark:bg-zinc-800 dark:border-zinc-700 flex flex-col items-center justify-center p-3 text-center",
+                className: "card-carousel-card absolute w-24 h-24 rounded-lg shadow-md bg-white border border-gray-200 dark:bg-zinc-800 dark:border-zinc-700 flex flex-col items-center justify-center p-3 text-center",
                 style: {
                   transform,
                   zIndex: cards.length - Math.abs(offset),
@@ -1586,38 +1725,35 @@ var CardSlot = ({ cardType, card, onClear, onDropCard, activeDragType, allCards 
     }
   };
   const canAcceptDrop = activeDragType === null || activeDragType === cardType;
-  return /* @__PURE__ */ jsxs5("div", { className: "relative", children: [
-    /* @__PURE__ */ jsx6("h3", { className: "text-md font-medium text-gray-500 mb-2 text-center dark:text-zinc-400", children: CARD_TYPE_NAMES[cardType] }),
-    /* @__PURE__ */ jsx6(
-      "div",
-      {
-        className: "h-28 w-full",
-        onDragOver: handleDragOver,
-        onDragEnter: handleDragEnter,
-        onDragLeave: handleDragLeave,
-        onDrop: handleDrop,
-        children: card ? /* @__PURE__ */ jsxs5("div", { className: "relative h-full group", children: [
-          /* @__PURE__ */ jsxs5("div", { className: "p-3 rounded-lg bg-white border-2 border-gray-400 flex flex-col items-center justify-center text-center shadow-md h-full dark:bg-zinc-700 dark:border-zinc-500", children: [
-            /* @__PURE__ */ jsx6("div", { className: "text-gray-700 mb-2 dark:text-zinc-300", children: React4.cloneElement(card.icon, { className: "w-5 h-5" }) }),
-            /* @__PURE__ */ jsx6("h4", { className: "font-semibold text-sm text-gray-800 dark:text-zinc-100", children: card.name })
-          ] }),
-          /* @__PURE__ */ jsx6(
-            "button",
-            {
-              onClick: onClear,
-              className: "absolute -top-2 -right-2 w-5 h-5 bg-gray-600 text-white rounded-full flex items-center justify-center hover:bg-red-500 transition-colors z-20 text-xs dark:bg-zinc-400 dark:text-zinc-900 dark:hover:bg-red-500",
-              "aria-label": `Clear ${cardType}`,
-              children: "\xD7"
-            }
-          ),
-          /* @__PURE__ */ jsxs5("div", { className: "absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-max max-w-xs p-2 text-sm bg-zinc-800 text-white rounded-md shadow-lg transition-opacity duration-300 pointer-events-none z-10 opacity-0 group-hover:opacity-100 dark:bg-zinc-900", children: [
-            card.description,
-            /* @__PURE__ */ jsx6("div", { className: "absolute top-full left-1/2 -translate-x-1/2 w-0 h-0 border-x-4 border-x-transparent border-t-4 border-t-zinc-800 dark:border-t-zinc-900" })
-          ] })
-        ] }) : /* @__PURE__ */ jsx6("div", { className: `w-full h-full flex items-center justify-center bg-gray-50/50 border-2 border-dashed rounded-lg transition-all duration-200 dark:bg-zinc-800/40 ${isOver && canAcceptDrop ? "border-blue-500 bg-blue-100/50 dark:bg-blue-900/30 dark:border-blue-400" : "border-gray-300 dark:border-zinc-700"}`, children: /* @__PURE__ */ jsx6("p", { className: `text-sm transition-colors ${isOver && canAcceptDrop ? "text-blue-600 font-medium dark:text-blue-300" : "text-gray-400 dark:text-zinc-500"}`, children: "\u62D6\u62FD\u5361\u7247\u81F3\u6B64" }) })
-      }
-    )
-  ] });
+  return /* @__PURE__ */ jsx6(
+    "div",
+    {
+      className: "h-24 w-full",
+      onDragOver: handleDragOver,
+      onDragEnter: handleDragEnter,
+      onDragLeave: handleDragLeave,
+      onDrop: handleDrop,
+      children: card ? /* @__PURE__ */ jsxs5("div", { className: "relative h-full w-full group", children: [
+        /* @__PURE__ */ jsxs5("div", { className: "p-3 rounded-lg bg-white border-2 border-gray-400 flex flex-col items-center justify-center text-center shadow-md h-full dark:bg-zinc-700 dark:border-zinc-500", children: [
+          /* @__PURE__ */ jsx6("div", { className: "text-gray-700 mb-2 dark:text-zinc-300", children: React4.cloneElement(card.icon, { className: "w-5 h-5" }) }),
+          /* @__PURE__ */ jsx6("h4", { className: "font-semibold text-sm text-gray-800 dark:text-zinc-100", children: card.name })
+        ] }),
+        /* @__PURE__ */ jsx6(
+          "button",
+          {
+            onClick: onClear,
+            className: "absolute -top-2 right-8 w-5 h-5 bg-gray-600 text-white rounded-full flex items-center justify-center hover:bg-red-500 transition-colors z-20 text-xs dark:bg-zinc-400 dark:text-zinc-900 dark:hover:bg-red-500",
+            "aria-label": `Clear ${cardType}`,
+            children: "\xD7"
+          }
+        ),
+        /* @__PURE__ */ jsxs5("div", { className: "absolute bottom-full inset-x-0 mb-2 p-2 text-sm text-center bg-zinc-800 text-white rounded-md shadow-lg transition-opacity duration-300 pointer-events-none z-30 opacity-0 group-hover:opacity-100 dark:bg-zinc-900", children: [
+          card.description,
+          /* @__PURE__ */ jsx6("div", { className: "absolute top-full left-1/2 -translate-x-1/2 w-0 h-0 border-x-4 border-x-transparent border-t-4 border-t-zinc-800 dark:border-t-zinc-900" })
+        ] })
+      ] }) : /* @__PURE__ */ jsx6("div", { className: `w-full h-full flex items-center justify-center bg-gray-50/50 border-2 border-dashed rounded-lg transition-all duration-200 dark:bg-zinc-800/40 ${isOver && canAcceptDrop ? "border-blue-500 bg-blue-100/50 dark:bg-blue-900/30 dark:border-blue-400" : "border-gray-300 dark:border-zinc-700"}`, children: /* @__PURE__ */ jsx6("p", { className: `text-sm transition-colors ${isOver && canAcceptDrop ? "text-blue-600 font-medium dark:text-blue-300" : "text-gray-400 dark:text-zinc-500"}`, children: "\u62D6\u62FD\u5361\u7247\u81F3\u6B64" }) })
+    }
+  );
 };
 var CardSlot_default = CardSlot;
 
@@ -1632,6 +1768,9 @@ var Spinner = () => {
 var Spinner_default = Spinner;
 
 // components/CreateCardModal.tsx
+init_constants();
+init_types();
+init_icons();
 import { useState as useState3, useEffect as useEffect2 } from "react";
 import { jsx as jsx8, jsxs as jsxs7 } from "react/jsx-runtime";
 var PLACEHOLDER_EXAMPLES = {
@@ -1644,10 +1783,11 @@ var PLACEHOLDER_EXAMPLES = {
   ["Ending" /* Ending */]: "\u4F8B\u5982\uFF1A\u5F00\u653E\u5F0F\u7ED3\u5C40",
   ["Inspiration" /* Inspiration */]: "\u4F8B\u5982\uFF1A\u9B54\u6CD5\u6E90\u4E8E\u60C5\u7EEA"
 };
-var CreateCardModal = ({ isOpen, onClose, onSubmit, cardType, editingCard }) => {
+var CreateCardModal = ({ isOpen, onClose, onSubmit, cardType, editingCard, config }) => {
   const [name, setName] = useState3("");
   const [tooltipText, setTooltipText] = useState3("");
   const [description, setDescription] = useState3("");
+  const [isGenerating, setIsGenerating] = useState3(false);
   const isEditing = !!editingCard;
   useEffect2(() => {
     if (isOpen && isEditing && editingCard) {
@@ -1673,6 +1813,22 @@ var CreateCardModal = ({ isOpen, onClose, onSubmit, cardType, editingCard }) => 
       id: isEditing ? editingCard.id : void 0
     });
   };
+  const handleAiGenerate = async () => {
+    if (!name.trim() || isGenerating) {
+      return;
+    }
+    setIsGenerating(true);
+    try {
+      const { generateCardDetails: generateCardDetails2 } = await Promise.resolve().then(() => (init_aiService(), aiService_exports));
+      const details = await generateCardDetails2(name, cardType, config);
+      setTooltipText(details.tooltipText);
+      setDescription(details.description);
+    } catch (error) {
+      alert(error instanceof Error ? error.message : "AI \u751F\u6210\u5931\u8D25\u3002");
+    } finally {
+      setIsGenerating(false);
+    }
+  };
   if (!isOpen) return null;
   return /* @__PURE__ */ jsxs7(
     "div",
@@ -1694,7 +1850,23 @@ var CreateCardModal = ({ isOpen, onClose, onSubmit, cardType, editingCard }) => 
               /* @__PURE__ */ jsxs7("form", { onSubmit: handleSubmit, children: [
                 /* @__PURE__ */ jsxs7("div", { className: "space-y-4", children: [
                   /* @__PURE__ */ jsxs7("div", { children: [
-                    /* @__PURE__ */ jsx8("label", { htmlFor: "card-name", className: "block text-sm font-medium text-gray-700 dark:text-zinc-300", children: "\u540D\u79F0" }),
+                    /* @__PURE__ */ jsxs7("div", { className: "flex justify-between items-center", children: [
+                      /* @__PURE__ */ jsx8("label", { htmlFor: "card-name", className: "block text-sm font-medium text-gray-700 dark:text-zinc-300", children: "\u540D\u79F0" }),
+                      /* @__PURE__ */ jsxs7(
+                        "button",
+                        {
+                          type: "button",
+                          onClick: handleAiGenerate,
+                          disabled: !name.trim() || isGenerating,
+                          className: "flex items-center gap-1.5 px-2 py-1 text-xs font-medium text-gray-600 bg-gray-100 rounded-md hover:bg-gray-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed dark:bg-zinc-700 dark:text-zinc-200 dark:hover:bg-zinc-600",
+                          title: "\u4F7F\u7528AI\u6839\u636E\u540D\u79F0\u751F\u6210\u63D0\u793A\u548C\u5185\u5BB9",
+                          children: [
+                            isGenerating ? /* @__PURE__ */ jsx8(Spinner_default, {}) : /* @__PURE__ */ jsx8(SparklesIcon, { className: "w-3 h-3" }),
+                            /* @__PURE__ */ jsx8("span", { children: "AI \u751F\u6210" })
+                          ]
+                        }
+                      )
+                    ] }),
                     /* @__PURE__ */ jsx8(
                       "input",
                       {
@@ -1778,12 +1950,14 @@ var CreateCardModal = ({ isOpen, onClose, onSubmit, cardType, editingCard }) => 
 var CreateCardModal_default = CreateCardModal;
 
 // components/WriterView.tsx
+init_icons();
 import { Fragment as Fragment2, jsx as jsx9, jsxs as jsxs8 } from "react/jsx-runtime";
 var LENGTH_PRESETS = {
   "short": "2\u4E07\u5B57",
   "medium": "5\u4E07\u5B57",
   "long": "10\u4E07\u5B57"
 };
+var EMOTION_PRESETS = ["\u65E0", "\u7EAF\u7231", "HE", "BE", "\u751C\u5BA0", "\u6697\u604B", "\u8650\u604B", "\u5148\u8650\u540E\u751C", "\u6C99\u96D5", "\u723D\u6587", "\u590D\u4EC7", "\u53CD\u8F6C"];
 var getLengthCategory = (wordCount) => {
   if (!wordCount) return "";
   const num = parseInt(wordCount.replace(/[^0-9]/g, ""), 10);
@@ -1794,7 +1968,27 @@ var getLengthCategory = (wordCount) => {
   if (value >= 8e4) return "long";
   return "";
 };
-var WriterView = ({ config, setConfig, onStartGeneration, combinedCards, onCardSelect, onClearCard, novelInfo, setNovelInfo, allCards, onCreateCard, onUpdateCard, onDeleteCard, uiSettings }) => {
+var WriterView = ({
+  config,
+  setConfig,
+  onStartGeneration,
+  combinedCards,
+  onCardSelect,
+  onClearCard,
+  onAddCardSlot,
+  onRemoveCardSlot,
+  novelInfo,
+  setNovelInfo,
+  allCards,
+  onCreateCard,
+  onUpdateCard,
+  onDeleteCard,
+  uiSettings,
+  savedCombinations,
+  onSaveCombination,
+  onLoadCombination,
+  onDeleteCombination
+}) => {
   const [isLoading, setIsLoading] = useState4(false);
   const [activeDragType, setActiveDragType] = useState4(null);
   const [activePanel, setActivePanel] = useState4(0);
@@ -1804,14 +1998,19 @@ var WriterView = ({ config, setConfig, onStartGeneration, combinedCards, onCardS
   const [modelList, setModelList] = useState4([]);
   const [isModelListLoading, setIsModelListLoading] = useState4(false);
   const [isModelSelectOpen, setIsModelSelectOpen] = useState4(false);
+  const [isCombinationManagerOpen, setIsCombinationManagerOpen] = useState4(false);
   const [modelSearch, setModelSearch] = useState4("");
   const modelSelectRef = useRef2(null);
+  const combinationManagerRef = useRef2(null);
   const fileInputRef = useRef2(null);
   const totalPanels = 2;
   useEffect3(() => {
     const handleClickOutside = (event) => {
       if (modelSelectRef.current && !modelSelectRef.current.contains(event.target)) {
         setIsModelSelectOpen(false);
+      }
+      if (combinationManagerRef.current && !combinationManagerRef.current.contains(event.target)) {
+        setIsCombinationManagerOpen(false);
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
@@ -1837,17 +2036,20 @@ var WriterView = ({ config, setConfig, onStartGeneration, combinedCards, onCardS
   useEffect3(() => {
     const loadModels = async () => {
       if (!config.provider) return;
-      if (config.provider === "gemini") {
-        setModelList(["gemini-2.5-flash"]);
-        if (config.model !== "gemini-2.5-flash") {
-          setConfig((prev) => ({ ...prev, model: "gemini-2.5-flash" }));
+      if (config.provider !== "ollama" && (!config.apiKey || !config.endpoint)) {
+        if (config.provider === "gemini" && config.apiKey) {
+        } else {
+          setModelList([]);
+          return;
         }
-        return;
       }
       setIsModelListLoading(true);
       try {
         const models = await fetchModels(config);
         setModelList(models);
+        if (models.length > 0 && !models.includes(config.model)) {
+          setConfig((prev) => ({ ...prev, model: models[0] }));
+        }
       } catch (error) {
         if (error instanceof Error) {
           console.error("Failed to fetch models for writer view dropdown:", error.message);
@@ -1862,12 +2064,13 @@ var WriterView = ({ config, setConfig, onStartGeneration, combinedCards, onCardS
     loadModels();
   }, [config.provider, config.apiKey, config.endpoint, setConfig]);
   const isGenerationReady = useMemo(() => {
-    const coreCardsMet = CORE_CARD_TYPES.every((type) => combinedCards[type] != null);
-    const novelInfoMet = novelInfo.name && novelInfo.wordCount && novelInfo.synopsis && novelInfo.perspective;
+    const coreCardsMet = CORE_CARD_TYPES.every((type) => combinedCards[type]?.some((c) => c !== null));
+    const novelInfoMet = novelInfo.name && novelInfo.wordCount && novelInfo.synopsis && novelInfo.perspective && novelInfo.channel != null && // FIX: Allow '' (None) as a valid choice
+    novelInfo.emotion;
     return coreCardsMet && !!novelInfoMet;
   }, [combinedCards, novelInfo]);
   const isCardSelected = useCallback2((cardId) => {
-    return Object.values(combinedCards).some((c) => c?.id === cardId);
+    return Object.values(combinedCards).flat().some((c) => c?.id === cardId);
   }, [combinedCards]);
   const handleGenerate = async () => {
     if (!isGenerationReady) return;
@@ -1876,14 +2079,24 @@ var WriterView = ({ config, setConfig, onStartGeneration, combinedCards, onCardS
   const handleDrawCards = useCallback2(() => {
     const allTypes = [...CORE_CARD_TYPES, ...OPTIONAL_CARD_TYPES];
     allTypes.forEach((type) => {
-      const candidateCards = allCards.filter((card) => card.type === type);
-      if (candidateCards.length > 0) {
-        const randomIndex = Math.floor(Math.random() * candidateCards.length);
-        const selectedCard = candidateCards[randomIndex];
-        onCardSelect(selectedCard);
-      }
+      const currentSlots = combinedCards[type] || [null];
+      const availableCards = allCards.filter((card) => card.type === type);
+      if (availableCards.length === 0) return;
+      const selectedInThisDraw = /* @__PURE__ */ new Set();
+      currentSlots.forEach((_, index) => {
+        let candidateCards = availableCards.filter((card) => !selectedInThisDraw.has(card.id));
+        if (candidateCards.length === 0) {
+          candidateCards = availableCards;
+        }
+        if (candidateCards.length > 0) {
+          const randomIndex = Math.floor(Math.random() * candidateCards.length);
+          const selectedCard = candidateCards[randomIndex];
+          onCardSelect(selectedCard, index);
+          selectedInThisDraw.add(selectedCard.id);
+        }
+      });
     });
-  }, [onCardSelect, allCards]);
+  }, [combinedCards, allCards, onCardSelect]);
   const handleInfoChange = (e) => {
     const { id, value } = e.target;
     setNovelInfo((prev) => ({ ...prev, [id]: value }));
@@ -1947,8 +2160,14 @@ var WriterView = ({ config, setConfig, onStartGeneration, combinedCards, onCardS
     reader.readAsText(file);
     e.target.value = "";
   };
+  const handleSaveCombinationClick = () => {
+    const name = prompt("\u8BF7\u8F93\u5165\u8981\u4FDD\u5B58\u7684\u7EC4\u5408\u540D\u79F0\uFF1A", "\u6211\u7684\u6545\u4E8B\u7EC4\u5408");
+    if (name) {
+      onSaveCombination(name);
+    }
+  };
   return /* @__PURE__ */ jsxs8("div", { className: "w-full max-w-7xl mx-auto flex flex-col h-full", children: [
-    /* @__PURE__ */ jsxs8("header", { className: "flex justify-start items-center mb-6 gap-4", children: [
+    /* @__PURE__ */ jsxs8("header", { className: "flex justify-start items-center mb-6 gap-4 flex-wrap", children: [
       /* @__PURE__ */ jsx9(
         "button",
         {
@@ -2024,21 +2243,77 @@ var WriterView = ({ config, setConfig, onStartGeneration, combinedCards, onCardS
             onChange: (e) => setConfig((prev) => ({ ...prev, activePromptId: e.target.value })),
             className: "w-48 pl-3 pr-8 py-2 text-sm bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-gray-500 focus:border-gray-500 appearance-none transition-all dark:bg-zinc-700 dark:border-zinc-600 dark:text-zinc-100",
             "aria-label": "\u9009\u62E9\u63D0\u793A\u8BCD\u6A21\u677F",
-            children: config.prompts.map((prompt) => /* @__PURE__ */ jsx9("option", { value: prompt.id, children: prompt.name }, prompt.id))
+            children: config.prompts.map((prompt2) => /* @__PURE__ */ jsx9("option", { value: prompt2.id, children: prompt2.name }, prompt2.id))
           }
         ),
         /* @__PURE__ */ jsx9("div", { className: "pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700 dark:text-zinc-300", children: /* @__PURE__ */ jsx9("svg", { className: "fill-current h-4 w-4", xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 20 20", children: /* @__PURE__ */ jsx9("path", { d: "M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" }) }) })
+      ] }),
+      /* @__PURE__ */ jsxs8("div", { className: "flex items-center gap-2", children: [
+        /* @__PURE__ */ jsxs8(
+          "button",
+          {
+            type: "button",
+            onClick: handleSaveCombinationClick,
+            className: "flex items-center gap-2 pl-3 pr-4 py-2 text-sm bg-white border border-gray-300 rounded-lg shadow-sm hover:bg-gray-100 transition-all dark:bg-zinc-700 dark:border-zinc-600 dark:text-zinc-100 dark:hover:bg-zinc-600",
+            title: "\u4FDD\u5B58\u5F53\u524D\u5361\u724C\u7EC4\u5408",
+            children: [
+              /* @__PURE__ */ jsx9(BookmarkSquareIcon, { className: "w-4 h-4" }),
+              /* @__PURE__ */ jsx9("span", { children: "\u4FDD\u5B58\u7EC4\u5408" })
+            ]
+          }
+        ),
+        /* @__PURE__ */ jsxs8("div", { ref: combinationManagerRef, className: "relative", children: [
+          /* @__PURE__ */ jsx9(
+            "button",
+            {
+              type: "button",
+              onClick: () => setIsCombinationManagerOpen((prev) => !prev),
+              className: "p-2.5 bg-white border border-gray-300 rounded-lg shadow-sm hover:bg-gray-100 transition-all dark:bg-zinc-700 dark:border-zinc-600 dark:text-zinc-100 dark:hover:bg-zinc-600",
+              title: "\u7BA1\u7406\u5DF2\u4FDD\u5B58\u7684\u7EC4\u5408",
+              children: /* @__PURE__ */ jsx9(ArrowDownOnSquareIcon, { className: "w-4 h-4" })
+            }
+          ),
+          isCombinationManagerOpen && /* @__PURE__ */ jsxs8("div", { className: "absolute z-20 mt-2 w-72 right-0 bg-white dark:bg-zinc-800 rounded-lg shadow-xl border border-gray-200 dark:border-zinc-700", children: [
+            /* @__PURE__ */ jsx9("div", { className: "p-3 border-b border-gray-200 dark:border-zinc-700", children: /* @__PURE__ */ jsx9("h3", { className: "font-semibold text-gray-800 dark:text-zinc-100", children: "\u5DF2\u5B58\u7EC4\u5408" }) }),
+            savedCombinations.length > 0 ? /* @__PURE__ */ jsx9("ul", { className: "max-h-80 overflow-y-auto custom-scrollbar p-2", children: savedCombinations.map((combo) => /* @__PURE__ */ jsxs8("li", { className: "group flex justify-between items-center p-2 rounded-md hover:bg-gray-100 dark:hover:bg-zinc-700", children: [
+              /* @__PURE__ */ jsx9("span", { className: "text-sm font-medium text-gray-700 dark:text-zinc-200 truncate pr-2", title: combo.name, children: combo.name }),
+              /* @__PURE__ */ jsxs8("div", { className: "flex items-center gap-2", children: [
+                /* @__PURE__ */ jsx9(
+                  "button",
+                  {
+                    onClick: () => {
+                      onLoadCombination(combo.id);
+                      setIsCombinationManagerOpen(false);
+                    },
+                    className: "text-sm text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 font-semibold",
+                    title: "\u52A0\u8F7D\u6B64\u7EC4\u5408",
+                    children: "\u52A0\u8F7D"
+                  }
+                ),
+                /* @__PURE__ */ jsx9(
+                  "button",
+                  {
+                    onClick: () => onDeleteCombination(combo.id),
+                    className: "p-1 text-gray-400 hover:text-red-600 dark:text-zinc-500 dark:hover:text-red-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity",
+                    title: "\u5220\u9664\u6B64\u7EC4\u5408",
+                    children: /* @__PURE__ */ jsx9(TrashIcon, { className: "w-4 h-4" })
+                  }
+                )
+              ] })
+            ] }, combo.id)) }) : /* @__PURE__ */ jsx9("p", { className: "p-4 text-sm text-gray-500 dark:text-zinc-400 text-center", children: "\u8FD8\u6CA1\u6709\u4FDD\u5B58\u4EFB\u4F55\u7EC4\u5408\u3002" })
+          ] })
+        ] })
       ] })
     ] }),
     /* @__PURE__ */ jsxs8("div", { className: "flex-grow flex flex-col min-h-0", children: [
-      /* @__PURE__ */ jsx9("div", { className: "flex-1 overflow-hidden", children: /* @__PURE__ */ jsxs8(
+      /* @__PURE__ */ jsx9("div", { className: "flex-1 overflow-x-hidden overflow-y-visible", children: /* @__PURE__ */ jsxs8(
         "div",
         {
           className: "flex h-full transition-transform duration-500 ease-in-out",
           style: { transform: `translateX(-${activePanel * 100}%)` },
           children: [
-            /* @__PURE__ */ jsx9("div", { className: "w-full flex-shrink-0 p-1", children: /* @__PURE__ */ jsxs8("div", { className: "grid grid-cols-1 lg:grid-cols-2 gap-2 h-full", children: [
-              /* @__PURE__ */ jsxs8("div", { className: "bg-white p-6 rounded-xl border border-gray-200 shadow-sm flex flex-col h-full dark:bg-zinc-800 dark:border-zinc-700", children: [
+            /* @__PURE__ */ jsx9("div", { className: "w-full flex-shrink-0 p-1", children: /* @__PURE__ */ jsxs8("div", { className: "grid grid-cols-1 lg:grid-cols-5 gap-2 h-full", children: [
+              /* @__PURE__ */ jsxs8("div", { className: "bg-white p-6 rounded-xl border border-gray-200 shadow-sm flex flex-col h-full dark:bg-zinc-800 dark:border-zinc-700 lg:col-span-2", children: [
                 /* @__PURE__ */ jsx9("h2", { className: "text-xl font-semibold mb-5 text-gray-700 dark:text-zinc-200", children: "\u5C0F\u8BF4\u4FE1\u606F" }),
                 /* @__PURE__ */ jsxs8("div", { className: "flex flex-col flex-grow", children: [
                   /* @__PURE__ */ jsxs8("div", { className: "space-y-4", children: [
@@ -2048,6 +2323,51 @@ var WriterView = ({ config, setConfig, onStartGeneration, combinedCards, onCardS
                         /* @__PURE__ */ jsx9("span", { className: "text-red-500", children: "*" })
                       ] }),
                       /* @__PURE__ */ jsx9("input", { type: "text", id: "name", value: novelInfo.name, onChange: handleInfoChange, className: "w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-gray-500 focus:border-gray-500 dark:bg-zinc-700 dark:border-zinc-600 dark:text-white", placeholder: "\u4F8B\u5982\uFF1A\u6DF1\u6E0A\u56DE\u54CD" })
+                    ] }),
+                    /* @__PURE__ */ jsxs8("div", { children: [
+                      /* @__PURE__ */ jsxs8("label", { className: "block text-sm font-medium text-gray-600 mb-2 dark:text-zinc-300", children: [
+                        "\u4E66\u7C4D\u9891\u9053 ",
+                        /* @__PURE__ */ jsx9("span", { className: "text-red-500", children: "*" })
+                      ] }),
+                      /* @__PURE__ */ jsx9("div", { className: "flex items-center space-x-4", children: ["", "male", "female"].map((channelValue) => {
+                        const labels = { "": "\u65E0", "male": "\u7537\u9891", "female": "\u5973\u9891" };
+                        return /* @__PURE__ */ jsxs8("label", { className: "flex items-center space-x-2 cursor-pointer text-sm", children: [
+                          /* @__PURE__ */ jsx9(
+                            "input",
+                            {
+                              type: "radio",
+                              name: "channel",
+                              value: channelValue,
+                              checked: novelInfo.channel === channelValue,
+                              onChange: (e) => setNovelInfo((prev) => ({ ...prev, channel: e.target.value })),
+                              className: "h-4 w-4 text-gray-600 focus:ring-gray-500 border-gray-300"
+                            }
+                          ),
+                          /* @__PURE__ */ jsx9("span", { className: "text-gray-700 dark:text-zinc-300", children: labels[channelValue] })
+                        ] }, channelValue);
+                      }) })
+                    ] }),
+                    /* @__PURE__ */ jsxs8("div", { className: "grid grid-cols-2 gap-4", children: [
+                      /* @__PURE__ */ jsxs8("div", { children: [
+                        /* @__PURE__ */ jsxs8("label", { htmlFor: "emotion", className: "block text-sm font-medium text-gray-600 mb-1 dark:text-zinc-300", children: [
+                          "\u60C5\u7EEA ",
+                          /* @__PURE__ */ jsx9("span", { className: "text-red-500", children: "*" })
+                        ] }),
+                        /* @__PURE__ */ jsx9("select", { id: "emotion", value: novelInfo.emotion || "\u65E0", onChange: handleInfoChange, className: "w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-gray-500 focus:border-gray-500 bg-white dark:bg-zinc-700 dark:border-zinc-600 dark:text-white", children: EMOTION_PRESETS.map((e) => /* @__PURE__ */ jsx9("option", { value: e, children: e }, e)) })
+                      ] }),
+                      /* @__PURE__ */ jsxs8("div", { children: [
+                        /* @__PURE__ */ jsxs8("label", { htmlFor: "perspective", className: "block text-sm font-medium text-gray-600 mb-1 dark:text-zinc-300", children: [
+                          "\u53D9\u4E8B\u89C6\u89D2 ",
+                          /* @__PURE__ */ jsx9("span", { className: "text-red-500", children: "*" })
+                        ] }),
+                        /* @__PURE__ */ jsxs8("select", { id: "perspective", value: novelInfo.perspective || "", onChange: handleInfoChange, className: "w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-gray-500 focus:border-gray-500 bg-white dark:bg-zinc-700 dark:border-zinc-600 dark:text-white", children: [
+                          /* @__PURE__ */ jsx9("option", { value: "", children: "\u8BF7\u9009\u62E9..." }),
+                          /* @__PURE__ */ jsx9("option", { value: "\u5168\u77E5\u89C6\u89D2(\u96F6\u89C6\u89D2)", children: "\u5168\u77E5\u89C6\u89D2(\u96F6\u89C6\u89D2)" }),
+                          /* @__PURE__ */ jsx9("option", { value: "\u7B2C\u4E09\u4EBA\u79F0\u53D9\u8FF0", children: "\u7B2C\u4E09\u4EBA\u79F0\u53D9\u8FF0" }),
+                          /* @__PURE__ */ jsx9("option", { value: "\u7B2C\u4E00\u4EBA\u79F0\u53D9\u8FF0", children: "\u7B2C\u4E00\u4EBA\u79F0\u53D9\u8FF0" }),
+                          /* @__PURE__ */ jsx9("option", { value: "\u7B2C\u4E8C\u4EBA\u79F0\u53D9\u8FF0", children: "\u7B2C\u4E8C\u4EBA\u79F0\u53D9\u8FF0" })
+                        ] })
+                      ] })
                     ] }),
                     /* @__PURE__ */ jsxs8("div", { className: "grid grid-cols-2 gap-4", children: [
                       /* @__PURE__ */ jsxs8("div", { children: [
@@ -2068,19 +2388,6 @@ var WriterView = ({ config, setConfig, onStartGeneration, combinedCards, onCardS
                           /* @__PURE__ */ jsx9("span", { className: "text-red-500", children: "*" })
                         ] }),
                         /* @__PURE__ */ jsx9("input", { type: "text", id: "wordCount", value: novelInfo.wordCount, onChange: handleInfoChange, className: "w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-gray-500 focus:border-gray-500 dark:bg-zinc-700 dark:border-zinc-600 dark:text-white", placeholder: "\u4F8B\u5982\uFF1A10\u4E07\u5B57" })
-                      ] })
-                    ] }),
-                    /* @__PURE__ */ jsxs8("div", { children: [
-                      /* @__PURE__ */ jsxs8("label", { htmlFor: "perspective", className: "block text-sm font-medium text-gray-600 mb-1 dark:text-zinc-300", children: [
-                        "\u53D9\u4E8B\u89C6\u89D2 ",
-                        /* @__PURE__ */ jsx9("span", { className: "text-red-500", children: "*" })
-                      ] }),
-                      /* @__PURE__ */ jsxs8("select", { id: "perspective", value: novelInfo.perspective || "", onChange: handleInfoChange, className: "w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-gray-500 focus:border-gray-500 bg-white dark:bg-zinc-700 dark:border-zinc-600 dark:text-white", children: [
-                        /* @__PURE__ */ jsx9("option", { value: "", children: "\u8BF7\u9009\u62E9..." }),
-                        /* @__PURE__ */ jsx9("option", { value: "\u5168\u77E5\u89C6\u89D2(\u96F6\u89C6\u89D2)", children: "\u5168\u77E5\u89C6\u89D2(\u96F6\u89C6\u89D2)" }),
-                        /* @__PURE__ */ jsx9("option", { value: "\u7B2C\u4E09\u4EBA\u79F0\u53D9\u8FF0", children: "\u7B2C\u4E09\u4EBA\u79F0\u53D9\u8FF0" }),
-                        /* @__PURE__ */ jsx9("option", { value: "\u7B2C\u4E00\u4EBA\u79F0\u53D9\u8FF0", children: "\u7B2C\u4E00\u4EBA\u79F0\u53D9\u8FF0" }),
-                        /* @__PURE__ */ jsx9("option", { value: "\u7B2C\u4E8C\u4EBA\u79F0\u53D9\u8FF0", children: "\u7B2C\u4E8C\u4EBA\u79F0\u53D9\u8FF0" })
                       ] })
                     ] })
                   ] }),
@@ -2115,45 +2422,75 @@ var WriterView = ({ config, setConfig, onStartGeneration, combinedCards, onCardS
                   ] })
                 ] })
               ] }),
-              /* @__PURE__ */ jsxs8("div", { className: "bg-white p-6 rounded-xl border border-gray-200 shadow-sm flex flex-col overflow-hidden dark:bg-zinc-800 dark:border-zinc-700", children: [
+              /* @__PURE__ */ jsxs8("div", { className: "bg-white p-6 rounded-xl border border-gray-200 shadow-sm flex flex-col min-h-0 dark:bg-zinc-800 dark:border-zinc-700 lg:col-span-3", children: [
                 /* @__PURE__ */ jsx9("h2", { className: "text-xl font-semibold mb-5 text-gray-700 dark:text-zinc-200 flex-shrink-0", children: "\u6545\u4E8B\u7EC4\u5408" }),
                 /* @__PURE__ */ jsxs8("div", { className: "flex-grow overflow-y-auto custom-scrollbar -mr-4 pr-4", children: [
-                  /* @__PURE__ */ jsx9("div", { className: "grid grid-cols-2 gap-4", children: CORE_CARD_TYPES.map((type) => /* @__PURE__ */ jsx9(
-                    CardSlot_default,
-                    {
-                      cardType: type,
-                      card: combinedCards[type] || null,
-                      onClear: () => onClearCard(type),
-                      onDropCard: onCardSelect,
-                      activeDragType,
-                      allCards
-                    },
-                    type
-                  )) }),
-                  /* @__PURE__ */ jsx9("div", { className: "mt-4 pt-4 border-t border-gray-200/60 dark:border-zinc-600/60", children: /* @__PURE__ */ jsx9(
-                    CardSlot_default,
-                    {
-                      cardType: "Inspiration" /* Inspiration */,
-                      card: combinedCards["Inspiration" /* Inspiration */] || null,
-                      onClear: () => onClearCard("Inspiration" /* Inspiration */),
-                      onDropCard: onCardSelect,
-                      activeDragType,
-                      allCards
-                    },
-                    "Inspiration" /* Inspiration */
-                  ) }),
-                  /* @__PURE__ */ jsx9("div", { className: "mt-4 grid grid-cols-2 md:grid-cols-3 gap-4", children: OPTIONAL_CARD_TYPES.filter((type) => type !== "Inspiration" /* Inspiration */).map((type) => /* @__PURE__ */ jsx9(
-                    CardSlot_default,
-                    {
-                      cardType: type,
-                      card: combinedCards[type] || null,
-                      onClear: () => onClearCard(type),
-                      onDropCard: onCardSelect,
-                      activeDragType,
-                      allCards
-                    },
-                    type
-                  )) })
+                  /* @__PURE__ */ jsx9("div", { className: "grid grid-cols-2 gap-x-4 gap-y-6", children: CORE_CARD_TYPES.map((type) => /* @__PURE__ */ jsxs8("div", { className: "flex flex-col gap-2", children: [
+                    /* @__PURE__ */ jsxs8("div", { className: "flex justify-between items-center", children: [
+                      /* @__PURE__ */ jsx9("h3", { className: "text-md font-medium text-gray-500 dark:text-zinc-400", children: CARD_TYPE_NAMES[type] }),
+                      (combinedCards[type]?.length ?? 0) < 3 && /* @__PURE__ */ jsx9(
+                        "button",
+                        {
+                          onClick: () => onAddCardSlot(type),
+                          className: "p-1 text-gray-400 hover:text-gray-700 rounded-full hover:bg-gray-100 transition-colors dark:text-zinc-500 dark:hover:text-zinc-200 dark:hover:bg-zinc-700",
+                          title: `\u4E3A\u201C${CARD_TYPE_NAMES[type]}\u201D\u6DFB\u52A0\u4E00\u4E2A\u65B0\u680F\u4F4D`,
+                          children: /* @__PURE__ */ jsx9(PlusIcon, { className: "w-4 h-4" })
+                        }
+                      )
+                    ] }),
+                    combinedCards[type]?.map((card, index) => /* @__PURE__ */ jsxs8("div", { className: "relative", children: [
+                      /* @__PURE__ */ jsx9(
+                        CardSlot_default,
+                        {
+                          cardType: type,
+                          card,
+                          onClear: () => onClearCard(type, index),
+                          onDropCard: (droppedCard) => onCardSelect(droppedCard, index),
+                          activeDragType,
+                          allCards
+                        }
+                      ),
+                      index > 0 && /* @__PURE__ */ jsx9(
+                        "button",
+                        {
+                          onClick: () => onRemoveCardSlot(type, index),
+                          className: "absolute -top-2 -right-2 w-5 h-5 bg-gray-600 text-white rounded-full flex items-center justify-center hover:bg-red-500 transition-colors z-20",
+                          "aria-label": `\u79FB\u9664\u201C${CARD_TYPE_NAMES[type]}\u201D\u680F\u4F4D`,
+                          title: "\u79FB\u9664\u680F\u4F4D",
+                          children: /* @__PURE__ */ jsx9(TrashIcon, { className: "w-3 h-3" })
+                        }
+                      )
+                    ] }, `${type}-${index}`))
+                  ] }, type)) }),
+                  /* @__PURE__ */ jsxs8("div", { className: "mt-6 pt-4 border-t border-gray-200/60 dark:border-zinc-600/60", children: [
+                    /* @__PURE__ */ jsx9("h3", { className: "text-md font-medium text-gray-500 dark:text-zinc-400 mb-2", children: CARD_TYPE_NAMES["Inspiration" /* Inspiration */] }),
+                    /* @__PURE__ */ jsx9(
+                      CardSlot_default,
+                      {
+                        cardType: "Inspiration" /* Inspiration */,
+                        card: combinedCards["Inspiration" /* Inspiration */]?.[0] || null,
+                        onClear: () => onClearCard("Inspiration" /* Inspiration */, 0),
+                        onDropCard: (card) => onCardSelect(card, 0),
+                        activeDragType,
+                        allCards
+                      },
+                      "Inspiration" /* Inspiration */
+                    )
+                  ] }),
+                  /* @__PURE__ */ jsx9("div", { className: "mt-4 flex flex-wrap -mx-2", children: OPTIONAL_CARD_TYPES.filter((type) => type !== "Inspiration" /* Inspiration */).map((type) => /* @__PURE__ */ jsxs8("div", { className: "w-1/2 md:w-1/3 px-2 mb-4", children: [
+                    /* @__PURE__ */ jsx9("h3", { className: "text-md font-medium text-gray-500 dark:text-zinc-400 mb-2", children: CARD_TYPE_NAMES[type] }),
+                    /* @__PURE__ */ jsx9(
+                      CardSlot_default,
+                      {
+                        cardType: type,
+                        card: combinedCards[type]?.[0] || null,
+                        onClear: () => onClearCard(type, 0),
+                        onDropCard: (card) => onCardSelect(card, 0),
+                        activeDragType,
+                        allCards
+                      }
+                    )
+                  ] }, type)) })
                 ] })
               ] })
             ] }) }),
@@ -2177,7 +2514,13 @@ var WriterView = ({ config, setConfig, onStartGeneration, combinedCards, onCardS
                     CardCarousel_default,
                     {
                       cards: allCards.filter((card) => card.type === type),
-                      onCardSelect,
+                      onCardSelect: (card) => {
+                        let targetIndex = combinedCards[card.type]?.findIndex((slot) => slot === null);
+                        if (targetIndex === -1) {
+                          targetIndex = 0;
+                        }
+                        onCardSelect(card, targetIndex ?? 0);
+                      },
                       isCardSelected,
                       onEdit: handleOpenModalForEdit,
                       onDelete: handleDeleteRequest
@@ -2186,7 +2529,13 @@ var WriterView = ({ config, setConfig, onStartGeneration, combinedCards, onCardS
                     CardComponent_default,
                     {
                       card,
-                      onClick: onCardSelect,
+                      onClick: (c) => {
+                        let targetIndex = combinedCards[c.type]?.findIndex((slot) => slot === null);
+                        if (targetIndex === -1) {
+                          targetIndex = 0;
+                        }
+                        onCardSelect(c, targetIndex ?? 0);
+                      },
                       isSelected: isCardSelected(card.id),
                       onDragStart: () => handleCardDragStart(card.type),
                       onDragEnd: () => setActiveDragType(null),
@@ -2203,7 +2552,7 @@ var WriterView = ({ config, setConfig, onStartGeneration, combinedCards, onCardS
                   CardCarousel_default,
                   {
                     cards: allCards.filter((card) => card.type === type),
-                    onCardSelect,
+                    onCardSelect: (card) => onCardSelect(card, 0),
                     isCardSelected,
                     onEdit: handleOpenModalForEdit,
                     onDelete: handleDeleteRequest
@@ -2212,7 +2561,7 @@ var WriterView = ({ config, setConfig, onStartGeneration, combinedCards, onCardS
                   CardComponent_default,
                   {
                     card,
-                    onClick: onCardSelect,
+                    onClick: (c) => onCardSelect(c, 0),
                     isSelected: isCardSelected(card.id),
                     onDragStart: () => handleCardDragStart(card.type),
                     onDragEnd: () => setActiveDragType(null),
@@ -2246,7 +2595,8 @@ var WriterView = ({ config, setConfig, onStartGeneration, combinedCards, onCardS
         },
         onSubmit: handleModalSubmit,
         cardType: editingCard?.type ?? modalCardType,
-        editingCard
+        editingCard,
+        config
       }
     )
   ] });
@@ -2254,10 +2604,11 @@ var WriterView = ({ config, setConfig, onStartGeneration, combinedCards, onCardS
 var WriterView_default = WriterView;
 
 // components/SettingsView.tsx
+init_aiService();
 import { useState as useState5, useEffect as useEffect4 } from "react";
-import { Fragment as Fragment3, jsx as jsx10, jsxs as jsxs9 } from "react/jsx-runtime";
+import { jsx as jsx10, jsxs as jsxs9 } from "react/jsx-runtime";
 var PROVIDER_DEFAULTS = {
-  gemini: { endpoint: "", modelPlaceholder: "" },
+  gemini: { endpoint: "https://generativelanguage.googleapis.com", modelPlaceholder: "gemini-2.5-flash" },
   openai: { endpoint: "https://api.openai.com", modelPlaceholder: "gpt-4o, gpt-3.5-turbo" },
   deepseek: { endpoint: "https://api.deepseek.com", modelPlaceholder: "deepseek-chat" },
   openrouter: { endpoint: "https://openrouter.ai/api/v1", modelPlaceholder: "meta-llama/llama-3-8b-instruct" },
@@ -2337,6 +2688,15 @@ var SettingsView = ({ currentConfig, onSave, currentUISettings, onSaveUISettings
     setConfig(currentConfig);
   }, [currentConfig]);
   useEffect4(() => {
+    const currentProvider = config.provider;
+    if (!config.endpoint && PROVIDER_DEFAULTS[currentProvider]?.endpoint) {
+      setConfig((prev) => ({
+        ...prev,
+        endpoint: PROVIDER_DEFAULTS[currentProvider].endpoint
+      }));
+    }
+  }, [config.provider, config.endpoint]);
+  useEffect4(() => {
     setUISettings(currentUISettings);
   }, [currentUISettings]);
   const handleSave = () => {
@@ -2354,12 +2714,6 @@ var SettingsView = ({ currentConfig, onSave, currentUISettings, onSaveUISettings
     setTestResult({ status: "idle", message: "\u6D4B\u8BD5\u4E2D..." });
     setModelList([]);
     try {
-      if (config.provider === "gemini") {
-        if (!process.env.API_KEY || process.env.API_KEY.length < 30) throw new Error("\u65E0\u6548\u7684 Gemini API \u5BC6\u94A5\u683C\u5F0F\u3002\u8BF7\u68C0\u67E5\u60A8\u7684\u73AF\u5883\u53D8\u91CF\u3002");
-        setTestResult({ status: "success", message: "\u94FE\u63A5\u6210\u529F! Gemini \u6A21\u578B\u662F\u56FA\u5B9A\u7684\u3002" });
-        setIsTesting(false);
-        return;
-      }
       const models = await fetchModels(config);
       if (models.length === 0) {
         setTestResult({ status: "success", message: "\u6210\u529F\u8FDE\u63A5\uFF0C\u4F46\u672A\u627E\u5230\u53EF\u7528\u6A21\u578B\u3002" });
@@ -2379,13 +2733,13 @@ var SettingsView = ({ currentConfig, onSave, currentUISettings, onSaveUISettings
   const handleProviderChange = (e) => {
     const newProvider = e.target.value;
     const defaults = PROVIDER_DEFAULTS[newProvider];
+    const preservedApiKey = config.provider === "ollama" && newProvider !== "ollama" ? "" : config.apiKey;
     setConfig((prev) => ({
       ...prev,
       provider: newProvider,
-      model: newProvider === "gemini" ? "gemini-2.5-flash" : "",
-      assistantModel: newProvider === "gemini" ? "gemini-2.5-flash" : prev.assistantModel,
+      model: "",
       endpoint: defaults.endpoint,
-      apiKey: newProvider === "ollama" || newProvider === "gemini" ? "" : prev.apiKey
+      apiKey: newProvider === "ollama" ? "" : preservedApiKey
     }));
     setTestResult({ status: "idle", message: "" });
     setModelList([]);
@@ -2485,7 +2839,7 @@ var SettingsView = ({ currentConfig, onSave, currentUISettings, onSaveUISettings
               ]
             }
           ) }),
-          config.provider !== "ollama" && config.provider !== "gemini" && /* @__PURE__ */ jsx10(InputField, { label: "API \u5BC6\u94A5", id: "apiKey", children: /* @__PURE__ */ jsx10(
+          config.provider !== "ollama" && /* @__PURE__ */ jsx10(InputField, { label: "API \u5BC6\u94A5", id: "apiKey", children: /* @__PURE__ */ jsx10(
             "input",
             {
               id: "apiKey",
@@ -2496,40 +2850,38 @@ var SettingsView = ({ currentConfig, onSave, currentUISettings, onSaveUISettings
               placeholder: "\u8F93\u5165\u60A8\u7684 API \u5BC6\u94A5"
             }
           ) }),
-          config.provider !== "gemini" && /* @__PURE__ */ jsxs9(Fragment3, { children: [
-            /* @__PURE__ */ jsx10(InputField, { label: "Endpoint URL", id: "endpoint", children: /* @__PURE__ */ jsx10(
-              "input",
-              {
-                id: "endpoint",
-                type: "text",
-                value: config.endpoint,
-                onChange: (e) => setConfig((prev) => ({ ...prev, endpoint: e.target.value })),
-                className: "w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-gray-500 focus:border-gray-500 dark:bg-zinc-700 dark:border-zinc-600 dark:text-white",
-                placeholder: "\u670D\u52A1\u5730\u5740\u5C06\u6839\u636E\u63D0\u4F9B\u5546\u81EA\u52A8\u586B\u5145"
-              }
-            ) }),
-            /* @__PURE__ */ jsx10(InputField, { label: "\u6A21\u578B\u540D\u79F0", id: "model", children: modelList.length > 0 ? /* @__PURE__ */ jsx10(
-              "select",
-              {
-                id: "model",
-                value: config.model,
-                onChange: (e) => setConfig((prev) => ({ ...prev, model: e.target.value })),
-                className: "w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-gray-500 focus:border-gray-500 dark:bg-zinc-700 dark:border-zinc-600 dark:text-white",
-                children: modelList.map((modelName) => /* @__PURE__ */ jsx10("option", { value: modelName, children: modelName }, modelName))
-              }
-            ) : /* @__PURE__ */ jsx10(
-              "input",
-              {
-                id: "model",
-                type: "text",
-                value: config.model,
-                onChange: (e) => setConfig((prev) => ({ ...prev, model: e.target.value })),
-                className: "w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-gray-500 focus:border-gray-500 dark:bg-zinc-700 dark:border-zinc-600 dark:text-white",
-                placeholder: PROVIDER_DEFAULTS[config.provider]?.modelPlaceholder || "\u70B9\u51FB\u201C\u6D4B\u8BD5\u94FE\u63A5\u201D\u4EE5\u52A0\u8F7D\u6A21\u578B",
-                disabled: isTesting
-              }
-            ) })
-          ] }),
+          /* @__PURE__ */ jsx10(InputField, { label: "Endpoint URL", id: "endpoint", children: /* @__PURE__ */ jsx10(
+            "input",
+            {
+              id: "endpoint",
+              type: "text",
+              value: config.endpoint,
+              onChange: (e) => setConfig((prev) => ({ ...prev, endpoint: e.target.value })),
+              className: "w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-gray-500 focus:border-gray-500 disabled:bg-gray-100/80 dark:bg-zinc-700 dark:border-zinc-600 dark:text-white dark:disabled:bg-zinc-800/60 dark:disabled:cursor-not-allowed",
+              placeholder: PROVIDER_DEFAULTS[config.provider]?.endpoint
+            }
+          ) }),
+          /* @__PURE__ */ jsx10(InputField, { label: "\u6A21\u578B\u540D\u79F0", id: "model", children: modelList.length > 0 ? /* @__PURE__ */ jsx10(
+            "select",
+            {
+              id: "model",
+              value: config.model,
+              onChange: (e) => setConfig((prev) => ({ ...prev, model: e.target.value })),
+              className: "w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-gray-500 focus:border-gray-500 dark:bg-zinc-700 dark:border-zinc-600 dark:text-white",
+              children: modelList.map((modelName) => /* @__PURE__ */ jsx10("option", { value: modelName, children: modelName }, modelName))
+            }
+          ) : /* @__PURE__ */ jsx10(
+            "input",
+            {
+              id: "model",
+              type: "text",
+              value: config.model,
+              onChange: (e) => setConfig((prev) => ({ ...prev, model: e.target.value })),
+              className: "w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-gray-500 focus:border-gray-500 disabled:bg-gray-100/80 dark:bg-zinc-700 dark:border-zinc-600 dark:text-white dark:disabled:bg-zinc-800/60 dark:disabled:cursor-not-allowed",
+              placeholder: PROVIDER_DEFAULTS[config.provider]?.modelPlaceholder || "\u70B9\u51FB\u201C\u6D4B\u8BD5\u94FE\u63A5\u201D\u4EE5\u52A0\u8F7D\u6A21\u578B",
+              disabled: isTesting
+            }
+          ) }),
           /* @__PURE__ */ jsxs9("div", { className: "pt-4 flex items-center gap-4", children: [
             /* @__PURE__ */ jsx10(
               "button",
@@ -2798,6 +3150,8 @@ var SettingsView = ({ currentConfig, onSave, currentUISettings, onSaveUISettings
 var SettingsView_default = SettingsView;
 
 // components/ResultView.tsx
+init_aiService();
+init_icons();
 import { useState as useState6, useEffect as useEffect5, useRef as useRef3, useCallback as useCallback3, useMemo as useMemo2 } from "react";
 import EasyMDE from "easymde";
 import { jsx as jsx11, jsxs as jsxs10 } from "react/jsx-runtime";
@@ -2880,7 +3234,12 @@ var ResultView = ({
   useEffect5(() => {
     const mde = easyMdeInstance.current;
     if (mde && mde.value() !== outline) {
+      const scrollInfo = mde.codemirror.getScrollInfo();
       mde.value(outline);
+      const cm = mde.codemirror;
+      const lastLine = cm.lineCount() - 1;
+      cm.setCursor({ line: lastLine, ch: cm.getLine(lastLine).length });
+      cm.scrollTo(scrollInfo.left, scrollInfo.top);
     }
   }, [outline]);
   useEffect5(() => {
@@ -2899,13 +3258,6 @@ var ResultView = ({
   useEffect5(() => {
     const loadModels = async () => {
       if (!config.provider) return;
-      if (config.provider === "gemini") {
-        setModelList(["gemini-2.5-flash"]);
-        if (config.assistantModel !== "gemini-2.5-flash") {
-          setConfig((prev) => ({ ...prev, assistantModel: "gemini-2.5-flash" }));
-        }
-        return;
-      }
       setIsModelListLoading(true);
       try {
         const models = await fetchModels(config);
@@ -2918,7 +3270,7 @@ var ResultView = ({
       }
     };
     loadModels();
-  }, [config.provider, config.apiKey, config.endpoint, setConfig]);
+  }, [config.provider, config.apiKey, config.endpoint]);
   useEffect5(() => {
     const handleClickOutside = (event) => {
       if (modelSelectRef.current && !modelSelectRef.current.contains(event.target)) {
@@ -3057,12 +3409,10 @@ ${att.data}`);
         let finalOutline = "";
         const stream = polishOutline(currentOutline, userMessageContent, assistantConfig, controller.signal);
         for await (const chunk of stream) {
+          if (controller.signal.aborted) break;
           finalOutline += chunk;
-          if (easyMdeInstance.current) {
-            easyMdeInstance.current.value(finalOutline);
-          }
+          setOutline(finalOutline);
         }
-        setOutline(finalOutline);
         if (!controller.signal.aborted) {
           setCurrentChatHistory((prev) => [...prev, { id: `model-${Date.now()}`, role: "model", content: "\u597D\u7684\uFF0C\u6211\u5DF2\u7ECF\u6839\u636E\u4F60\u7684\u8981\u6C42\u66F4\u65B0\u4E86\u5927\u7EB2\u3002" }]);
         }
@@ -3608,6 +3958,7 @@ var CreateInspirationModal = ({ isOpen, onClose, onSubmit, categoryTitle, editin
 var CreateInspirationModal_default = CreateInspirationModal;
 
 // components/InspirationView.tsx
+init_icons();
 import { jsx as jsx13, jsxs as jsxs12 } from "react/jsx-runtime";
 var InspirationView = ({ inspirationCards, onCreateCard, onUpdateCard, onDeleteCard, onCardDragStart, onCardClick, selectedInspirationCardId }) => {
   const [isModalOpen, setIsModalOpen] = useState8(false);
@@ -3781,6 +4132,7 @@ var AboutView = () => {
 var AboutView_default = AboutView;
 
 // components/ArchiveView.tsx
+init_icons();
 import { useState as useState9, useMemo as useMemo3 } from "react";
 import { jsx as jsx15, jsxs as jsxs14 } from "react/jsx-runtime";
 var ArchiveCard = ({ item, onLoad, onDelete }) => {
@@ -3888,10 +4240,13 @@ var ArchiveView = ({ archive, onLoadStory, onDeleteStory }) => {
 var ArchiveView_default = ArchiveView;
 
 // components/TipsView.tsx
+init_icons();
 import React12, { useState as useState10, useCallback as useCallback4, useRef as useRef4, useEffect as useEffect7, useMemo as useMemo4 } from "react";
+init_aiService();
+init_constants();
 import { marked } from "marked";
 import DOMPurify from "dompurify";
-import { Fragment as Fragment4, jsx as jsx16, jsxs as jsxs15 } from "react/jsx-runtime";
+import { Fragment as Fragment3, jsx as jsx16, jsxs as jsxs15 } from "react/jsx-runtime";
 var TipsView = ({ topics, setTopics, config, storyArchive }) => {
   const [activeTab, setActiveTab] = useState10("roles");
   const sortedTopics = useMemo4(() => [...topics].sort((a, b) => b.lastModified - a.lastModified), [topics]);
@@ -4259,7 +4614,7 @@ ${selectedArchive.outline}
           ] })
         },
         tool.id
-      )) }) }) : /* @__PURE__ */ jsxs15(Fragment4, { children: [
+      )) }) }) : /* @__PURE__ */ jsxs15(Fragment3, { children: [
         /* @__PURE__ */ jsx16("div", { className: "p-3 border-t border-gray-100 dark:border-zinc-700/50", children: /* @__PURE__ */ jsxs15(
           "button",
           {
@@ -4328,7 +4683,7 @@ ${selectedArchive.outline}
         )) }) })
       ] })
     ] }),
-    /* @__PURE__ */ jsx16("main", { className: "flex-1 flex flex-col bg-white rounded-xl border border-gray-200 shadow-sm dark:bg-zinc-800 dark:border-zinc-700 min-h-0", children: activeTopicId ? /* @__PURE__ */ jsxs15(Fragment4, { children: [
+    /* @__PURE__ */ jsx16("main", { className: "flex-1 flex flex-col bg-white rounded-xl border border-gray-200 shadow-sm dark:bg-zinc-800 dark:border-zinc-700 min-h-0", children: activeTopicId ? /* @__PURE__ */ jsxs15(Fragment3, { children: [
       /* @__PURE__ */ jsxs15("header", { className: "flex-shrink-0 p-3 border-b border-gray-200 dark:border-zinc-700 flex justify-between items-center", children: [
         /* @__PURE__ */ jsxs15("div", { className: "flex items-center gap-3 px-2", children: [
           activeTopic?.toolId && BRAINSTORM_TOOLS.find((t) => t.id === activeTopic.toolId) && /* @__PURE__ */ jsx16("div", { className: "p-2 rounded-lg text-blue-600 dark:text-blue-400", children: React12.cloneElement(BRAINSTORM_TOOLS.find((t) => t.id === activeTopic.toolId).icon, { className: "w-6 h-6" }) }),
@@ -4390,11 +4745,11 @@ ${selectedArchive.outline}
                   }
                 }
               ) }),
-              !isLoading && msg.content && msg.content.trim() !== "" && /* @__PURE__ */ jsx16("div", { className: "flex justify-end items-center gap-1 mt-1.5 transition-opacity opacity-0 group-hover:opacity-100", children: isUser ? /* @__PURE__ */ jsxs15(Fragment4, { children: [
+              !isLoading && msg.content && msg.content.trim() !== "" && /* @__PURE__ */ jsx16("div", { className: "flex justify-end items-center gap-1 mt-1.5 transition-opacity opacity-0 group-hover:opacity-100", children: isUser ? /* @__PURE__ */ jsxs15(Fragment3, { children: [
                 /* @__PURE__ */ jsx16("button", { onClick: () => setEditingMessage({ id: msg.id, content: msg.content }), title: "\u7F16\u8F91", className: "p-1.5 text-gray-400 hover:text-gray-700 dark:text-zinc-500 dark:hover:text-zinc-200 rounded-full hover:bg-gray-100 dark:hover:bg-zinc-600", children: /* @__PURE__ */ jsx16(PencilIcon, { className: "w-4 h-4" }) }),
                 /* @__PURE__ */ jsx16("button", { onClick: () => handleCopy(msg.content, msg.id), title: "\u590D\u5236", className: "p-1.5 text-gray-400 hover:text-gray-700 dark:text-zinc-500 dark:hover:text-zinc-200 rounded-full hover:bg-gray-100 dark:hover:bg-zinc-600", children: copiedMessageId === msg.id ? /* @__PURE__ */ jsx16("span", { className: "text-xs px-1", children: "\u5DF2\u590D\u5236" }) : /* @__PURE__ */ jsx16(ClipboardDocumentIcon, { className: "w-4 h-4" }) }),
                 /* @__PURE__ */ jsx16("button", { onClick: () => handleDeleteMessage(msg.id), title: "\u5220\u9664", className: "p-1.5 text-gray-400 hover:text-red-600 dark:text-zinc-500 dark:hover:text-red-400 rounded-full hover:bg-red-100 dark:hover:bg-red-900/40", children: /* @__PURE__ */ jsx16(TrashIcon, { className: "w-4 h-4" }) })
-              ] }) : /* @__PURE__ */ jsxs15(Fragment4, { children: [
+              ] }) : /* @__PURE__ */ jsxs15(Fragment3, { children: [
                 /* @__PURE__ */ jsx16("button", { onClick: () => handleRegenerate(msg.id), title: "\u91CD\u65B0\u751F\u6210", className: "p-1.5 text-gray-400 hover:text-gray-700 dark:text-zinc-500 dark:hover:text-zinc-200 rounded-full hover:bg-gray-100 dark:hover:bg-zinc-600", children: /* @__PURE__ */ jsx16(ArrowPathIcon, { className: "w-4 h-4" }) }),
                 /* @__PURE__ */ jsx16("button", { onClick: () => setEditingMessage({ id: msg.id, content: msg.content }), title: "\u7F16\u8F91", className: "p-1.5 text-gray-400 hover:text-gray-700 dark:text-zinc-500 dark:hover:text-zinc-200 rounded-full hover:bg-gray-100 dark:hover:bg-zinc-600", children: /* @__PURE__ */ jsx16(PencilIcon, { className: "w-4 h-4" }) }),
                 /* @__PURE__ */ jsx16("button", { onClick: () => handleCopy(msg.content, msg.id), title: "\u590D\u5236", className: "p-1.5 text-gray-400 hover:text-gray-700 dark:text-zinc-500 dark:hover:text-zinc-200 rounded-full hover:bg-gray-100 dark:hover:bg-zinc-600", children: copiedMessageId === msg.id ? /* @__PURE__ */ jsx16("span", { className: "text-xs px-1", children: "\u5DF2\u590D\u5236" }) : /* @__PURE__ */ jsx16(ClipboardDocumentIcon, { className: "w-4 h-4" }) }),
@@ -4505,6 +4860,8 @@ ${selectedArchive.outline}
 var TipsView_default = TipsView;
 
 // App.tsx
+init_types();
+init_icons();
 import { jsx as jsx17, jsxs as jsxs16 } from "react/jsx-runtime";
 var loadAndMigrateChatHistory = (key, defaultMessage) => {
   try {
@@ -4601,7 +4958,7 @@ var App = () => {
     }
   });
   const [novelInfo, setNovelInfo] = useState11(() => {
-    const defaultState = { name: "", wordCount: "", synopsis: "", perspective: "" };
+    const defaultState = { name: "", wordCount: "", synopsis: "", perspective: "", channel: "", emotion: "\u65E0" };
     try {
       const savedInfo = localStorage.getItem("novelInfo");
       return savedInfo ? { ...defaultState, ...JSON.parse(savedInfo) } : defaultState;
@@ -4614,27 +4971,41 @@ var App = () => {
     try {
       const savedIds = localStorage.getItem("selectedCardIds");
       const defaultState = {
-        ["Theme" /* Theme */]: null,
-        ["Genre" /* Genre */]: null,
-        ["Character" /* Character */]: null,
-        ["Plot" /* Plot */]: null,
-        ["Structure" /* Structure */]: null,
-        ["Technique" /* Technique */]: null,
-        ["Ending" /* Ending */]: null,
-        ["Inspiration" /* Inspiration */]: null
+        ["Theme" /* Theme */]: [null],
+        ["Genre" /* Genre */]: [null],
+        ["Character" /* Character */]: [null],
+        ["Plot" /* Plot */]: [null],
+        ["Structure" /* Structure */]: [null],
+        ["Technique" /* Technique */]: [null],
+        ["Ending" /* Ending */]: [null],
+        ["Inspiration" /* Inspiration */]: [null]
       };
-      return savedIds ? { ...defaultState, ...JSON.parse(savedIds) } : defaultState;
+      if (savedIds) {
+        const parsed = JSON.parse(savedIds);
+        for (const key in parsed) {
+          if (parsed[key] && !Array.isArray(parsed[key])) {
+            parsed[key] = [parsed[key]];
+          }
+        }
+        for (const key in defaultState) {
+          if (!parsed[key]) {
+            parsed[key] = defaultState[key];
+          }
+        }
+        return parsed;
+      }
+      return defaultState;
     } catch (error) {
       console.error("Failed to parse selected card IDs from localStorage", error);
       return {
-        ["Theme" /* Theme */]: null,
-        ["Genre" /* Genre */]: null,
-        ["Character" /* Character */]: null,
-        ["Plot" /* Plot */]: null,
-        ["Structure" /* Structure */]: null,
-        ["Technique" /* Technique */]: null,
-        ["Ending" /* Ending */]: null,
-        ["Inspiration" /* Inspiration */]: null
+        ["Theme" /* Theme */]: [null],
+        ["Genre" /* Genre */]: [null],
+        ["Character" /* Character */]: [null],
+        ["Plot" /* Plot */]: [null],
+        ["Structure" /* Structure */]: [null],
+        ["Technique" /* Technique */]: [null],
+        ["Ending" /* Ending */]: [null],
+        ["Inspiration" /* Inspiration */]: [null]
       };
     }
   });
@@ -4687,6 +5058,14 @@ var App = () => {
   const [storyArchive, setStoryArchive] = useState11(() => {
     try {
       const saved = localStorage.getItem("storyArchive");
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
+    }
+  });
+  const [savedCombinations, setSavedCombinations] = useState11(() => {
+    try {
+      const saved = localStorage.getItem("savedCombinations");
       return saved ? JSON.parse(saved) : [];
     } catch {
       return [];
@@ -4745,6 +5124,13 @@ var App = () => {
       console.error("Failed to save story archive", e);
     }
   }, [storyArchive]);
+  useEffect8(() => {
+    try {
+      localStorage.setItem("savedCombinations", JSON.stringify(savedCombinations));
+    } catch (e) {
+      console.error("Failed to save combinations", e);
+    }
+  }, [savedCombinations]);
   useEffect8(() => {
     try {
       localStorage.setItem("assistantHistory", JSON.stringify(assistantHistory));
@@ -4836,13 +5222,13 @@ var App = () => {
     const rehydratedCards = {};
     for (const type in selectedCardIds) {
       const cardType = type;
-      const cardId = selectedCardIds[cardType];
-      if (cardId) {
-        const foundCard = allCards.find((card) => card.id === cardId);
-        rehydratedCards[cardType] = foundCard || null;
-      } else {
-        rehydratedCards[cardType] = null;
-      }
+      const cardIdArray = selectedCardIds[cardType] || [];
+      rehydratedCards[cardType] = cardIdArray.map((cardId) => {
+        if (cardId) {
+          return allCards.find((card) => card.id === cardId) || null;
+        }
+        return null;
+      });
     }
     return rehydratedCards;
   }, [selectedCardIds, allCards]);
@@ -4917,13 +5303,49 @@ var App = () => {
       setStoryArchive((prev) => prev.filter((item) => item.id !== storyId));
       if (currentStoryId === storyId) {
         setCurrentStoryId(null);
-        setNovelInfo({ name: "", wordCount: "", synopsis: "", perspective: "" });
+        setNovelInfo({ name: "", wordCount: "", synopsis: "", perspective: "", channel: "", emotion: "\u65E0" });
         setAndPersistOutline("");
       }
     }
   }, [currentStoryId, setAndPersistOutline]);
-  const handleCardSelect = useCallback5((card) => {
-    setSelectedCardIds((prev) => ({ ...prev, [card.type]: card.id }));
+  const handleSaveCombination = (name) => {
+    if (!name.trim()) {
+      alert("\u7EC4\u5408\u540D\u79F0\u4E0D\u80FD\u4E3A\u7A7A\u3002");
+      return;
+    }
+    const cardsToSave = JSON.parse(JSON.stringify(selectedCardIds));
+    const newCombination = {
+      id: `combo-${Date.now()}`,
+      name: name.trim(),
+      selectedCardIds: cardsToSave
+    };
+    setSavedCombinations((prev) => [newCombination, ...prev]);
+    alert(`\u7EC4\u5408 \u201C${name.trim()}\u201D \u5DF2\u4FDD\u5B58\uFF01`);
+  };
+  const handleLoadCombination = (combinationId) => {
+    const combinationToLoad = savedCombinations.find((c) => c.id === combinationId);
+    if (combinationToLoad) {
+      const cardsToLoad = JSON.parse(JSON.stringify(combinationToLoad.selectedCardIds));
+      setSelectedCardIds(cardsToLoad);
+      alert(`\u5DF2\u52A0\u8F7D\u7EC4\u5408 \u201C${combinationToLoad.name}\u201D\uFF01`);
+    }
+  };
+  const handleDeleteCombination = (combinationId) => {
+    if (window.confirm("\u60A8\u786E\u5B9A\u8981\u5220\u9664\u6B64\u7EC4\u5408\u5417\uFF1F")) {
+      setSavedCombinations((prev) => prev.filter((c) => c.id !== combinationId));
+    }
+  };
+  const handleCardSelect = useCallback5((card, index) => {
+    setSelectedCardIds((prev) => {
+      const newIds = { ...prev };
+      if (!newIds[card.type]) {
+        newIds[card.type] = [];
+      }
+      const typeArray = [...newIds[card.type] || []];
+      typeArray[index] = card.id;
+      newIds[card.type] = typeArray;
+      return newIds;
+    });
   }, []);
   const handleCreateCard = useCallback5((newCardData) => {
     const newCard = {
@@ -4943,16 +5365,50 @@ var App = () => {
       const newSelection = { ...prev };
       let changed = false;
       for (const key in newSelection) {
-        if (newSelection[key] === cardId) {
-          newSelection[key] = null;
+        const cardType = key;
+        const idArray = newSelection[cardType];
+        if (idArray && idArray.includes(cardId)) {
+          newSelection[cardType] = idArray.map((id) => id === cardId ? null : id);
           changed = true;
         }
       }
       return changed ? newSelection : prev;
     });
   }, []);
-  const handleClearCard = useCallback5((cardType) => {
-    setSelectedCardIds((prev) => ({ ...prev, [cardType]: null }));
+  const handleClearCard = useCallback5((cardType, index) => {
+    setSelectedCardIds((prev) => {
+      const newIds = { ...prev };
+      const typeArray = [...newIds[cardType] || []];
+      typeArray[index] = null;
+      newIds[cardType] = typeArray;
+      return newIds;
+    });
+  }, []);
+  const handleAddCardSlot = useCallback5((cardType) => {
+    setSelectedCardIds((prev) => {
+      const currentSlots = prev[cardType] || [];
+      if (currentSlots.length < 3) {
+        return {
+          ...prev,
+          [cardType]: [...currentSlots, null]
+        };
+      }
+      return prev;
+    });
+  }, []);
+  const handleRemoveCardSlot = useCallback5((cardType, index) => {
+    setSelectedCardIds((prev) => {
+      const currentSlots = prev[cardType] || [];
+      if (currentSlots.length <= 1 || index === 0) {
+        return prev;
+      }
+      const newSlots = [...currentSlots];
+      newSlots.splice(index, 1);
+      return {
+        ...prev,
+        [cardType]: newSlots
+      };
+    });
   }, []);
   const handleCreateInspirationCard = useCallback5((categoryId, newItemData) => {
     setInspirationCards((prevCards) => {
@@ -4997,8 +5453,12 @@ var App = () => {
     }));
     const cardIdToClear = `inspiration-${categoryId}-${itemId}`;
     setSelectedCardIds((prev) => {
-      if (prev["Inspiration" /* Inspiration */] === cardIdToClear) {
-        return { ...prev, ["Inspiration" /* Inspiration */]: null };
+      const inspirationSlots = prev["Inspiration" /* Inspiration */] || [];
+      if (inspirationSlots.includes(cardIdToClear)) {
+        return {
+          ...prev,
+          ["Inspiration" /* Inspiration */]: inspirationSlots.map((id) => id === cardIdToClear ? null : id)
+        };
       }
       return prev;
     });
@@ -5009,7 +5469,17 @@ var App = () => {
   const handleInspirationCardClick = useCallback5((cardId) => {
     const foundCard = allCards.find((card) => card.id === cardId);
     if (foundCard && foundCard.type === "Inspiration" /* Inspiration */) {
-      setSelectedCardIds((prev) => ({ ...prev, ["Inspiration" /* Inspiration */]: foundCard.id }));
+      setSelectedCardIds((prev) => {
+        const inspirationSlots = prev["Inspiration" /* Inspiration */] || [null];
+        const emptyIndex = inspirationSlots.findIndex((id) => id === null);
+        const newSlots = [...inspirationSlots];
+        if (emptyIndex !== -1) {
+          newSlots[emptyIndex] = foundCard.id;
+        } else {
+          newSlots[0] = foundCard.id;
+        }
+        return { ...prev, ["Inspiration" /* Inspiration */]: newSlots };
+      });
     }
   }, [allCards]);
   const renderView = () => {
@@ -5024,13 +5494,19 @@ var App = () => {
             combinedCards,
             onCardSelect: handleCardSelect,
             onClearCard: handleClearCard,
+            onAddCardSlot: handleAddCardSlot,
+            onRemoveCardSlot: handleRemoveCardSlot,
             novelInfo,
             setNovelInfo,
             allCards,
             onCreateCard: handleCreateCard,
             onUpdateCard: handleUpdateCard,
             onDeleteCard: handleDeleteCard,
-            uiSettings
+            uiSettings,
+            savedCombinations,
+            onSaveCombination: handleSaveCombination,
+            onLoadCombination: handleLoadCombination,
+            onDeleteCombination: handleDeleteCombination
           }
         );
       case "result":
@@ -5064,7 +5540,7 @@ var App = () => {
             onDeleteCard: handleDeleteInspirationCard,
             onCardDragStart: handleInspirationCardDragStart,
             onCardClick: handleInspirationCardClick,
-            selectedInspirationCardId: selectedCardIds["Inspiration" /* Inspiration */]
+            selectedInspirationCardId: selectedCardIds["Inspiration" /* Inspiration */]?.[0]
           }
         );
       case "tips":
@@ -5108,13 +5584,19 @@ var App = () => {
             combinedCards,
             onCardSelect: handleCardSelect,
             onClearCard: handleClearCard,
+            onAddCardSlot: handleAddCardSlot,
+            onRemoveCardSlot: handleRemoveCardSlot,
             novelInfo,
             setNovelInfo,
             allCards,
             onCreateCard: handleCreateCard,
             onUpdateCard: handleUpdateCard,
             onDeleteCard: handleDeleteCard,
-            uiSettings
+            uiSettings,
+            savedCombinations,
+            onSaveCombination: handleSaveCombination,
+            onLoadCombination: handleLoadCombination,
+            onDeleteCombination: handleDeleteCombination
           }
         );
     }

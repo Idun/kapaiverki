@@ -1,8 +1,7 @@
-
-
 import { GoogleGenAI } from "@google/genai";
 import type { CombinedCards, AIConfig, AIProvider, Card, NovelInfo, ChatMessage } from '../types';
 import { CardType } from '../types';
+import { CARD_TYPE_NAMES } from '../constants';
 
 interface OpenAIModel {
   id: string;
@@ -13,42 +12,42 @@ interface OllamaModel {
 }
 
 const createPrompt = (cards: CombinedCards, customPrompt: string, novelInfo: NovelInfo): string => {
-    const requiredCards: { [key: string]: Card } = {
-        Theme: cards[CardType.Theme]!,
-        Genre: cards[CardType.Genre]!,
-        Character: cards[CardType.Character]!,
-        Plot: cards[CardType.Plot]!,
-    };
     
-    const characterCard = requiredCards.Character;
-    const characterPrompt = `- 角色创作指导 (Character Archetype Guide): 这是创作角色的核心概念，请基于「${characterCard.name}」(${characterCard.description}) 的特质，设计一个独特的、有血有肉的角色。请注意，这只是一个创作指引，严禁在故事中直接使用「${characterCard.name}」这个原型名称作为角色的名字或身份。例如，如果原型是“导师”，你应该创造一个具体的、有名字的人物（比如“老法师埃兰”或“退休的李将军”），而不是在故事里直接称呼角色为“导师”。`;
+    const formatCards = (cardType: CardType): string => {
+        const cardArray = cards[cardType];
+        if (!cardArray || cardArray.every(c => c === null)) return '';
+        
+        const validCards = cardArray.filter((c): c is Card => c !== null);
+        if (validCards.length === 0) return '';
+        
+        // Special prompt for Character archetype
+        if (cardType === CardType.Character) {
+            const names = validCards.map(c => `「${c.name}」`).join('和');
+            const descs = validCards.map(c => `(${c.description})`).join('; ');
+            return `- 角色创作指导 (Character Archetype Guide): 这是创作角色的核心概念，请基于${names}${descs}的特质，设计一个或多个独特的、有血有肉的角色。请注意，这只是一个创作指引，严禁在故事中直接使用原型名称作为角色的名字或身份。`;
+        }
+        
+        const cardStrings = validCards.map(c => `${c.name} (${c.description})`);
+        const title = CARD_TYPE_NAMES[cardType];
+        return `- ${title}: ${cardStrings.join(' | ')}`;
+    };
 
     const promptParts = [
-        `- 主题 (Theme): ${requiredCards.Theme.name} (${requiredCards.Theme.description})`,
-        `- 类型 (Genre): ${requiredCards.Genre.name} (${requiredCards.Genre.description})`,
-        characterPrompt,
-        `- 情节结构 (Plot): ${requiredCards.Plot.name} (${requiredCards.Plot.description})`
-    ];
+        formatCards(CardType.Theme),
+        formatCards(CardType.Genre),
+        formatCards(CardType.Character),
+        formatCards(CardType.Plot),
+        formatCards(CardType.Structure),
+        formatCards(CardType.Technique),
+        formatCards(CardType.Ending),
+        formatCards(CardType.Inspiration),
+    ].filter(Boolean); // Filter out empty strings
     
-    if (cards.Structure) {
-        promptParts.push(`- 叙事结构 (Narrative Structure): ${cards.Structure.name} (${cards.Structure.description})`);
-    }
-
-    if (cards.Technique) {
-        promptParts.push(`- 叙事手法 (Narrative Technique): ${cards.Technique.name} (${cards.Technique.description})`);
-    }
-    
-    if (cards.Ending) {
-        promptParts.push(`- 结局风格 (Ending Style): ${cards.Ending.name} (${cards.Ending.description})`);
-    }
-
-    if (cards.Inspiration) {
-        const inspirationPrompt = `- 创作氛围与世界观参考 (Creative Atmosphere & Worldview Reference): 请从以下概念中汲取灵感来构建故事的独特世界观或氛围，但不要直接照搬其设定。将其作为一种风格指引，与其它核心要素融合创作：${cards.Inspiration.name} (${cards.Inspiration.description})`;
-        promptParts.push(inspirationPrompt);
-    }
 
     const novelInfoParts = [];
     if (novelInfo.name) novelInfoParts.push(`- 小说名称: ${novelInfo.name}`);
+    if (novelInfo.channel) novelInfoParts.push(`- 书籍频道: ${novelInfo.channel === 'male' ? '男频' : '女频'}`);
+    if (novelInfo.emotion && novelInfo.emotion !== '无') novelInfoParts.push(`- 核心情绪: ${novelInfo.emotion}`);
     if (novelInfo.wordCount) novelInfoParts.push(`- 预估字数: ${novelInfo.wordCount}`);
     if (novelInfo.perspective) novelInfoParts.push(`- 叙事视角: ${novelInfo.perspective}`);
     if (novelInfo.synopsis) novelInfoParts.push(`- 一句话概要: ${novelInfo.synopsis}`);
@@ -68,14 +67,17 @@ ${promptParts.join('\n')}
 
 
 async function* generateWithGemini(promptOrMessages: string | ChatMessage[], config: AIConfig, signal?: AbortSignal): AsyncGenerator<string> {
-    // FIX: Per coding guidelines, API key must come exclusively from environment variables.
-    const apiKey = process.env.API_KEY;
+    const apiKey = config.apiKey || process.env.API_KEY;
     if (!apiKey) {
-        throw new Error("Gemini API key is not configured in environment variables (API_KEY).");
+        throw new Error("Gemini API 密钥未配置。请在“设置”页面中提供您的密钥。");
     }
     const ai = new GoogleGenAI({ apiKey });
+    
+    if (!config.model) {
+        throw new Error("Gemini model name is not configured.");
+    }
+    const modelName = config.model;
 
-    // FIX: Add thinkingConfig when maxOutputTokens is set for gemini-2.5-flash
     const generationConfig: { 
         temperature?: number; 
         topP?: number; 
@@ -86,8 +88,6 @@ async function* generateWithGemini(promptOrMessages: string | ChatMessage[], con
     if (config.topP !== undefined) generationConfig.topP = config.topP;
     if (config.maxTokens !== undefined) {
         generationConfig.maxOutputTokens = config.maxTokens;
-        // Set thinkingBudget to reserve tokens for the final output, preventing blocks.
-        // Using a quarter of the max tokens for thinking is a safe default.
         generationConfig.thinkingConfig = { thinkingBudget: Math.floor(config.maxTokens / 4) };
     }
 
@@ -96,7 +96,6 @@ async function* generateWithGemini(promptOrMessages: string | ChatMessage[], con
         ? [{ role: 'user', content: promptOrMessages }]
         : promptOrMessages;
 
-    // Convert ChatMessage[] to Gemini's format
     const contents = messages.map(msg => {
         const parts: Array<{ text: string } | { inlineData: { mimeType: string; data: string } }> = [];
         if (msg.content) {
@@ -105,7 +104,6 @@ async function* generateWithGemini(promptOrMessages: string | ChatMessage[], con
 
         if (msg.images) {
             msg.images.forEach(imgData => {
-                // simplistic mime type detection
                 const mimeType = imgData.startsWith('/9j/') ? 'image/jpeg' : 'image/png';
                 parts.push({
                     inlineData: {
@@ -117,7 +115,6 @@ async function* generateWithGemini(promptOrMessages: string | ChatMessage[], con
         }
         
         return {
-            // Treat 'system' as 'user' for multi-turn compatibility
             role: msg.role === 'model' ? 'model' : 'user',
             parts: parts,
         };
@@ -125,8 +122,8 @@ async function* generateWithGemini(promptOrMessages: string | ChatMessage[], con
 
     if (config.streaming) {
         const response = await ai.models.generateContentStream({
-            model: 'gemini-2.5-flash',
-            contents: contents as any, // Cast to handle structured content
+            model: modelName,
+            contents: contents as any,
             config: generationConfig,
         });
         for await (const chunk of response) {
@@ -139,7 +136,7 @@ async function* generateWithGemini(promptOrMessages: string | ChatMessage[], con
     } else {
         if (signal?.aborted) throw new DOMException('Aborted by user', 'AbortError');
         const response = await ai.models.generateContent({
-            model: 'gemini-2.5-flash',
+            model: modelName,
             contents: contents as any,
             config: generationConfig,
         });
@@ -149,7 +146,7 @@ async function* generateWithGemini(promptOrMessages: string | ChatMessage[], con
         }
         yield response.text.trim();
     }
-};
+}
 
 const getEndpoint = (url: string, path: 'chat' | 'models'): string => {
     const trimmedUrl = url.trim().replace(/\/+$/, '');
@@ -158,10 +155,9 @@ const getEndpoint = (url: string, path: 'chat' | 'models'): string => {
     if (trimmedUrl.endsWith('/v1')) {
         return `${trimmedUrl}/${path === 'chat' ? 'chat/completions' : 'models'}`;
     }
-    if (trimmedUrl.includes('/api/v1')) { // Handle OpenRouter style
+    if (trimmedUrl.includes('/api/v1')) {
         return `${trimmedUrl}/${path === 'chat' ? 'chat/completions' : 'models'}`;
     }
-    // Prevent double /v1/v1
     if (trimmedUrl.endsWith(finalPath)) {
         return trimmedUrl;
     }
@@ -193,9 +189,7 @@ async function* generateWithOpenAICompatible(promptOrMessages: string | ChatMess
         ? [{ role: 'user', content: promptOrMessages }]
         : promptOrMessages;
         
-    // FIX: Keep system messages and map 'model' to 'assistant'.
     const preparedMessages = messages.map(msg => {
-        // The role 'model' should be mapped to 'assistant' for OpenAI compatibility.
         const role = msg.role === 'model' ? 'assistant' : msg.role;
 
         if (!msg.images || msg.images.length === 0) {
@@ -220,7 +214,6 @@ async function* generateWithOpenAICompatible(promptOrMessages: string | ChatMess
     if (config.maxTokens !== undefined) body.max_tokens = config.maxTokens;
     if (config.topP !== undefined) body.top_p = config.topP;
     
-    // FIX: ModelScope does not support frequency_penalty or presence_penalty
     if (config.provider !== 'modelscope') {
         if (config.frequencyPenalty !== undefined) body.frequency_penalty = config.frequencyPenalty;
         if (config.presencePenalty !== undefined) body.presence_penalty = config.presencePenalty;
@@ -292,7 +285,7 @@ async function* generateWithOpenAICompatible(promptOrMessages: string | ChatMess
         }
         yield content.trim();
     }
-};
+}
 
 
 export async function* generateOutline(cards: CombinedCards, config: AIConfig, novelInfo: NovelInfo): AsyncGenerator<string> {
@@ -323,7 +316,7 @@ export async function* generateOutline(cards: CombinedCards, config: AIConfig, n
         }
         throw new Error(`生成故事大纲失败。请检查您的 API 设置后重试。`);
     }
-};
+}
 
 export async function* polishOutline(currentOutline: string, userMessage: string, config: AIConfig, signal?: AbortSignal): AsyncGenerator<string> {
     const polishPrompt = `你是一位专业的小说写作助理。你的任务是根据用户的指示来修改一份故事大纲。
@@ -359,7 +352,7 @@ ${currentOutline}
         }
         throw new Error(`AI 润色失败。请检查您的 API 设置后重试。`);
     }
-};
+}
 
 export async function* generateChatResponse(chatHistory: ChatMessage[], config: AIConfig, signal?: AbortSignal): AsyncGenerator<string> {
     const openAICompatibleProviders: AIProvider[] = ['openai', 'deepseek', 'openrouter', 'siliconflow', 'ollama', 'custom', 'modelscope'];
@@ -388,15 +381,69 @@ export async function* generateChatResponse(chatHistory: ChatMessage[], config: 
 
 
 export const fetchModels = async (config: AIConfig): Promise<string[]> => {
-    if (config.provider !== 'gemini' && !config.endpoint) {
+    if (config.provider === 'gemini') {
+        const apiKey = config.apiKey || process.env.API_KEY;
+        if (!apiKey) {
+            throw new Error("Gemini API 密钥未配置。");
+        }
+        if (!config.endpoint) {
+            throw new Error("Gemini Endpoint URL is not configured.");
+        }
+
+        const endpoint = `${config.endpoint.trim().replace(/\/+$/, '')}/v1beta/models`;
+        
+        try {
+            const response = await fetch(endpoint, {
+                method: 'GET',
+                headers: {
+                    'x-goog-api-key': apiKey,
+                },
+            });
+
+            if (!response.ok) {
+                let errorData;
+                try {
+                    errorData = await response.json();
+                } catch (e) {
+                    throw new Error(`API 返回状态 ${response.status}: ${response.statusText}`);
+                }
+                throw new Error(`获取 Gemini 模型列表失败 (状态 ${response.status}): ${errorData.error?.message || '请检查 Endpoint URL 和 API 密钥。'}`);
+            }
+
+            const data = await response.json();
+
+            if (!data.models) {
+                throw new Error('从 Gemini API 获取模型时返回了无效的响应。');
+            }
+            
+            // Filter for models that can generate content and are not legacy, then sort
+            const models = data.models
+                .filter((model: any) => 
+                    model.supportedGenerationMethods?.includes('generateContent') &&
+                    !model.name.includes('embedding') &&
+                    !model.name.includes('text-bison') // filter out legacy models
+                )
+                .map((model: any) => model.name.replace('models/', ''))
+                .sort();
+                
+            return models;
+        } catch (error) {
+            console.error(`Failed to fetch models from Gemini:`, error);
+            if (error instanceof Error) {
+                let detailedMessage = `获取模型列表失败: ${error.message}`;
+                 if (error.message.includes('Failed to fetch')) {
+                    detailedMessage += '\n\n请检查您的网络连接、Endpoint URL 是否正确，以及 API 密钥是否有效。';
+                }
+                throw new Error(detailedMessage);
+            }
+            throw new Error('获取模型列表时发生未知网络错误。');
+        }
+    }
+
+    if (!config.endpoint) {
         throw new Error("Endpoint URL 不能为空。");
     }
-
-    if (config.provider === 'gemini') {
-        // Gemini SDK doesn't have a public models list API. The model is fixed.
-        return ['gemini-2.5-flash'];
-    }
-
+    
     const endpoint = config.provider === 'ollama'
         ? `${config.endpoint.trim().replace(/\/+$/, '')}/api/tags`
         : getEndpoint(config.endpoint, 'models');
@@ -423,10 +470,8 @@ export const fetchModels = async (config: AIConfig): Promise<string[]> => {
         const data = await response.json();
 
         if (config.provider === 'ollama') {
-            // Ollama response: { models: [{ name: 'llama3:latest', ... }] }
             return data.models?.map((model: OllamaModel) => model.name) || [];
         } else {
-            // OpenAI-compatible response: { data: [{ id: 'gpt-4', ... }] }
             return data.data?.map((model: OpenAIModel) => model.id).sort() || [];
         }
     } catch (error) {
@@ -441,3 +486,55 @@ export const fetchModels = async (config: AIConfig): Promise<string[]> => {
         throw new Error('获取模型列表时发生未知网络错误。');
     }
 };
+
+export async function generateCardDetails(cardName: string, cardType: CardType, config: AIConfig): Promise<{ tooltipText: string; description: string }> {
+    if (!cardName.trim()) {
+        throw new Error("Card name cannot be empty.");
+    }
+
+    const cardTypeName = CARD_TYPE_NAMES[cardType];
+
+    const prompt = `你是一位专业的创意写作和故事理论专家。请为一个写作提示卡片生成两段文本，卡片类型为“${cardTypeName}”，名称为“${cardName}”：
+
+1.  **tooltipText**: 一句简明扼要的总结（少于20个汉字），解释卡片的核心概念。
+2.  **description**: 一段详细的说明（大约50-80汉字），这段内容将作为AI生成故事大纲的更大提示词（prompt）的一部分。这段描述应该对AI具有启发性和指导性。
+
+请严格按照以下JSON格式提供输出，不要包含任何markdown标记或额外的解释：
+{
+  "tooltipText": "...",
+  "description": "..."
+}`;
+    
+    const getFullResponse = async (prompt: string, config: AIConfig): Promise<string> => {
+        const openAICompatibleProviders: AIProvider[] = ['openai', 'deepseek', 'openrouter', 'siliconflow', 'ollama', 'custom', 'modelscope'];
+        const nonStreamingConfig = { ...config, streaming: false };
+
+        let stream: AsyncGenerator<string>;
+
+        if (nonStreamingConfig.provider === 'gemini') {
+            stream = generateWithGemini(prompt, nonStreamingConfig);
+        } else if (openAICompatibleProviders.includes(nonStreamingConfig.provider)) {
+            stream = generateWithOpenAICompatible(prompt, nonStreamingConfig);
+        } else {
+            throw new Error(`Unsupported AI provider: ${nonStreamingConfig.provider}`);
+        }
+
+        const { value } = await stream.next();
+        return value || "";
+    }
+
+    try {
+        const responseText = await getFullResponse(prompt, config);
+        const cleanedResponse = responseText.replace(/```json/g, '').replace(/```/g, '').trim();
+        const parsed = JSON.parse(cleanedResponse);
+
+        if (typeof parsed.tooltipText === 'string' && typeof parsed.description === 'string') {
+            return parsed;
+        } else {
+            throw new Error("AI response did not contain the expected JSON structure.");
+        }
+    } catch (error) {
+        console.error("Failed to generate or parse card details from AI:", error);
+        throw new Error(`AI生成卡片详情失败: ${error instanceof Error ? error.message : '请检查网络和AI设置。'}`);
+    }
+}

@@ -1,6 +1,7 @@
 
 
 
+
 import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import EasyMDE from 'easymde';
 import type { AIConfig, NovelInfo, UISettings, CombinedCards, ChatMessage } from '../types';
@@ -120,7 +121,12 @@ const ResultView: React.FC<ResultViewProps> = ({
     useEffect(() => {
         const mde = easyMdeInstance.current;
         if (mde && mde.value() !== outline) {
-            mde.value(outline);
+            const scrollInfo = mde.codemirror.getScrollInfo(); // Preserve scroll position before update
+            mde.value(outline); 
+            const cm = mde.codemirror;
+            const lastLine = cm.lineCount() - 1;
+            cm.setCursor({ line: lastLine, ch: cm.getLine(lastLine).length }); // Move cursor to the end
+            cm.scrollTo(scrollInfo.left, scrollInfo.top); // Restore scroll position
         }
     }, [outline]);
 
@@ -145,13 +151,6 @@ const ResultView: React.FC<ResultViewProps> = ({
     useEffect(() => {
         const loadModels = async () => {
             if (!config.provider) return;
-            if (config.provider === 'gemini') {
-                setModelList(['gemini-2.5-flash']);
-                if (config.assistantModel !== 'gemini-2.5-flash') {
-                     setConfig(prev => ({ ...prev, assistantModel: 'gemini-2.5-flash' }));
-                }
-                return;
-            }
 
             setIsModelListLoading(true);
             try {
@@ -166,7 +165,7 @@ const ResultView: React.FC<ResultViewProps> = ({
         };
 
         loadModels();
-    }, [config.provider, config.apiKey, config.endpoint, setConfig]);
+    }, [config.provider, config.apiKey, config.endpoint]);
 
     // Effect to handle clicking outside dropdowns
     useEffect(() => {
@@ -334,12 +333,10 @@ const ResultView: React.FC<ResultViewProps> = ({
                 let finalOutline = "";
                 const stream = polishOutline(currentOutline, userMessageContent, assistantConfig, controller.signal);
                 for await (const chunk of stream) {
+                    if (controller.signal.aborted) break;
                     finalOutline += chunk;
-                    if (easyMdeInstance.current) {
-                        easyMdeInstance.current.value(finalOutline);
-                    }
+                    setOutline(finalOutline); // Update state to trigger useEffect for editor update & cursor management
                 }
-                setOutline(finalOutline);
                 if (!controller.signal.aborted) {
                     setCurrentChatHistory(prev => [...prev, { id: `model-${Date.now()}`, role: 'model', content: '好的，我已经根据你的要求更新了大纲。' }]);
                 }

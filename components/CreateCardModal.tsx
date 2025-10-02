@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import type { Card, CardType } from '../types';
+import type { Card, CardType, AIConfig } from '../types';
 import { CARD_TYPE_NAMES } from '../constants';
 import { CardType as CardTypeEnum } from '../types';
+import { SparklesIcon } from './icons';
+import Spinner from './Spinner';
 
 interface CreateCardModalProps {
     isOpen: boolean;
@@ -9,6 +11,7 @@ interface CreateCardModalProps {
     onSubmit: (data: { name: string; tooltipText: string; description:string; id?: string; }) => void;
     cardType: CardType;
     editingCard?: Card | null;
+    config: AIConfig;
 }
 
 const PLACEHOLDER_EXAMPLES: Record<CardType, string> = {
@@ -23,10 +26,11 @@ const PLACEHOLDER_EXAMPLES: Record<CardType, string> = {
 };
 
 
-const CreateCardModal: React.FC<CreateCardModalProps> = ({ isOpen, onClose, onSubmit, cardType, editingCard }) => {
+const CreateCardModal: React.FC<CreateCardModalProps> = ({ isOpen, onClose, onSubmit, cardType, editingCard, config }) => {
     const [name, setName] = useState('');
     const [tooltipText, setTooltipText] = useState('');
     const [description, setDescription] = useState('');
+    const [isGenerating, setIsGenerating] = useState(false);
     
     const isEditing = !!editingCard;
 
@@ -57,6 +61,23 @@ const CreateCardModal: React.FC<CreateCardModalProps> = ({ isOpen, onClose, onSu
         });
     };
 
+    const handleAiGenerate = async () => {
+        if (!name.trim() || isGenerating) {
+            return;
+        }
+        setIsGenerating(true);
+        try {
+            const { generateCardDetails } = await import('../services/aiService');
+            const details = await generateCardDetails(name, cardType, config);
+            setTooltipText(details.tooltipText);
+            setDescription(details.description);
+        } catch (error) {
+            alert(error instanceof Error ? error.message : 'AI 生成失败。');
+        } finally {
+            setIsGenerating(false);
+        }
+    };
+
     if (!isOpen) return null;
 
     return (
@@ -78,7 +99,19 @@ const CreateCardModal: React.FC<CreateCardModalProps> = ({ isOpen, onClose, onSu
                 <form onSubmit={handleSubmit}>
                     <div className="space-y-4">
                         <div>
-                            <label htmlFor="card-name" className="block text-sm font-medium text-gray-700 dark:text-zinc-300">名称</label>
+                            <div className="flex justify-between items-center">
+                                <label htmlFor="card-name" className="block text-sm font-medium text-gray-700 dark:text-zinc-300">名称</label>
+                                <button
+                                    type="button"
+                                    onClick={handleAiGenerate}
+                                    disabled={!name.trim() || isGenerating}
+                                    className="flex items-center gap-1.5 px-2 py-1 text-xs font-medium text-gray-600 bg-gray-100 rounded-md hover:bg-gray-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed dark:bg-zinc-700 dark:text-zinc-200 dark:hover:bg-zinc-600"
+                                    title="使用AI根据名称生成提示和内容"
+                                >
+                                    {isGenerating ? <Spinner /> : <SparklesIcon className="w-3 h-3" />}
+                                    <span>AI 生成</span>
+                                </button>
+                            </div>
                             <input
                                 id="card-name"
                                 type="text"
