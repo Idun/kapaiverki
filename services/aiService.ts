@@ -67,14 +67,14 @@ ${promptParts.join('\n')}
 
 
 async function* generateWithGemini(promptOrMessages: string | ChatMessage[], config: AIConfig, signal?: AbortSignal): AsyncGenerator<string> {
-    const apiKey = config.apiKey || process.env.API_KEY;
+    const apiKey = config.apiKey;
     if (!apiKey) {
         throw new Error("Gemini API 密钥未配置。请在“设置”页面中提供您的密钥。");
     }
     const ai = new GoogleGenAI({ apiKey });
     
     if (!config.model) {
-        throw new Error("Gemini model name is not configured.");
+        throw new Error("Gemini 模型名称未配置。");
     }
     const modelName = config.model;
 
@@ -88,7 +88,10 @@ async function* generateWithGemini(promptOrMessages: string | ChatMessage[], con
     if (config.topP !== undefined) generationConfig.topP = config.topP;
     if (config.maxTokens !== undefined) {
         generationConfig.maxOutputTokens = config.maxTokens;
-        generationConfig.thinkingConfig = { thinkingBudget: Math.floor(config.maxTokens / 4) };
+        // FIX: Per Gemini API guidelines, set thinkingBudget when maxOutputTokens is set.
+        if (config.model === 'gemini-2.5-flash') {
+            generationConfig.thinkingConfig = { thinkingBudget: Math.floor(config.maxTokens / 4) };
+        }
     }
 
 
@@ -127,22 +130,22 @@ async function* generateWithGemini(promptOrMessages: string | ChatMessage[], con
             config: generationConfig,
         });
         for await (const chunk of response) {
-            if (signal?.aborted) throw new DOMException('Aborted by user', 'AbortError');
+            if (signal?.aborted) throw new DOMException('用户中止操作', 'AbortError');
             const chunkText = chunk.text;
             if (chunkText) {
                 yield chunkText;
             }
         }
     } else {
-        if (signal?.aborted) throw new DOMException('Aborted by user', 'AbortError');
+        if (signal?.aborted) throw new DOMException('用户中止操作', 'AbortError');
         const response = await ai.models.generateContent({
             model: modelName,
             contents: contents as any,
             config: generationConfig,
         });
-        if (signal?.aborted) throw new DOMException('Aborted by user', 'AbortError');
+        if (signal?.aborted) throw new DOMException('用户中止操作', 'AbortError');
         if (!response.text) {
-            throw new Error("API returned an empty response.");
+            throw new Error("API 返回了空响应。");
         }
         yield response.text.trim();
     }
@@ -150,34 +153,43 @@ async function* generateWithGemini(promptOrMessages: string | ChatMessage[], con
 
 const getEndpoint = (url: string, path: 'chat' | 'models'): string => {
     const trimmedUrl = url.trim().replace(/\/+$/, '');
-    const finalPath = path === 'chat' ? '/v1/chat/completions' : '/v1/models';
-    
-    if (trimmedUrl.endsWith('/v1')) {
-        return `${trimmedUrl}/${path === 'chat' ? 'chat/completions' : 'models'}`;
+    let basePath = trimmedUrl;
+
+    // Find the base path by locating /v1 or /api/v1 and stripping anything after it.
+    const apiV1Index = trimmedUrl.indexOf('/api/v1');
+    const v1Index = trimmedUrl.indexOf('/v1');
+
+    if (apiV1Index !== -1) {
+        basePath = trimmedUrl.substring(0, apiV1Index + '/api/v1'.length);
+    } else if (v1Index !== -1) {
+        basePath = trimmedUrl.substring(0, v1Index + '/v1'.length);
+    } else if (!trimmedUrl.endsWith('/v1')) {
+        // If neither is found, and it doesn't already end with /v1, assume the user provided a base domain and append /v1.
+        basePath = `${trimmedUrl}/v1`;
     }
-    if (trimmedUrl.includes('/api/v1')) {
-        return `${trimmedUrl}/${path === 'chat' ? 'chat/completions' : 'models'}`;
-    }
-    if (trimmedUrl.endsWith(finalPath)) {
-        return trimmedUrl;
-    }
-    return `${trimmedUrl}${finalPath}`;
+
+    const finalPath = path === 'chat' ? '/chat/completions' : '/models';
+    return `${basePath}${finalPath}`;
 };
 
 
 async function* generateWithOpenAICompatible(promptOrMessages: string | ChatMessage[], config: AIConfig, signal?: AbortSignal): AsyncGenerator<string> {
-    const providersThatNeedKey: AIProvider[] = ['openai', 'deepseek', 'openrouter', 'siliconflow', 'modelscope'];
-    if (providersThatNeedKey.includes(config.provider) && !config.apiKey) {
-        throw new Error(`API key is required for the ${config.provider} provider.`);
-    }
-    if (!config.endpoint) throw new Error("Endpoint URL is missing.");
-    if (!config.model) throw new Error("Model name is missing.");
+    const providersThatNeedKey: AIProvider[] = ['openai', 'deepseek', 'openrouter', 'siliconflow', 'modelscope', 'custom'];
+    const isOllama = config.provider === 'ollama';
 
-    const endpoint = getEndpoint(config.endpoint, 'chat');
+    if (!isOllama && providersThatNeedKey.includes(config.provider) && !config.apiKey) {
+        throw new Error(`需要为 ${config.provider} 提供商提供 API 密钥。`);
+    }
+    if (!config.endpoint) throw new Error("Endpoint URL 不能为空。");
+    if (!config.model) throw new Error("模型名称不能为空。");
+
+    const endpoint = isOllama
+        ? `${config.endpoint.trim().replace(/\/+$/, '')}/api/chat`
+        : getEndpoint(config.endpoint, 'chat');
     
     const headers: HeadersInit = { 'Content-Type': 'application/json' };
 
-    if (config.apiKey) {
+    if (!isOllama && config.apiKey) {
         headers['Authorization'] = `Bearer ${config.apiKey}`;
     }
     
@@ -210,13 +222,21 @@ async function* generateWithOpenAICompatible(promptOrMessages: string | ChatMess
     });
     body.messages = preparedMessages;
 
-    if (config.temperature !== undefined) body.temperature = config.temperature;
-    if (config.maxTokens !== undefined) body.max_tokens = config.maxTokens;
-    if (config.topP !== undefined) body.top_p = config.topP;
-    
-    if (config.provider !== 'modelscope') {
-        if (config.frequencyPenalty !== undefined) body.frequency_penalty = config.frequencyPenalty;
-        if (config.presencePenalty !== undefined) body.presence_penalty = config.presencePenalty;
+    if (isOllama) {
+        body.options = {};
+        if (config.temperature !== undefined) body.options.temperature = config.temperature;
+        if (config.maxTokens !== undefined) body.options.num_predict = config.maxTokens;
+        if (config.topP !== undefined) body.options.top_p = config.topP;
+        if (config.frequencyPenalty !== undefined) body.options.repeat_penalty = config.frequencyPenalty;
+    } else {
+        if (config.temperature !== undefined) body.temperature = config.temperature;
+        if (config.maxTokens !== undefined) body.max_tokens = config.maxTokens;
+        if (config.topP !== undefined) body.top_p = config.topP;
+        
+        if (config.provider !== 'modelscope') {
+            if (config.frequencyPenalty !== undefined) body.frequency_penalty = config.frequencyPenalty;
+            if (config.presencePenalty !== undefined) body.presence_penalty = config.presencePenalty;
+        }
     }
 
 
@@ -228,9 +248,9 @@ async function* generateWithOpenAICompatible(promptOrMessages: string | ChatMess
             try {
                 errorData = await response.json();
             } catch(e) {
-                throw new Error(`API error (${response.status}): ${response.statusText}`);
+                throw new Error(`API 错误 (${response.status}): ${response.statusText}`);
             }
-            throw new Error(`API error (${response.status}): ${errorData.error?.message || 'Unknown error'}`);
+            throw new Error(`API 错误 (${response.status}): ${errorData.error?.message || '未知错误'}`);
         }
 
         const reader = response.body.getReader();
@@ -243,7 +263,7 @@ async function* generateWithOpenAICompatible(promptOrMessages: string | ChatMess
 
             if (signal?.aborted) {
                 await reader.cancel();
-                throw new DOMException('Aborted by user', 'AbortError');
+                throw new DOMException('用户中止操作', 'AbortError');
             }
 
             buffer += decoder.decode(value, { stream: true });
@@ -251,17 +271,31 @@ async function* generateWithOpenAICompatible(promptOrMessages: string | ChatMess
             buffer = lines.pop() || '';
 
             for (const line of lines) {
-                if (line.startsWith('data: ')) {
-                    const dataStr = line.substring(6);
-                    if (dataStr.trim() === '[DONE]') return;
+                 if (isOllama) {
+                    if (line.trim() === '') continue;
                     try {
-                        const data = JSON.parse(dataStr);
-                        const content = data.choices?.[0]?.delta?.content;
+                        const data = JSON.parse(line);
+                        const content = data.message?.content;
                         if (content) {
                             yield content;
                         }
+                        if (data.done) return;
                     } catch (e) {
-                        // Ignore JSON parse errors, might be partial data
+                        // Ignore JSON parse errors on partial data
+                    }
+                } else {
+                    if (line.startsWith('data: ')) {
+                        const dataStr = line.substring(6);
+                        if (dataStr.trim() === '[DONE]') return;
+                        try {
+                            const data = JSON.parse(dataStr);
+                            const content = data.choices?.[0]?.delta?.content;
+                            if (content) {
+                                yield content;
+                            }
+                        } catch (e) {
+                            // Ignore JSON parse errors, might be partial data
+                        }
                     }
                 }
             }
@@ -273,15 +307,18 @@ async function* generateWithOpenAICompatible(promptOrMessages: string | ChatMess
             try {
                 errorData = await response.json();
             } catch(e) {
-                throw new Error(`API error (${response.status}): ${response.statusText}`);
+                throw new Error(`API 错误 (${response.status}): ${response.statusText}`);
             }
-            throw new Error(`API error (${response.status}): ${errorData.error?.message || 'Unknown error'}`);
+            throw new Error(`API 错误 (${response.status}): ${errorData.error?.message || '未知错误'}`);
         }
         const data = await response.json();
-        const content = data.choices?.[0]?.message?.content;
+        
+        const content = isOllama
+            ? data.message?.content
+            : data.choices?.[0]?.message?.content;
 
-        if (!content) {
-            throw new Error("API returned an invalid response structure.");
+        if (typeof content !== 'string') {
+            throw new Error("API 返回了无效的响应结构。");
         }
         yield content.trim();
     }
@@ -291,7 +328,7 @@ async function* generateWithOpenAICompatible(promptOrMessages: string | ChatMess
 export async function* generateOutline(cards: CombinedCards, config: AIConfig, novelInfo: NovelInfo): AsyncGenerator<string> {
     const activePrompt = config.prompts.find(p => p.id === config.activePromptId) || config.prompts[0];
     if (!activePrompt) {
-        throw new Error("No active prompt template found. Please check your settings.");
+        throw new Error("找不到有效的提示词模板。请检查您的设置。");
     }
 
     const prompt = createPrompt(cards, activePrompt.content, novelInfo);
@@ -303,10 +340,10 @@ export async function* generateOutline(cards: CombinedCards, config: AIConfig, n
         } else if (openAICompatibleProviders.includes(config.provider)) {
             yield* generateWithOpenAICompatible(prompt, config);
         } else {
-            throw new Error(`Unsupported AI provider: ${config.provider}`);
+            throw new Error(`不支持的 AI 提供商: ${config.provider}`);
         }
     } catch (error) {
-        console.error(`Error generating outline with ${config.provider} API:`, error);
+        console.error(`使用 ${config.provider} API 生成大纲时出错:`, error);
         if (error instanceof Error) {
             let detailedMessage = `生成故事大纲失败: ${error.message}`;
             if (error.message.includes('Failed to fetch')) {
@@ -339,10 +376,10 @@ ${currentOutline}
         } else if (openAICompatibleProviders.includes(config.provider)) {
             yield* generateWithOpenAICompatible(polishPrompt, config, signal);
         } else {
-            throw new Error(`Unsupported AI provider: ${config.provider}`);
+            throw new Error(`不支持的 AI 提供商: ${config.provider}`);
         }
     } catch (error) {
-        console.error(`Error polishing outline with ${config.provider} API:`, error);
+        console.error(`使用 ${config.provider} API 润色大纲时出错:`, error);
         if (error instanceof Error) {
             let detailedMessage = `AI 润色失败: ${error.message}`;
             if (error.message.includes('Failed to fetch')) {
@@ -364,10 +401,10 @@ export async function* generateChatResponse(chatHistory: ChatMessage[], config: 
         } else if (openAICompatibleProviders.includes(chatConfig.provider)) {
             yield* generateWithOpenAICompatible(chatHistory, chatConfig, signal);
         } else {
-            throw new Error(`Unsupported AI provider: ${chatConfig.provider}`);
+            throw new Error(`不支持的 AI 提供商: ${chatConfig.provider}`);
         }
     } catch (error) {
-        console.error(`Error in chat response with ${chatConfig.provider} API:`, error);
+        console.error(`使用 ${chatConfig.provider} API 进行聊天时出错:`, error);
         if (error instanceof Error) {
             let detailedMessage = `AI 聊天失败: ${error.message}`;
             if (error.message.includes('Failed to fetch')) {
@@ -379,18 +416,53 @@ export async function* generateChatResponse(chatHistory: ChatMessage[], config: 
     }
 }
 
+export async function* editText(originalText: string, instruction: string, config: AIConfig, signal?: AbortSignal): AsyncGenerator<string> {
+    const prompt = `你是一位专业的小说编辑。请根据用户的指示，修改以下文本。只返回修改后的文本，不要添加任何额外的解释或 markdown 格式。
+
+原始文本:
+---
+${originalText}
+---
+
+修改指示:
+"${instruction}"
+`;
+
+    const openAICompatibleProviders: AIProvider[] = ['openai', 'deepseek', 'openrouter', 'siliconflow', 'ollama', 'custom', 'modelscope'];
+    const editConfig = { ...config, model: config.assistantModel || config.model };
+
+    try {
+        if (editConfig.provider === 'gemini') {
+            yield* generateWithGemini(prompt, editConfig, signal);
+        } else if (openAICompatibleProviders.includes(editConfig.provider)) {
+            yield* generateWithOpenAICompatible(prompt, editConfig, signal);
+        } else {
+            throw new Error(`不支持的 AI 提供商: ${editConfig.provider}`);
+        }
+    } catch (error) {
+        console.error(`使用 ${editConfig.provider} API 编辑文本时出错:`, error);
+        if (error instanceof Error) {
+             let detailedMessage = `AI 编辑失败: ${error.message}`;
+            if (error.message.includes('Failed to fetch')) {
+                detailedMessage += '\n\n请检查您的网络连接和 AI Endpoint 设置。';
+            }
+            throw new Error(detailedMessage);
+        }
+        throw new Error(`AI 编辑失败。请检查您的 API 设置后重试。`);
+    }
+}
+
 
 export const fetchModels = async (config: AIConfig): Promise<string[]> => {
     if (config.provider === 'gemini') {
-        const apiKey = config.apiKey || process.env.API_KEY;
+        const apiKey = config.apiKey;
         if (!apiKey) {
-            throw new Error("Gemini API 密钥未配置。");
+            throw new Error("Gemini API 密钥未配置。请在“设置”页面提供。");
         }
-        if (!config.endpoint) {
-            throw new Error("Gemini Endpoint URL is not configured.");
-        }
+        
+        const endpointUrl = config.endpoint || 'https://generativelanguage.googleapis.com';
 
-        const endpoint = `${config.endpoint.trim().replace(/\/+$/, '')}/v1beta/models`;
+        const endpoint = `${endpointUrl.trim().replace(/\/+$/, '')}/v1beta/models`;
         
         try {
             const response = await fetch(endpoint, {
@@ -428,7 +500,7 @@ export const fetchModels = async (config: AIConfig): Promise<string[]> => {
                 
             return models;
         } catch (error) {
-            console.error(`Failed to fetch models from Gemini:`, error);
+            console.error(`获取 Gemini 模型失败:`, error);
             if (error instanceof Error) {
                 let detailedMessage = `获取模型列表失败: ${error.message}`;
                  if (error.message.includes('Failed to fetch')) {
@@ -475,7 +547,7 @@ export const fetchModels = async (config: AIConfig): Promise<string[]> => {
             return data.data?.map((model: OpenAIModel) => model.id).sort() || [];
         }
     } catch (error) {
-        console.error(`Failed to fetch models from ${config.endpoint}:`, error);
+        console.error(`从 ${config.endpoint} 获取模型失败:`, error);
         if (error instanceof Error) {
             let detailedMessage = `获取模型列表失败: ${error.message}`;
              if (error.message.includes('Failed to fetch')) {
@@ -489,7 +561,7 @@ export const fetchModels = async (config: AIConfig): Promise<string[]> => {
 
 export async function generateCardDetails(cardName: string, cardType: CardType, config: AIConfig): Promise<{ tooltipText: string; description: string }> {
     if (!cardName.trim()) {
-        throw new Error("Card name cannot be empty.");
+        throw new Error("卡片名称不能为空。");
     }
 
     const cardTypeName = CARD_TYPE_NAMES[cardType];
@@ -516,7 +588,7 @@ export async function generateCardDetails(cardName: string, cardType: CardType, 
         } else if (openAICompatibleProviders.includes(nonStreamingConfig.provider)) {
             stream = generateWithOpenAICompatible(prompt, nonStreamingConfig);
         } else {
-            throw new Error(`Unsupported AI provider: ${nonStreamingConfig.provider}`);
+            throw new Error(`不支持的 AI 提供商: ${nonStreamingConfig.provider}`);
         }
 
         const { value } = await stream.next();
@@ -531,10 +603,10 @@ export async function generateCardDetails(cardName: string, cardType: CardType, 
         if (typeof parsed.tooltipText === 'string' && typeof parsed.description === 'string') {
             return parsed;
         } else {
-            throw new Error("AI response did not contain the expected JSON structure.");
+            throw new Error("AI 响应未包含预期的 JSON 结构。");
         }
     } catch (error) {
-        console.error("Failed to generate or parse card details from AI:", error);
+        console.error("AI 生成或解析卡片详情失败:", error);
         throw new Error(`AI生成卡片详情失败: ${error instanceof Error ? error.message : '请检查网络和AI设置。'}`);
     }
 }

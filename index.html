@@ -110,6 +110,21 @@
         .editor-container .editor-statusbar {
             display: none; /* Hide status bar for a cleaner look */
         }
+        
+        /* EasyMDE Line Numbers */
+        .editor-container .CodeMirror-gutters {
+            background-color: var(--easymde-bg) !important;
+            border-right: 1px solid var(--easymde-border);
+            padding-right: 5px;
+        }
+        .editor-container .CodeMirror-linenumber {
+            color: #a1a1aa; /* zinc-400 */
+            padding: 0 3px 0 5px;
+        }
+        html.dark .editor-container .CodeMirror-linenumber {
+            color: #52525b; /* zinc-600 */
+        }
+
 
         /* Flip Card Styles */
         .flip-card {
@@ -260,6 +275,148 @@
             background-color: transparent;
         }
 
+        /* Selection Popup */
+        .selection-popup {
+            position: absolute;
+            z-index: 1000;
+            transition: opacity 0.1s ease-out, transform 0.1s ease-out;
+        }
+        .selection-popup-buttons {
+            background-color: var(--easymde-bg);
+            border: 1px solid var(--easymde-border);
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            padding: 4px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .selection-popup-btn {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 10px;
+            border: none;
+            background-color: transparent;
+            cursor: pointer;
+            border-radius: 6px;
+            font-size: 13px;
+            color: var(--easymde-toolbar-text);
+        }
+        .selection-popup-btn:hover {
+            background-color: var(--easymde-toolbar-hover-bg);
+        }
+        .selection-popup-divider {
+            width: 1px;
+            height: 16px;
+            background-color: var(--easymde-border);
+        }
+        
+        /* New AI Input for Popup */
+        .selection-popup-ai-input {
+            width: 400px;
+            border-radius: 12px;
+            background-color: var(--ai-input-bg);
+            border: 1px solid var(--easymde-border);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            display: flex;
+            flex-direction: column;
+        }
+        .selection-popup-textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border: none;
+            background-color: transparent;
+            color: var(--easymde-text);
+            outline: none;
+            resize: none;
+            font-size: 14px;
+            min-height: 50px;
+        }
+        .selection-popup-toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 4px 8px;
+            border-top: 1px solid var(--easymde-border);
+        }
+        .selection-popup-toolbar-left {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .selection-popup-icon-btn {
+            padding: 6px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: none;
+            background-color: transparent;
+            color: #9ca3af; /* gray-400 */
+        }
+        html.dark .selection-popup-icon-btn {
+            color: #71717a; /* zinc-500 */
+        }
+        .selection-popup-icon-btn:hover:not(:disabled) {
+            background-color: var(--easymde-toolbar-hover-bg);
+            color: var(--easymde-toolbar-text);
+        }
+        .selection-popup-icon-btn:disabled {
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+        .selection-popup-send-btn {
+            background-color: #374151;
+            color: white;
+        }
+        html.dark .selection-popup-send-btn {
+            background-color: #d4d4d8;
+            color: #18181b;
+        }
+        .selection-popup-send-btn:hover:not(:disabled) {
+             background-color: #1f2937;
+             color: white;
+        }
+        html.dark .selection-popup-send-btn:hover:not(:disabled) {
+             background-color: #e5e7eb;
+        }
+        
+        /* Chat Reference Pill */
+        .chat-reference-pill {
+            display: inline-flex;
+            align-items: center;
+            background-color: #e5e7eb; /* gray-200 */
+            border-radius: 6px;
+            padding: 2px 8px 2px 4px;
+            font-size: 13px;
+            color: #374151;
+            line-height: 1.2;
+        }
+        html.dark .chat-reference-pill {
+            background-color: #3f3f46; /* zinc-700 */
+            color: #d4d4d8;
+        }
+        .chat-reference-pill-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 16px;
+            height: 16px;
+            border-radius: 4px;
+            color: #4b5563;
+            margin-right: 6px;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        html.dark .chat-reference-pill-btn {
+            color: #a1a1aa;
+        }
+        .chat-reference-pill-btn:hover {
+            background-color: #d1d5db; /* gray-300 */
+        }
+        html.dark .chat-reference-pill-btn:hover {
+            background-color: #52525b; /* zinc-600 */
+        }
 
     </style>
 <script type="importmap">
@@ -271,7 +428,8 @@
     "react": "https://aistudiocdn.com/react@^18.2.0",
     "easymde": "https://aistudiocdn.com/easymde@^2.18.0",
     "marked": "https://aistudiocdn.com/marked@^12.0.1",
-    "dompurify": "https://aistudiocdn.com/dompurify@^3.0.11"
+    "dompurify": "https://aistudiocdn.com/dompurify@^3.0.11",
+    "codemirror": "https://aistudiocdn.com/codemirror@^6.0.2"
   }
 }
 </script>

@@ -772,6 +772,7 @@ const App: React.FC = () => {
                             isGenerating={isGenerating}
                             setIsGenerating={setIsGenerating}
                             combinedCards={combinedCards}
+                            allCards={allCards}
                             onSaveToArchive={handleSaveToArchive}
                             assistantHistory={assistantHistory}
                             setAssistantHistory={setAssistantHistory}

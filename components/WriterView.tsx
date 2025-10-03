@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useCallback, useEffect, useRef } from 'react';
-import type { Card, CombinedCards, AIConfig, CardType, NovelInfo, UISettings, SavedCombination } from '../types';
+import type { Card, CombinedCards, AIConfig, CardType, NovelInfo, UISettings, SavedCombination, PromptTemplate } from '../types';
 import { CardType as CardTypeEnum } from '../types';
 import { CORE_CARD_TYPES, CARD_TYPE_NAMES, OPTIONAL_CARD_TYPES } from '../constants';
 import { fetchModels } from '../services/aiService';
@@ -355,7 +355,8 @@ const WriterView: React.FC<WriterViewProps> = ({
                         className="w-48 pl-3 pr-8 py-2 text-sm bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-gray-500 focus:border-gray-500 appearance-none transition-all dark:bg-zinc-700 dark:border-zinc-600 dark:text-zinc-100"
                         aria-label="选择提示词模板"
                     >
-                        {config.prompts.map(prompt => (
+                        {/* Fix: Add explicit type `PromptTemplate` to the map function's parameter to resolve TypeScript error. */}
+                        {config.prompts.map((prompt: PromptTemplate) => (
                             <option key={prompt.id} value={prompt.id}>
                                 {prompt.name}
                             </option>
