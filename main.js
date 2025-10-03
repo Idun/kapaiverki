@@ -16,7 +16,7 @@ var init_types = __esm({
 
 // components/icons.tsx
 import { jsx, jsxs } from "react/jsx-runtime";
-var ThemeIcon, GenreIcon, CharacterIcon, PlotIcon, StructureIcon, TechniqueIcon, EndingIcon, PenSparkleIcon, SettingsIcon, DocumentTextIcon, LightbulbIcon, DownloadIcon, UploadIcon, PreviewIcon, PlusIcon, SparklesIcon, PencilIcon, TrashIcon, ArrowUpIcon, StopIcon, AiIcon, InformationCircleIcon, ArchiveBoxIcon, DocumentPlusIcon, PhotoIcon, QuestionMarkCircleIcon, UserCircleIcon, ArrowsRightLeftIcon, GlobeAltIcon, ClipboardDocumentIcon, ArrowPathIcon, FireIcon, Bars3BottomLeftIcon, BookmarkSquareIcon, ArrowDownOnSquareIcon;
+var ThemeIcon, GenreIcon, CharacterIcon, PlotIcon, StructureIcon, TechniqueIcon, EndingIcon, PenSparkleIcon, SettingsIcon, DocumentTextIcon, LightbulbIcon, DownloadIcon, UploadIcon, PreviewIcon, PlusIcon, SparklesIcon, PencilIcon, TrashIcon, ArrowUpIcon, StopIcon, AiIcon, InformationCircleIcon, ArchiveBoxIcon, DocumentPlusIcon, PhotoIcon, QuestionMarkCircleIcon, UserCircleIcon, ArrowsRightLeftIcon, GlobeAltIcon, ClipboardDocumentIcon, ArrowPathIcon, FireIcon, Bars3BottomLeftIcon, BookmarkSquareIcon, ArrowDownOnSquareIcon, AtSymbolIcon, ChevronDownIcon;
 var init_icons = __esm({
   "components/icons.tsx"() {
     ThemeIcon = (props) => /* @__PURE__ */ jsx("svg", { xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", strokeWidth: 1.5, stroke: "currentColor", ...props, children: /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M12 3v2.25m6.364.386-1.591 1.591M21 12h-2.25m-.386 6.364-1.591-1.591M12 18.75V21m-6.364-.386 1.591-1.591M3 12H.75m.386-6.364 1.591 1.591M12 6.75a5.25 5.25 0 1 0 0 10.5 5.25 5.25 0 0 0 0-10.5Z" }) });
@@ -67,6 +67,8 @@ var init_icons = __esm({
     Bars3BottomLeftIcon = (props) => /* @__PURE__ */ jsx("svg", { xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", strokeWidth: 1.5, stroke: "currentColor", ...props, children: /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25H12" }) });
     BookmarkSquareIcon = (props) => /* @__PURE__ */ jsx("svg", { xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", strokeWidth: 1.5, stroke: "currentColor", ...props, children: /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M16.5 3.75V16.5L12 14.25 7.5 16.5V3.75m9 0H7.5A2.25 2.25 0 0 0 5.25 6v13.5A2.25 2.25 0 0 0 7.5 21h9a2.25 2.25 0 0 0 2.25-2.25V6A2.25 2.25 0 0 0 16.5 3.75Z" }) });
     ArrowDownOnSquareIcon = (props) => /* @__PURE__ */ jsx("svg", { xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", strokeWidth: 1.5, stroke: "currentColor", ...props, children: /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M9 8.25H7.5a2.25 2.25 0 0 0-2.25 2.25v9a2.25 2.25 0 0 0 2.25 2.25h9a2.25 2.25 0 0 0 2.25-2.25v-9a2.25 2.25 0 0 0-2.25-2.25H15m0-3-3-3m0 0-3 3m3-3v11.25" }) });
+    AtSymbolIcon = (props) => /* @__PURE__ */ jsx("svg", { xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", strokeWidth: 1.5, stroke: "currentColor", ...props, children: /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M16.5 12a4.5 4.5 0 1 1-9 0 4.5 4.5 0 0 1 9 0Zm0 0c0 1.657 1.007 3 2.25 3S21 13.657 21 12a9 9 0 1 0-2.636 6.364M16.5 12V8.25" }) });
+    ChevronDownIcon = (props) => /* @__PURE__ */ jsx("svg", { xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", strokeWidth: 2, stroke: "currentColor", ...props, children: /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "m19.5 8.25-7.5 7.5-7.5-7.5" }) });
   }
 });
 
@@ -622,6 +624,7 @@ var init_constants = __esm({
 // services/aiService.ts
 var aiService_exports = {};
 __export(aiService_exports, {
+  editText: () => editText,
   fetchModels: () => fetchModels,
   generateCardDetails: () => generateCardDetails,
   generateChatResponse: () => generateChatResponse,
@@ -630,13 +633,13 @@ __export(aiService_exports, {
 });
 import { GoogleGenAI } from "@google/genai";
 async function* generateWithGemini(promptOrMessages, config, signal) {
-  const apiKey = config.apiKey || process.env.API_KEY;
+  const apiKey = config.apiKey;
   if (!apiKey) {
     throw new Error("Gemini API \u5BC6\u94A5\u672A\u914D\u7F6E\u3002\u8BF7\u5728\u201C\u8BBE\u7F6E\u201D\u9875\u9762\u4E2D\u63D0\u4F9B\u60A8\u7684\u5BC6\u94A5\u3002");
   }
   const ai = new GoogleGenAI({ apiKey });
   if (!config.model) {
-    throw new Error("Gemini model name is not configured.");
+    throw new Error("Gemini \u6A21\u578B\u540D\u79F0\u672A\u914D\u7F6E\u3002");
   }
   const modelName = config.model;
   const generationConfig = {};
@@ -644,7 +647,9 @@ async function* generateWithGemini(promptOrMessages, config, signal) {
   if (config.topP !== void 0) generationConfig.topP = config.topP;
   if (config.maxTokens !== void 0) {
     generationConfig.maxOutputTokens = config.maxTokens;
-    generationConfig.thinkingConfig = { thinkingBudget: Math.floor(config.maxTokens / 4) };
+    if (config.model === "gemini-2.5-flash") {
+      generationConfig.thinkingConfig = { thinkingBudget: Math.floor(config.maxTokens / 4) };
+    }
   }
   const messages = typeof promptOrMessages === "string" ? [{ role: "user", content: promptOrMessages }] : promptOrMessages;
   const contents = messages.map((msg) => {
@@ -675,36 +680,37 @@ async function* generateWithGemini(promptOrMessages, config, signal) {
       config: generationConfig
     });
     for await (const chunk of response) {
-      if (signal?.aborted) throw new DOMException("Aborted by user", "AbortError");
+      if (signal?.aborted) throw new DOMException("\u7528\u6237\u4E2D\u6B62\u64CD\u4F5C", "AbortError");
       const chunkText = chunk.text;
       if (chunkText) {
         yield chunkText;
       }
     }
   } else {
-    if (signal?.aborted) throw new DOMException("Aborted by user", "AbortError");
+    if (signal?.aborted) throw new DOMException("\u7528\u6237\u4E2D\u6B62\u64CD\u4F5C", "AbortError");
     const response = await ai.models.generateContent({
       model: modelName,
       contents,
       config: generationConfig
     });
-    if (signal?.aborted) throw new DOMException("Aborted by user", "AbortError");
+    if (signal?.aborted) throw new DOMException("\u7528\u6237\u4E2D\u6B62\u64CD\u4F5C", "AbortError");
     if (!response.text) {
-      throw new Error("API returned an empty response.");
+      throw new Error("API \u8FD4\u56DE\u4E86\u7A7A\u54CD\u5E94\u3002");
     }
     yield response.text.trim();
   }
 }
 async function* generateWithOpenAICompatible(promptOrMessages, config, signal) {
-  const providersThatNeedKey = ["openai", "deepseek", "openrouter", "siliconflow", "modelscope"];
-  if (providersThatNeedKey.includes(config.provider) && !config.apiKey) {
-    throw new Error(`API key is required for the ${config.provider} provider.`);
+  const providersThatNeedKey = ["openai", "deepseek", "openrouter", "siliconflow", "modelscope", "custom"];
+  const isOllama = config.provider === "ollama";
+  if (!isOllama && providersThatNeedKey.includes(config.provider) && !config.apiKey) {
+    throw new Error(`\u9700\u8981\u4E3A ${config.provider} \u63D0\u4F9B\u5546\u63D0\u4F9B API \u5BC6\u94A5\u3002`);
   }
-  if (!config.endpoint) throw new Error("Endpoint URL is missing.");
-  if (!config.model) throw new Error("Model name is missing.");
-  const endpoint = getEndpoint(config.endpoint, "chat");
+  if (!config.endpoint) throw new Error("Endpoint URL \u4E0D\u80FD\u4E3A\u7A7A\u3002");
+  if (!config.model) throw new Error("\u6A21\u578B\u540D\u79F0\u4E0D\u80FD\u4E3A\u7A7A\u3002");
+  const endpoint = isOllama ? `${config.endpoint.trim().replace(/\/+$/, "")}/api/chat` : getEndpoint(config.endpoint, "chat");
   const headers = { "Content-Type": "application/json" };
-  if (config.apiKey) {
+  if (!isOllama && config.apiKey) {
     headers["Authorization"] = `Bearer ${config.apiKey}`;
   }
   const body = {
@@ -727,12 +733,20 @@ async function* generateWithOpenAICompatible(promptOrMessages, config, signal) {
     return { role, content: contentParts };
   });
   body.messages = preparedMessages;
-  if (config.temperature !== void 0) body.temperature = config.temperature;
-  if (config.maxTokens !== void 0) body.max_tokens = config.maxTokens;
-  if (config.topP !== void 0) body.top_p = config.topP;
-  if (config.provider !== "modelscope") {
-    if (config.frequencyPenalty !== void 0) body.frequency_penalty = config.frequencyPenalty;
-    if (config.presencePenalty !== void 0) body.presence_penalty = config.presencePenalty;
+  if (isOllama) {
+    body.options = {};
+    if (config.temperature !== void 0) body.options.temperature = config.temperature;
+    if (config.maxTokens !== void 0) body.options.num_predict = config.maxTokens;
+    if (config.topP !== void 0) body.options.top_p = config.topP;
+    if (config.frequencyPenalty !== void 0) body.options.repeat_penalty = config.frequencyPenalty;
+  } else {
+    if (config.temperature !== void 0) body.temperature = config.temperature;
+    if (config.maxTokens !== void 0) body.max_tokens = config.maxTokens;
+    if (config.topP !== void 0) body.top_p = config.topP;
+    if (config.provider !== "modelscope") {
+      if (config.frequencyPenalty !== void 0) body.frequency_penalty = config.frequencyPenalty;
+      if (config.presencePenalty !== void 0) body.presence_penalty = config.presencePenalty;
+    }
   }
   if (config.streaming) {
     body.stream = true;
@@ -742,9 +756,9 @@ async function* generateWithOpenAICompatible(promptOrMessages, config, signal) {
       try {
         errorData = await response.json();
       } catch (e) {
-        throw new Error(`API error (${response.status}): ${response.statusText}`);
+        throw new Error(`API \u9519\u8BEF (${response.status}): ${response.statusText}`);
       }
-      throw new Error(`API error (${response.status}): ${errorData.error?.message || "Unknown error"}`);
+      throw new Error(`API \u9519\u8BEF (${response.status}): ${errorData.error?.message || "\u672A\u77E5\u9519\u8BEF"}`);
     }
     const reader = response.body.getReader();
     const decoder = new TextDecoder();
@@ -754,22 +768,35 @@ async function* generateWithOpenAICompatible(promptOrMessages, config, signal) {
       if (done) break;
       if (signal?.aborted) {
         await reader.cancel();
-        throw new DOMException("Aborted by user", "AbortError");
+        throw new DOMException("\u7528\u6237\u4E2D\u6B62\u64CD\u4F5C", "AbortError");
       }
       buffer += decoder.decode(value, { stream: true });
       const lines = buffer.split("\n");
       buffer = lines.pop() || "";
       for (const line of lines) {
-        if (line.startsWith("data: ")) {
-          const dataStr = line.substring(6);
-          if (dataStr.trim() === "[DONE]") return;
+        if (isOllama) {
+          if (line.trim() === "") continue;
           try {
-            const data = JSON.parse(dataStr);
-            const content = data.choices?.[0]?.delta?.content;
+            const data = JSON.parse(line);
+            const content = data.message?.content;
             if (content) {
               yield content;
             }
+            if (data.done) return;
           } catch (e) {
+          }
+        } else {
+          if (line.startsWith("data: ")) {
+            const dataStr = line.substring(6);
+            if (dataStr.trim() === "[DONE]") return;
+            try {
+              const data = JSON.parse(dataStr);
+              const content = data.choices?.[0]?.delta?.content;
+              if (content) {
+                yield content;
+              }
+            } catch (e) {
+            }
           }
         }
       }
@@ -781,14 +808,14 @@ async function* generateWithOpenAICompatible(promptOrMessages, config, signal) {
       try {
         errorData = await response.json();
       } catch (e) {
-        throw new Error(`API error (${response.status}): ${response.statusText}`);
+        throw new Error(`API \u9519\u8BEF (${response.status}): ${response.statusText}`);
       }
-      throw new Error(`API error (${response.status}): ${errorData.error?.message || "Unknown error"}`);
+      throw new Error(`API \u9519\u8BEF (${response.status}): ${errorData.error?.message || "\u672A\u77E5\u9519\u8BEF"}`);
     }
     const data = await response.json();
-    const content = data.choices?.[0]?.message?.content;
-    if (!content) {
-      throw new Error("API returned an invalid response structure.");
+    const content = isOllama ? data.message?.content : data.choices?.[0]?.message?.content;
+    if (typeof content !== "string") {
+      throw new Error("API \u8FD4\u56DE\u4E86\u65E0\u6548\u7684\u54CD\u5E94\u7ED3\u6784\u3002");
     }
     yield content.trim();
   }
@@ -796,7 +823,7 @@ async function* generateWithOpenAICompatible(promptOrMessages, config, signal) {
 async function* generateOutline(cards, config, novelInfo) {
   const activePrompt = config.prompts.find((p) => p.id === config.activePromptId) || config.prompts[0];
   if (!activePrompt) {
-    throw new Error("No active prompt template found. Please check your settings.");
+    throw new Error("\u627E\u4E0D\u5230\u6709\u6548\u7684\u63D0\u793A\u8BCD\u6A21\u677F\u3002\u8BF7\u68C0\u67E5\u60A8\u7684\u8BBE\u7F6E\u3002");
   }
   const prompt2 = createPrompt(cards, activePrompt.content, novelInfo);
   const openAICompatibleProviders = ["openai", "deepseek", "openrouter", "siliconflow", "ollama", "custom", "modelscope"];
@@ -806,10 +833,10 @@ async function* generateOutline(cards, config, novelInfo) {
     } else if (openAICompatibleProviders.includes(config.provider)) {
       yield* generateWithOpenAICompatible(prompt2, config);
     } else {
-      throw new Error(`Unsupported AI provider: ${config.provider}`);
+      throw new Error(`\u4E0D\u652F\u6301\u7684 AI \u63D0\u4F9B\u5546: ${config.provider}`);
     }
   } catch (error) {
-    console.error(`Error generating outline with ${config.provider} API:`, error);
+    console.error(`\u4F7F\u7528 ${config.provider} API \u751F\u6210\u5927\u7EB2\u65F6\u51FA\u9519:`, error);
     if (error instanceof Error) {
       let detailedMessage = `\u751F\u6210\u6545\u4E8B\u5927\u7EB2\u5931\u8D25: ${error.message}`;
       if (error.message.includes("Failed to fetch")) {
@@ -839,10 +866,10 @@ ${currentOutline}
     } else if (openAICompatibleProviders.includes(config.provider)) {
       yield* generateWithOpenAICompatible(polishPrompt, config, signal);
     } else {
-      throw new Error(`Unsupported AI provider: ${config.provider}`);
+      throw new Error(`\u4E0D\u652F\u6301\u7684 AI \u63D0\u4F9B\u5546: ${config.provider}`);
     }
   } catch (error) {
-    console.error(`Error polishing outline with ${config.provider} API:`, error);
+    console.error(`\u4F7F\u7528 ${config.provider} API \u6DA6\u8272\u5927\u7EB2\u65F6\u51FA\u9519:`, error);
     if (error instanceof Error) {
       let detailedMessage = `AI \u6DA6\u8272\u5931\u8D25: ${error.message}`;
       if (error.message.includes("Failed to fetch")) {
@@ -862,10 +889,10 @@ async function* generateChatResponse(chatHistory, config, signal) {
     } else if (openAICompatibleProviders.includes(chatConfig.provider)) {
       yield* generateWithOpenAICompatible(chatHistory, chatConfig, signal);
     } else {
-      throw new Error(`Unsupported AI provider: ${chatConfig.provider}`);
+      throw new Error(`\u4E0D\u652F\u6301\u7684 AI \u63D0\u4F9B\u5546: ${chatConfig.provider}`);
     }
   } catch (error) {
-    console.error(`Error in chat response with ${chatConfig.provider} API:`, error);
+    console.error(`\u4F7F\u7528 ${chatConfig.provider} API \u8FDB\u884C\u804A\u5929\u65F6\u51FA\u9519:`, error);
     if (error instanceof Error) {
       let detailedMessage = `AI \u804A\u5929\u5931\u8D25: ${error.message}`;
       if (error.message.includes("Failed to fetch")) {
@@ -876,9 +903,42 @@ async function* generateChatResponse(chatHistory, config, signal) {
     throw new Error(`AI \u804A\u5929\u5931\u8D25\u3002\u8BF7\u68C0\u67E5\u60A8\u7684 API \u8BBE\u7F6E\u540E\u91CD\u8BD5\u3002`);
   }
 }
+async function* editText(originalText, instruction, config, signal) {
+  const prompt2 = `\u4F60\u662F\u4E00\u4F4D\u4E13\u4E1A\u7684\u5C0F\u8BF4\u7F16\u8F91\u3002\u8BF7\u6839\u636E\u7528\u6237\u7684\u6307\u793A\uFF0C\u4FEE\u6539\u4EE5\u4E0B\u6587\u672C\u3002\u53EA\u8FD4\u56DE\u4FEE\u6539\u540E\u7684\u6587\u672C\uFF0C\u4E0D\u8981\u6DFB\u52A0\u4EFB\u4F55\u989D\u5916\u7684\u89E3\u91CA\u6216 markdown \u683C\u5F0F\u3002
+
+\u539F\u59CB\u6587\u672C:
+---
+${originalText}
+---
+
+\u4FEE\u6539\u6307\u793A:
+"${instruction}"
+`;
+  const openAICompatibleProviders = ["openai", "deepseek", "openrouter", "siliconflow", "ollama", "custom", "modelscope"];
+  const editConfig = { ...config, model: config.assistantModel || config.model };
+  try {
+    if (editConfig.provider === "gemini") {
+      yield* generateWithGemini(prompt2, editConfig, signal);
+    } else if (openAICompatibleProviders.includes(editConfig.provider)) {
+      yield* generateWithOpenAICompatible(prompt2, editConfig, signal);
+    } else {
+      throw new Error(`\u4E0D\u652F\u6301\u7684 AI \u63D0\u4F9B\u5546: ${editConfig.provider}`);
+    }
+  } catch (error) {
+    console.error(`\u4F7F\u7528 ${editConfig.provider} API \u7F16\u8F91\u6587\u672C\u65F6\u51FA\u9519:`, error);
+    if (error instanceof Error) {
+      let detailedMessage = `AI \u7F16\u8F91\u5931\u8D25: ${error.message}`;
+      if (error.message.includes("Failed to fetch")) {
+        detailedMessage += "\n\n\u8BF7\u68C0\u67E5\u60A8\u7684\u7F51\u7EDC\u8FDE\u63A5\u548C AI Endpoint \u8BBE\u7F6E\u3002";
+      }
+      throw new Error(detailedMessage);
+    }
+    throw new Error(`AI \u7F16\u8F91\u5931\u8D25\u3002\u8BF7\u68C0\u67E5\u60A8\u7684 API \u8BBE\u7F6E\u540E\u91CD\u8BD5\u3002`);
+  }
+}
 async function generateCardDetails(cardName, cardType, config) {
   if (!cardName.trim()) {
-    throw new Error("Card name cannot be empty.");
+    throw new Error("\u5361\u7247\u540D\u79F0\u4E0D\u80FD\u4E3A\u7A7A\u3002");
   }
   const cardTypeName = CARD_TYPE_NAMES[cardType];
   const prompt2 = `\u4F60\u662F\u4E00\u4F4D\u4E13\u4E1A\u7684\u521B\u610F\u5199\u4F5C\u548C\u6545\u4E8B\u7406\u8BBA\u4E13\u5BB6\u3002\u8BF7\u4E3A\u4E00\u4E2A\u5199\u4F5C\u63D0\u793A\u5361\u7247\u751F\u6210\u4E24\u6BB5\u6587\u672C\uFF0C\u5361\u7247\u7C7B\u578B\u4E3A\u201C${cardTypeName}\u201D\uFF0C\u540D\u79F0\u4E3A\u201C${cardName}\u201D\uFF1A
@@ -900,7 +960,7 @@ async function generateCardDetails(cardName, cardType, config) {
     } else if (openAICompatibleProviders.includes(nonStreamingConfig.provider)) {
       stream = generateWithOpenAICompatible(prompt3, nonStreamingConfig);
     } else {
-      throw new Error(`Unsupported AI provider: ${nonStreamingConfig.provider}`);
+      throw new Error(`\u4E0D\u652F\u6301\u7684 AI \u63D0\u4F9B\u5546: ${nonStreamingConfig.provider}`);
     }
     const { value } = await stream.next();
     return value || "";
@@ -912,10 +972,10 @@ async function generateCardDetails(cardName, cardType, config) {
     if (typeof parsed.tooltipText === "string" && typeof parsed.description === "string") {
       return parsed;
     } else {
-      throw new Error("AI response did not contain the expected JSON structure.");
+      throw new Error("AI \u54CD\u5E94\u672A\u5305\u542B\u9884\u671F\u7684 JSON \u7ED3\u6784\u3002");
     }
   } catch (error) {
-    console.error("Failed to generate or parse card details from AI:", error);
+    console.error("AI \u751F\u6210\u6216\u89E3\u6790\u5361\u7247\u8BE6\u60C5\u5931\u8D25:", error);
     throw new Error(`AI\u751F\u6210\u5361\u7247\u8BE6\u60C5\u5931\u8D25: ${error instanceof Error ? error.message : "\u8BF7\u68C0\u67E5\u7F51\u7EDC\u548CAI\u8BBE\u7F6E\u3002"}`);
   }
 }
@@ -969,28 +1029,27 @@ ${promptParts.join("\n")}
     };
     getEndpoint = (url, path) => {
       const trimmedUrl = url.trim().replace(/\/+$/, "");
-      const finalPath = path === "chat" ? "/v1/chat/completions" : "/v1/models";
-      if (trimmedUrl.endsWith("/v1")) {
-        return `${trimmedUrl}/${path === "chat" ? "chat/completions" : "models"}`;
+      let basePath = trimmedUrl;
+      const apiV1Index = trimmedUrl.indexOf("/api/v1");
+      const v1Index = trimmedUrl.indexOf("/v1");
+      if (apiV1Index !== -1) {
+        basePath = trimmedUrl.substring(0, apiV1Index + "/api/v1".length);
+      } else if (v1Index !== -1) {
+        basePath = trimmedUrl.substring(0, v1Index + "/v1".length);
+      } else if (!trimmedUrl.endsWith("/v1")) {
+        basePath = `${trimmedUrl}/v1`;
       }
-      if (trimmedUrl.includes("/api/v1")) {
-        return `${trimmedUrl}/${path === "chat" ? "chat/completions" : "models"}`;
-      }
-      if (trimmedUrl.endsWith(finalPath)) {
-        return trimmedUrl;
-      }
-      return `${trimmedUrl}${finalPath}`;
+      const finalPath = path === "chat" ? "/chat/completions" : "/models";
+      return `${basePath}${finalPath}`;
     };
     fetchModels = async (config) => {
       if (config.provider === "gemini") {
-        const apiKey = config.apiKey || process.env.API_KEY;
+        const apiKey = config.apiKey;
         if (!apiKey) {
-          throw new Error("Gemini API \u5BC6\u94A5\u672A\u914D\u7F6E\u3002");
+          throw new Error("Gemini API \u5BC6\u94A5\u672A\u914D\u7F6E\u3002\u8BF7\u5728\u201C\u8BBE\u7F6E\u201D\u9875\u9762\u63D0\u4F9B\u3002");
         }
-        if (!config.endpoint) {
-          throw new Error("Gemini Endpoint URL is not configured.");
-        }
-        const endpoint2 = `${config.endpoint.trim().replace(/\/+$/, "")}/v1beta/models`;
+        const endpointUrl = config.endpoint || "https://generativelanguage.googleapis.com";
+        const endpoint2 = `${endpointUrl.trim().replace(/\/+$/, "")}/v1beta/models`;
         try {
           const response = await fetch(endpoint2, {
             method: "GET",
@@ -1017,7 +1076,7 @@ ${promptParts.join("\n")}
           ).map((model) => model.name.replace("models/", "")).sort();
           return models;
         } catch (error) {
-          console.error(`Failed to fetch models from Gemini:`, error);
+          console.error(`\u83B7\u53D6 Gemini \u6A21\u578B\u5931\u8D25:`, error);
           if (error instanceof Error) {
             let detailedMessage = `\u83B7\u53D6\u6A21\u578B\u5217\u8868\u5931\u8D25: ${error.message}`;
             if (error.message.includes("Failed to fetch")) {
@@ -1054,7 +1113,7 @@ ${promptParts.join("\n")}
           return data.data?.map((model) => model.id).sort() || [];
         }
       } catch (error) {
-        console.error(`Failed to fetch models from ${config.endpoint}:`, error);
+        console.error(`\u4ECE ${config.endpoint} \u83B7\u53D6\u6A21\u578B\u5931\u8D25:`, error);
         if (error instanceof Error) {
           let detailedMessage = `\u83B7\u53D6\u6A21\u578B\u5217\u8868\u5931\u8D25: ${error.message}`;
           if (error.message.includes("Failed to fetch")) {
@@ -1280,11 +1339,63 @@ var DEFAULT_STORY_ARCHITECT_PROMPT_TEMPLATE = {
   name: "\u6545\u4E8B\u5EFA\u7B51\u5E08 (\u9ED8\u8BA4)",
   content: DEFAULT_STORY_ARCHITECT_PROMPT_CONTENT
 };
+var DEFAULT_SAVE_THE_CAT_PROMPT_CONTENT = `\u4F60\u73B0\u5728\u662F\u4E00\u4F4D\u4E13\u4E1A\u7684\u5C0F\u8BF4\u7ED3\u6784\u987E\u95EE\uFF0C\u6DF1\u5EA6\u7CBE\u901A\u6770\u897F\u5361\xB7\u5E03\u7F57\u8FEA\u6240\u8457\u7684\u300A\u6551\u732B\u54AA\uFF1A\u5C0F\u8BF4\u521B\u4F5C\u6307\u5357\u300B\u3002\u4F60\u7684\u4EFB\u52A1\u662F\u57FA\u4E8E\u5176\u7ECF\u5178\u768415\u4E2A\u60C5\u8282\u70B9\uFF0C\u5E2E\u52A9\u7528\u6237\u4E3A\u4E00\u4E2A\u6545\u4E8B\u6784\u601D\u4E00\u4EFD\u8BE6\u7EC6\u7684\u7ED3\u6784\u5927\u7EB2\u3002
+
+## \u8BF7\u9075\u5FAA\u4EE5\u4E0B\u6D41\u7A0B\uFF1A
+1. \u9996\u5148\uFF0C\u4F60\u9700\u8981\u5411\u7528\u6237\u63D0\u95EE\uFF0C\u4EE5\u6536\u96C6\u7528\u6237\u6545\u4E8B\u7684\u6838\u5FC3\u6982\u5FF5\u3002\u4F60\u5E94\u8BE5\u81F3\u5C11\u8BE2\u95EE\u4EE5\u4E0B\u51E0\u70B9\uFF1A
+- **\u6545\u4E8B\u7C7B\u578B/\u9898\u6750\uFF1A** \uFF08\u4F8B\u5982\uFF1A\u79D1\u5E7B\u3001\u5947\u5E7B\u3001\u90FD\u5E02\u7231\u60C5\u3001\u60AC\u7591\u60CA\u609A\u7B49\uFF09
+- **\u4E3B\u89D2\u7B80\u4ECB\uFF1A** \uFF08\u4ED6\u662F\u8C01\uFF1F\u4ED6\u6700\u5927\u7684\u7F3A\u70B9\u6216\u9700\u8981\u514B\u670D\u7684\u5185\u5728\u95EE\u9898\u662F\u4EC0\u4E48\uFF1F\uFF09
+- **\u4E3B\u89D2\u7684\u76EE\u6807\uFF1A** \uFF08\u4ED6\u5728\u6545\u4E8B\u5F00\u59CB\u65F6\u6700\u60F3\u8981\u5F97\u5230\u4EC0\u4E48\uFF1F\uFF09
+- **\u4E3B\u89D2\u7684\u9700\u6C42\uFF1A** \uFF08\u4ED6\u771F\u6B63\u9700\u8981\u5B66\u4F1A\u6216\u660E\u767D\u4EC0\u4E48\u624D\u80FD\u6210\u957F\uFF1F\uFF09
+- **\u6838\u5FC3\u51B2\u7A81\uFF1A** \uFF08\u662F\u4EC0\u4E48\u6216\u8C01\u5728\u963B\u788D\u4ED6\u5B9E\u73B0\u76EE\u6807\uFF1F\uFF09
+
+2. \u5728\u7528\u6237\u56DE\u7B54\u4E86\u8FD9\u4E9B\u95EE\u9898\u4E4B\u540E\uFF0C\u4F60\u5C06\u6839\u636E\u7528\u6237\u63D0\u4F9B\u7684\u4FE1\u606F\uFF0C\u4E3A\u7528\u6237\u7684\u6545\u4E8B\u751F\u6210\u4E00\u4EFD\u5305\u542B\u4EE5\u4E0B15\u4E2A\u60C5\u8282\u70B9\u7684\u5B8C\u6574\u5927\u7EB2\u3002
+
+\u8FD9\u662F\u4F60\u9700\u8981\u586B\u5145\u768415\u4E2A\u60C5\u8282\u70B9\u6846\u67B6\u548C\u5B83\u4EEC\u7684\u89E3\u91CA\uFF1A
+**\u7B2C\u4E00\u5E55**
+1. **\u5F00\u573A\u5F62\u8C61:** \u6545\u4E8B\u7684\u5F00\u573A\u753B\u9762\uFF0C\u5C55\u793A\u4E3B\u89D2\u5728\u6539\u53D8\u53D1\u751F\u524D\u7684\u751F\u6D3B\u72B6\u6001\u548C\u4E16\u754C\u6837\u8C8C\u3002
+2. **\u4E3B\u9898\u5448\u73B0:** \u901A\u8FC7\u67D0\u4E2A\u6B21\u8981\u89D2\u8272\u7684\u5BF9\u8BDD\u6216\u4E00\u4E2A\u4E8B\u4EF6\uFF0C\u6697\u793A\u51FA\u4E3B\u89D2\u9700\u8981\u5B66\u4E60\u7684\u4EBA\u751F\u8BFE\u9898\uFF08\u5373\u201C\u4E3B\u89D2\u7684\u9700\u6C42\u201D\uFF09\u3002
+3. **\u5E03\u5C40:** \u8BE6\u7EC6\u5C55\u793A\u4E3B\u89D2\u7684\u4E16\u754C\uFF0C\u4ECB\u7ECD\u4ED6\u7684\u751F\u6D3B\u3001\u7F3A\u70B9\u3001\u6267\u5FF5\uFF0C\u4EE5\u53CA\u4E0E\u6545\u4E8B\u76F8\u5173\u7684\u4E3B\u8981\u914D\u89D2\u3002
+4. **\u50AC\u5316\u5242:** \u4E00\u4E2A\u65E0\u6CD5\u5FFD\u89C6\u7684\u4E8B\u4EF6\uFF08\u5BFC\u706B\u7EBF\uFF09\uFF0C\u5F7B\u5E95\u6253\u7834\u4E3B\u89D2\u7684\u5E73\u9759\u751F\u6D3B\uFF0C\u8FEB\u4F7F\u4ED6\u5FC5\u987B\u505A\u51FA\u6539\u53D8\u3002
+5. **\u8BA8\u8BBA:** \u4E3B\u89D2\u5BF9\u50AC\u5316\u5242\u4E8B\u4EF6\u611F\u5230\u72B9\u8C6B\u548C\u6297\u62D2\uFF0C\u601D\u8003\u81EA\u5DF1\u662F\u5426\u5E94\u8BE5\u63A5\u53D7\u8FD9\u4E2A\u6311\u6218\u3002
+
+**\u7B2C\u4E8C\u5E55**
+6. **\u8FDB\u5165\u7B2C\u4E8C\u5E55:** \u4E3B\u89D2\u505A\u51FA\u51B3\u5B9A\uFF0C\u4E3B\u52A8\u8E0F\u4E0A\u5F81\u7A0B\uFF0C\u8FDB\u5165\u4E00\u4E2A\u5168\u65B0\u7684\u3001\u5145\u6EE1\u6311\u6218\u7684\u4E16\u754C\u3002
+7. **B\u6545\u4E8B:** \u5F15\u5165\u4E00\u4E2A\u6B21\u8981\u60C5\u8282\uFF08\u5982\u7231\u60C5\u3001\u53CB\u60C5\u6216\u5E08\u5F92\u5173\u7CFB\uFF09\uFF0C\u8FD9\u4E2A\u60C5\u8282\u5C06\u662F\u63A2\u8BA8\u548C\u5B66\u4E60\u6545\u4E8B\u4E3B\u9898\u7684\u4E3B\u8981\u8F7D\u4F53\u3002
+8. **\u4E50\u8DA3\u548C\u6E38\u620F:** \u4E3B\u89D2\u5728\u65B0\u4E16\u754C\u4E2D\u8FDB\u884C\u63A2\u7D22\u548C\u5C1D\u8BD5\uFF0C\u7ECF\u5386\u4E00\u7CFB\u5217\u6216\u6210\u529F\u6216\u5931\u8D25\u7684\u4E8B\u4EF6\uFF0C\u5C55\u793A\u6545\u4E8B\u7684\u6838\u5FC3\u5438\u5F15\u529B\u3002
+9. **\u4E2D\u70B9:** \u6545\u4E8B\u7684\u4E2D\u5FC3\u70B9\uFF0C\u53D1\u751F\u4E00\u4E2A\u91CD\u5927\u4E8B\u4EF6\uFF0C\u5B83\u8981\u4E48\u662F\u201C\u865A\u5047\u7684\u80DC\u5229\u201D\uFF08\u4E3B\u89D2\u4F3C\u4E4E\u8FBE\u6210\u4E86\u76EE\u6807\uFF09\uFF0C\u8981\u4E48\u662F\u201C\u865A\u5047\u7684\u5931\u8D25\u201D\uFF08\u906D\u9047\u91CD\u5927\u6253\u51FB\uFF09\uFF0C\u6545\u4E8B\u7684\u8D4C\u6CE8\u88AB\u6025\u5267\u62AC\u9AD8\u3002
+10. **\u574F\u4EBA\u903C\u8FD1:** \u5728\u4E2D\u70B9\u4E4B\u540E\uFF0C\u5185\u5916\u90E8\u7684\u5BF9\u6297\u529B\u91CF\u5F00\u59CB\u5168\u529B\u53CD\u51FB\uFF0C\u4E3B\u89D2\u7684\u538B\u529B\u8D8A\u6765\u8D8A\u5927\uFF0C\u5904\u5883\u6108\u53D1\u8270\u96BE\u3002
+11. **\u4E00\u65E0\u6240\u6709:** \u4E3B\u89D2\u7684\u6700\u4F4E\u8C37\u3002\u4ED6\u906D\u9047\u4E86\u5F7B\u5E95\u7684\u5931\u8D25\uFF0C\u611F\u89C9\u5931\u53BB\u4E86\u4E00\u5207\uFF0C\u901A\u5E38\u4F34\u968F\u7740\u67D0\u79CD\u201C\u6B7B\u4EA1\u201D\u7684\u8C61\u5F81\uFF08\u5982\u5931\u53BB\u5BFC\u5E08\u3001\u670B\u53CB\u6216\u5E0C\u671B\uFF09\u3002
+12. **\u7075\u9B42\u7684\u9ED1\u591C:** \u5728\u7EDD\u671B\u4E2D\uFF0C\u4E3B\u89D2\u72EC\u81EA\u53CD\u601D\uFF0C\u6700\u7EC8\u4ECEB\u6545\u4E8B\u6216\u81EA\u8EAB\u7ECF\u5386\u4E2D\u83B7\u5F97\u987F\u609F\uFF0C\u660E\u767D\u4E86\u81EA\u5DF1\u771F\u6B63\u9700\u8981\u7684\u662F\u4EC0\u4E48\uFF08\u4ECEWant\u5230Need\u7684\u8F6C\u53D8\uFF09\u3002
+
+**\u7B2C\u4E09\u5E55**
+13. **\u8FDB\u5165\u7B2C\u4E09\u5E55:** \u51ED\u501F\u65B0\u7684\u987F\u609F\uFF0C\u4E3B\u89D2\u5236\u5B9A\u51FA\u6700\u7EC8\u7684\u884C\u52A8\u8BA1\u5212\uFF0C\u51B3\u5B9A\u53D1\u8D77\u53CD\u51FB\u3002
+14. **\u7ED3\u5C40:** \u4E3B\u89D2\u6267\u884C\u8BA1\u5212\uFF0C\u4E0E\u6838\u5FC3\u51B2\u7A81\u8FDB\u884C\u6700\u7EC8\u5BF9\u51B3\u3002\u4ED6\u8FD0\u7528\u65B0\u5B66\u5230\u7684\u667A\u6167\uFF0C\u6574\u5408\u4E86\u7B2C\u4E00\u5E55\u548C\u7B2C\u4E8C\u5E55\u7684\u7ECF\u9A8C\u6765\u89E3\u51B3\u6240\u6709\u95EE\u9898\u3002
+15. **\u7ED3\u5C3E\u5F62\u8C61:** \u6545\u4E8B\u7684\u6700\u540E\u4E00\u4E2A\u753B\u9762\uFF0C\u4E0E\u5F00\u573A\u5F62\u8C61\u5F62\u6210\u9C9C\u660E\u5BF9\u6BD4\uFF0C\u6709\u529B\u5730\u5C55\u793A\u51FA\u4E3B\u89D2\u5DF2\u7ECF\u8131\u80CE\u6362\u9AA8\uFF0C\u4E16\u754C\u4E5F\u7115\u7136\u4E00\u65B0\u3002
+
+## \u7B2C\u4E8C\u6B65\uFF1A\u68C0\u67E5\u548C\u4F18\u5316
+- \u786E\u4FDD\u6BCF\u4E2A\u60C5\u8282\u70B9\u90FD\u670D\u52A1\u4E8E\u4E3B\u9898
+- \u68C0\u67E5\u56E0\u679C\u5173\u7CFB\u7684\u903B\u8F91\u6027
+- \u9A8C\u8BC1\u4E3B\u89D2\u7684\u6210\u957F\u5F27\u7EBF
+- \u786E\u4FDD\u51B2\u7A81\u4E0D\u65AD\u5347\u7EA7
+- \u68C0\u67E5\u60C5\u8282\u70B9\u7684\u65F6\u95F4\u5206\u914D
+
+## \u7B2C\u4E09\u6B65\uFF1A\u8F93\u51FA\u5B8C\u6574\u5927\u7EB2
+- \u5BF9\u4E8E\u6BCF\u4E00\u4E2A\u60C5\u8282\u70B9\uFF0C\u8BF7\u75282-4\u53E5\u8BDD\uFF0C\u5177\u4F53\u63CF\u8FF0\u51FA\u5728\u7528\u6237\u7684\u6545\u4E8B\u80CC\u666F\u4E0B\uFF0C\u53EF\u80FD\u4F1A\u53D1\u751F\u4EC0\u4E48\u5173\u952E\u4E8B\u4EF6\u3001\u89D2\u8272\u7684\u884C\u52A8\u6216\u5FC3\u7406\u8F6C\u53D8\u3002
+- \u6807\u6CE8\u5173\u952E\u8F6C\u6298\u70B9\u548C\u60C5\u611F\u8282\u594F
+- \u63D0\u4F9B\u7AE0\u8282\u5212\u5206\u5EFA\u8BAE
+- \u7ED9\u51FA\u5B57\u6570\u5206\u914D\u53C2\u8003`;
+var DEFAULT_SAVE_THE_CAT_PROMPT_TEMPLATE = {
+  id: "default-save-the-cat",
+  name: "15\u4E2A\u60C5\u8282\u70B9\u5927\u7EB2\u5199\u4F5C\u52A9\u624B",
+  content: DEFAULT_SAVE_THE_CAT_PROMPT_CONTENT
+};
 var DEFAULT_PROMPTS = [
   DEFAULT_SNOWFLAKE_PROMPT_TEMPLATE,
   DEFAULT_SNOWFLAKE_STEP_BY_STEP_PROMPT_TEMPLATE,
   DEFAULT_SATISFYING_FORMULA_PROMPT_TEMPLATE,
-  DEFAULT_STORY_ARCHITECT_PROMPT_TEMPLATE
+  DEFAULT_STORY_ARCHITECT_PROMPT_TEMPLATE,
+  DEFAULT_SAVE_THE_CAT_PROMPT_TEMPLATE
 ];
 
 // inspirationConstants.ts
@@ -3027,7 +3138,7 @@ var SettingsView = ({ currentConfig, onSave, currentUISettings, onSaveUISettings
                   className: "p-2 text-gray-500 hover:text-red-600 hover:bg-red-100 rounded-md transition-colors flex-shrink-0 dark:text-zinc-400 dark:hover:text-red-500 dark:hover:bg-red-900/50",
                   "aria-label": "\u5220\u9664\u6A21\u677F",
                   title: "\u5220\u9664\u6B64\u6A21\u677F",
-                  children: /* @__PURE__ */ jsx10("svg", { xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", strokeWidth: 1.5, stroke: "currentColor", className: "w-5 h-5", children: /* @__PURE__ */ jsx10("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.134-2.033-2.134H8.71c-1.123 0-2.033.954-2.033 2.134v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" }) })
+                  children: /* @__PURE__ */ jsx10("svg", { xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", strokeWidth: 1.5, stroke: "currentColor", className: "w-5 h-5", children: /* @__PURE__ */ jsx10("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 4.811 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.134-2.033-2.134H8.71c-1.123 0-2.033.954-2.033 2.134v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" }) })
                 }
               )
             ] }) }),
@@ -3150,9 +3261,10 @@ var SettingsView = ({ currentConfig, onSave, currentUISettings, onSaveUISettings
 var SettingsView_default = SettingsView;
 
 // components/ResultView.tsx
+init_constants();
 init_aiService();
 init_icons();
-import { useState as useState6, useEffect as useEffect5, useRef as useRef3, useCallback as useCallback3, useMemo as useMemo2 } from "react";
+import React8, { useState as useState6, useEffect as useEffect5, useRef as useRef3, useCallback as useCallback3, useMemo as useMemo2 } from "react";
 import EasyMDE from "easymde";
 import { jsx as jsx11, jsxs as jsxs10 } from "react/jsx-runtime";
 var MAX_ATTACHMENTS = 5;
@@ -3167,6 +3279,7 @@ var ResultView = ({
   isGenerating,
   setIsGenerating,
   combinedCards,
+  allCards,
   onSaveToArchive,
   assistantHistory,
   setAssistantHistory,
@@ -3186,8 +3299,22 @@ var ResultView = ({
   const textUploadInputRef = useRef3(null);
   const [isUploadMenuOpen, setIsUploadMenuOpen] = useState6(false);
   const uploadMenuRef = useRef3(null);
+  const [isMentionMenuOpen, setIsMentionMenuOpen] = useState6(false);
+  const [mentionSearch, setMentionSearch] = useState6("");
+  const mentionMenuRef = useRef3(null);
+  const [expandedMentionCategories, setExpandedMentionCategories] = useState6([]);
+  const [selectionPopup, setSelectionPopup] = useState6({ visible: false, x: 0, y: 0 });
+  const selectionPopupRef = useRef3(null);
+  const [isAiEditing, setIsAiEditing] = useState6(false);
+  const [aiEditInstruction, setAiEditInstruction] = useState6("");
+  const selectionInfoRef = useRef3(null);
+  const [isAiEditMentionOpen, setIsAiEditMentionOpen] = useState6(false);
+  const aiEditMentionMenuRef = useRef3(null);
+  const [aiEditMentionSearch, setAiEditMentionSearch] = useState6("");
+  const [expandedAiEditMentionCategories, setExpandedAiEditMentionCategories] = useState6([]);
   const [chatMode, setChatMode] = useState6("assistant");
   const [chatInput, setChatInput] = useState6("");
+  const [chatReferences, setChatReferences] = useState6([]);
   const [isChatLoading, setIsChatLoading] = useState6(false);
   const [attachments, setAttachments] = useState6([]);
   const currentChatHistory = useMemo2(() => chatMode === "assistant" ? assistantHistory : chatHistory, [chatMode, assistantHistory, chatHistory]);
@@ -3197,6 +3324,19 @@ var ResultView = ({
   const [isModelListLoading, setIsModelListLoading] = useState6(false);
   const [modelSearch, setModelSearch] = useState6("");
   const modelSelectRef = useRef3(null);
+  const isAiEditingRef = useRef3(isAiEditing);
+  useEffect5(() => {
+    isAiEditingRef.current = isAiEditing;
+  }, [isAiEditing]);
+  const handleAddToChat = useCallback3(() => {
+    if (!selectionInfoRef.current) return;
+    const { startLine } = selectionInfoRef.current;
+    const referenceText = `[\u5927\u7EB2\u6BB5\u843D ${startLine}]`;
+    setChatReferences((prev) => [...prev, referenceText]);
+    setSelectionPopup({ visible: false, x: 0, y: 0 });
+    setIsAiEditing(false);
+    chatInputRef.current?.focus();
+  }, []);
   useEffect5(() => {
     if (isEditingName && nameInputRef.current) {
       nameInputRef.current.focus();
@@ -3212,11 +3352,12 @@ var ResultView = ({
         spellChecker: false,
         placeholder: "\u60A8\u751F\u6210\u7684\u6545\u4E8B\u5927\u7EB2\u5C06\u663E\u793A\u5728\u8FD9\u91CC\uFF0C\u60A8\u53EF\u4EE5\u81EA\u7531\u7F16\u8F91...",
         toolbar: false,
-        // Remove the default toolbar
-        minHeight: "100px"
+        minHeight: "100px",
+        lineNumbers: true
       });
       easyMdeInstance.current = mde;
-      mde.codemirror.on("change", () => {
+      const cm = mde.codemirror;
+      cm.on("change", () => {
         if (easyMdeInstance.current) {
           setOutline(easyMdeInstance.current.value());
           if (saveStatus === "saved") {
@@ -3224,13 +3365,59 @@ var ResultView = ({
           }
         }
       });
+      cm.on("cursorActivity", (instance) => {
+        const selection = instance.getDoc().getSelection();
+        if (selection && selection.length > 0) {
+          if (isAiEditingRef.current) return;
+          const from = instance.getDoc().getCursor("start");
+          const coords = instance.cursorCoords(true, "local");
+          selectionInfoRef.current = {
+            content: selection,
+            startLine: from.line + 1,
+            from,
+            to: instance.getDoc().getCursor("end")
+          };
+          setSelectionPopup({
+            visible: true,
+            x: coords.left,
+            y: coords.top - 55
+          });
+        } else {
+          setSelectionPopup({ visible: false, x: 0, y: 0 });
+          setIsAiEditing(false);
+          setAiEditInstruction("");
+          selectionInfoRef.current = null;
+        }
+      });
+      cm.on("blur", (instance, event) => {
+        const popupEl = selectionPopupRef.current;
+        if (event.relatedTarget && popupEl?.contains(event.relatedTarget)) {
+          return;
+        }
+        setSelectionPopup({ visible: false, x: 0, y: 0 });
+        setIsAiEditing(false);
+        setAiEditInstruction("");
+      });
+      const wrapper = cm.getWrapperElement();
+      const handleKeyDown = (e) => {
+        if (e.ctrlKey && e.key.toLowerCase() === "i" && selectionInfoRef.current) {
+          e.preventDefault();
+          setIsAiEditing(true);
+        }
+        if (e.ctrlKey && e.key.toLowerCase() === "u" && selectionInfoRef.current) {
+          e.preventDefault();
+          handleAddToChat();
+        }
+      };
+      wrapper.addEventListener("keydown", handleKeyDown);
+      return () => {
+        wrapper.removeEventListener("keydown", handleKeyDown);
+        easyMdeInstance.current?.toTextArea();
+        easyMdeInstance.current = null;
+        mde = null;
+      };
     }
-    return () => {
-      easyMdeInstance.current?.toTextArea();
-      easyMdeInstance.current = null;
-      mde = null;
-    };
-  }, []);
+  }, [handleAddToChat]);
   useEffect5(() => {
     const mde = easyMdeInstance.current;
     if (mde && mde.value() !== outline) {
@@ -3279,6 +3466,12 @@ var ResultView = ({
       if (uploadMenuRef.current && !uploadMenuRef.current.contains(event.target)) {
         setIsUploadMenuOpen(false);
       }
+      if (mentionMenuRef.current && !mentionMenuRef.current.contains(event.target)) {
+        setIsMentionMenuOpen(false);
+      }
+      if (aiEditMentionMenuRef.current && !aiEditMentionMenuRef.current.contains(event.target)) {
+        setIsAiEditMentionOpen(false);
+      }
     };
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
@@ -3311,6 +3504,29 @@ var ResultView = ({
       active = false;
     };
   }, [isGenerating, combinedCards, config, novelInfo, setOutline, setIsGenerating]);
+  const groupedAndFilteredCards = useMemo2(() => {
+    const searchTarget = isAiEditMentionOpen ? aiEditMentionSearch : mentionSearch;
+    const filtered = allCards.filter(
+      (card) => card.name.toLowerCase().includes(searchTarget.toLowerCase()) || CARD_TYPE_NAMES[card.type].toLowerCase().includes(searchTarget.toLowerCase())
+    );
+    return filtered.reduce((acc, card) => {
+      if (!acc[card.type]) {
+        acc[card.type] = [];
+      }
+      acc[card.type].push(card);
+      return acc;
+    }, {});
+  }, [allCards, mentionSearch, aiEditMentionSearch, isAiEditMentionOpen]);
+  const useMentionMenuAutoExpand = (search, setExpandedCategories) => {
+    useEffect5(() => {
+      if (search) {
+        const categories = Object.keys(groupedAndFilteredCards);
+        setExpandedCategories(categories);
+      }
+    }, [search, groupedAndFilteredCards, setExpandedCategories]);
+  };
+  useMentionMenuAutoExpand(mentionSearch, setExpandedMentionCategories);
+  useMentionMenuAutoExpand(aiEditMentionSearch, setExpandedAiEditMentionCategories);
   const handleSave = () => {
     onSaveToArchive();
     setSaveStatus("saved");
@@ -3368,18 +3584,24 @@ var ResultView = ({
       setCurrentChatHistory([]);
     }
   };
+  const handleRemoveReference = (indexToRemove) => {
+    setChatReferences((prev) => prev.filter((_, index) => index !== indexToRemove));
+  };
   const handleChatSubmit = useCallback3(async (e) => {
     e.preventDefault();
     const message = chatInput.trim();
-    if (!message && attachments.length === 0 || isChatLoading) return;
+    const referencesText = chatReferences.join(" ");
+    const finalMessage = `${referencesText} ${message}`.trim();
+    if (!finalMessage && attachments.length === 0 || isChatLoading) return;
     setChatInput("");
+    setChatReferences([]);
     setAttachments([]);
     if (chatInputRef.current) {
       chatInputRef.current.style.height = "auto";
     }
     const controller = new AbortController();
     abortControllerRef.current = controller;
-    let userMessageContent = message;
+    let userMessageContent = finalMessage;
     const userMessageImages = [];
     const textAttachmentsContent = [];
     attachments.forEach((att) => {
@@ -3457,7 +3679,7 @@ ${att.data}`);
       setIsChatLoading(false);
       abortControllerRef.current = null;
     }
-  }, [chatInput, isChatLoading, outline, config, setOutline, chatMode, currentChatHistory, setCurrentChatHistory, attachments]);
+  }, [chatInput, isChatLoading, outline, config, setOutline, chatMode, currentChatHistory, setCurrentChatHistory, attachments, chatReferences]);
   const handleChatInputChange = (e) => {
     setChatInput(e.target.value);
     const textarea = e.target;
@@ -3467,10 +3689,10 @@ ${att.data}`);
   };
   const handlePaste = (e) => {
     if (attachments.length >= MAX_ATTACHMENTS || isChatLoading) return;
-    const items = e.clipboardData.items;
-    for (let i = 0; i < items.length; i++) {
-      if (items[i].type.indexOf("image") !== -1) {
-        const file = items[i].getAsFile();
+    const items = Array.from(e.clipboardData.items);
+    for (const item of items) {
+      if (item.kind === "file" && item.type.includes("image")) {
+        const file = item.getAsFile();
         if (file) {
           e.preventDefault();
           const reader = new FileReader();
@@ -3493,16 +3715,17 @@ ${att.data}`);
       return;
     }
     for (const file of Array.from(files)) {
-      if (!file.type.startsWith("image/")) {
-        alert(`\u6587\u4EF6 "${file.name}" \u4E0D\u662F\u56FE\u7247\uFF0C\u5DF2\u8DF3\u8FC7\u3002`);
+      const typedFile = file;
+      if (!typedFile.type.startsWith("image/")) {
+        alert(`\u6587\u4EF6 "${typedFile.name}" \u4E0D\u662F\u56FE\u7247\uFF0C\u5DF2\u8DF3\u8FC7\u3002`);
         continue;
       }
       const reader = new FileReader();
       reader.onload = (event) => {
         const base64String = (event.target?.result).split(",")[1];
-        setAttachments((prev) => [...prev, { type: "image", data: base64String, name: file.name }]);
+        setAttachments((prev) => [...prev, { type: "image", data: base64String, name: typedFile.name }]);
       };
-      reader.readAsDataURL(file);
+      reader.readAsDataURL(typedFile);
     }
     e.target.value = "";
   };
@@ -3515,12 +3738,13 @@ ${att.data}`);
       return;
     }
     for (const file of Array.from(files)) {
+      const typedFile = file;
       const reader = new FileReader();
       reader.onload = (event) => {
         const textContent = event.target?.result;
-        setAttachments((prev) => [...prev, { type: "text", data: textContent, name: file.name }]);
+        setAttachments((prev) => [...prev, { type: "text", data: textContent, name: typedFile.name }]);
       };
-      reader.readAsText(file);
+      reader.readAsText(typedFile);
     }
     e.target.value = "";
   };
@@ -3528,6 +3752,156 @@ ${att.data}`);
     if (!modelSearch) return modelList;
     return modelList.filter((m) => m.toLowerCase().includes(modelSearch.toLowerCase()));
   }, [modelList, modelSearch]);
+  const toggleMentionCategory = (categoryType) => {
+    setExpandedMentionCategories(
+      (prev) => prev.includes(categoryType) ? prev.filter((t) => t !== categoryType) : [...prev, categoryType]
+    );
+  };
+  const toggleAiEditMentionCategory = (categoryType) => {
+    setExpandedAiEditMentionCategories(
+      (prev) => prev.includes(categoryType) ? prev.filter((t) => t !== categoryType) : [...prev, categoryType]
+    );
+  };
+  const handleAiEditRequest = async (e) => {
+    e.preventDefault();
+    if (!aiEditInstruction.trim() || !selectionInfoRef.current) return;
+    const { content, from, to } = selectionInfoRef.current;
+    const cm = easyMdeInstance.current?.codemirror;
+    if (!cm) return;
+    setSelectionPopup({ visible: false, x: 0, y: 0 });
+    setIsAiEditing(false);
+    const controller = new AbortController();
+    abortControllerRef.current = controller;
+    const placeholder = "\u270D\uFE0F AI \u6B63\u5728\u4FEE\u6539...";
+    cm.getDoc().replaceRange(placeholder, from, to);
+    const placeholderEndPos = { line: from.line, ch: from.ch + placeholder.length };
+    try {
+      const editConfig = { ...config, model: config.assistantModel || config.model };
+      const stream = editText(content, aiEditInstruction, editConfig, controller.signal);
+      let fullResponse = "";
+      for await (const chunk of stream) {
+        if (controller.signal.aborted) throw new DOMException("Aborted by user", "AbortError");
+        fullResponse += chunk;
+      }
+      cm.getDoc().replaceRange(fullResponse, from, placeholderEndPos);
+    } catch (err) {
+      cm.getDoc().replaceRange(content, from, placeholderEndPos);
+      alert(err instanceof Error ? err.message : "AI \u7F16\u8F91\u5931\u8D25\u3002");
+    } finally {
+      setAiEditInstruction("");
+      setAiEditMentionSearch("");
+      abortControllerRef.current = null;
+      selectionInfoRef.current = null;
+      cm.focus();
+    }
+  };
+  const renderSelectionPopup = () => {
+    if (!selectionPopup.visible) return null;
+    return /* @__PURE__ */ jsx11(
+      "div",
+      {
+        ref: selectionPopupRef,
+        className: "selection-popup",
+        style: { top: selectionPopup.y, left: selectionPopup.x },
+        onMouseDown: (e) => e.stopPropagation(),
+        children: isAiEditing ? /* @__PURE__ */ jsxs10("form", { onSubmit: handleAiEditRequest, className: "selection-popup-ai-input", children: [
+          /* @__PURE__ */ jsx11(
+            "textarea",
+            {
+              value: aiEditInstruction,
+              onChange: (e) => setAiEditInstruction(e.target.value),
+              placeholder: "\u8F93\u5165\u4FEE\u6539\u6307\u4EE4 (Ctrl+Enter \u53D1\u9001)...",
+              className: "selection-popup-textarea custom-scrollbar",
+              autoFocus: true,
+              onKeyDown: (e) => {
+                if (e.key === "Escape") {
+                  e.preventDefault();
+                  setIsAiEditing(false);
+                  setAiEditInstruction("");
+                }
+                if (e.key === "Enter" && e.ctrlKey) {
+                  e.preventDefault();
+                  handleAiEditRequest(e);
+                }
+              }
+            }
+          ),
+          /* @__PURE__ */ jsxs10("div", { className: "selection-popup-toolbar", children: [
+            /* @__PURE__ */ jsx11("div", { className: "selection-popup-toolbar-left", children: /* @__PURE__ */ jsxs10("div", { className: "relative", children: [
+              /* @__PURE__ */ jsx11(
+                "button",
+                {
+                  type: "button",
+                  onClick: () => setIsAiEditMentionOpen((p) => !p),
+                  className: "selection-popup-icon-btn",
+                  title: "\u63D0\u53CA\u5361\u7247",
+                  children: /* @__PURE__ */ jsx11(AtSymbolIcon, { className: "w-4 h-4" })
+                }
+              ),
+              isAiEditMentionOpen && /* @__PURE__ */ jsxs10("div", { ref: aiEditMentionMenuRef, className: "absolute bottom-full right-0 mb-2 w-72 bg-white dark:bg-zinc-800 rounded-xl shadow-lg border border-gray-200 dark:border-zinc-700 z-20 flex flex-col", children: [
+                /* @__PURE__ */ jsx11("div", { className: "p-2 border-b border-gray-200 dark:border-zinc-700", children: /* @__PURE__ */ jsx11(
+                  "input",
+                  {
+                    type: "text",
+                    value: aiEditMentionSearch,
+                    onChange: (e) => setAiEditMentionSearch(e.target.value),
+                    placeholder: "\u641C\u7D22\u5361\u7247...",
+                    className: "w-full px-2 py-1.5 text-sm border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-gray-500 focus:border-gray-500 dark:bg-zinc-700 dark:border-zinc-600 dark:text-white",
+                    autoFocus: true
+                  }
+                ) }),
+                /* @__PURE__ */ jsx11("ul", { className: "max-h-60 overflow-y-auto custom-scrollbar p-2", children: Object.keys(groupedAndFilteredCards).length > 0 ? Object.entries(groupedAndFilteredCards).map(([type, cards]) => {
+                  const isExpanded = expandedAiEditMentionCategories.includes(type);
+                  return /* @__PURE__ */ jsxs10("li", { children: [
+                    /* @__PURE__ */ jsxs10(
+                      "button",
+                      {
+                        type: "button",
+                        onClick: () => toggleAiEditMentionCategory(type),
+                        className: "w-full flex justify-between items-center px-2 py-2 text-sm font-semibold text-gray-600 dark:text-zinc-300 rounded-md hover:bg-gray-100 dark:hover:bg-zinc-700",
+                        children: [
+                          /* @__PURE__ */ jsx11("span", { children: CARD_TYPE_NAMES[type] }),
+                          /* @__PURE__ */ jsx11(ChevronDownIcon, { className: `w-4 h-4 transition-transform ${isExpanded ? "rotate-180" : ""}` })
+                        ]
+                      }
+                    ),
+                    isExpanded && /* @__PURE__ */ jsx11("ul", { className: "pl-2 pt-1 pb-2", children: cards.map((card) => /* @__PURE__ */ jsx11("li", { children: /* @__PURE__ */ jsxs10(
+                      "button",
+                      {
+                        type: "button",
+                        onClick: () => {
+                          setAiEditInstruction((prev) => prev + `@${card.name} `);
+                          setIsAiEditMentionOpen(false);
+                          setAiEditMentionSearch("");
+                        },
+                        className: "w-full text-left flex items-center gap-3 px-2 py-2 rounded-md hover:bg-gray-100 dark:hover:bg-zinc-700 transition-colors",
+                        children: [
+                          React8.cloneElement(card.icon, { className: "w-4 h-4 text-gray-500 dark:text-zinc-400 flex-shrink-0" }),
+                          /* @__PURE__ */ jsx11("span", { className: "text-sm text-gray-800 dark:text-zinc-200 truncate", children: card.name })
+                        ]
+                      }
+                    ) }, card.id)) })
+                  ] }, type);
+                }) : /* @__PURE__ */ jsx11("li", { className: "p-4 text-sm text-gray-500 dark:text-zinc-400 text-center", children: "\u672A\u627E\u5230\u5361\u7247\u3002" }) })
+              ] })
+            ] }) }),
+            /* @__PURE__ */ jsx11("button", { type: "submit", className: "selection-popup-icon-btn selection-popup-send-btn", title: "\u53D1\u9001 (Ctrl+Enter)", disabled: !aiEditInstruction.trim(), children: /* @__PURE__ */ jsx11(ArrowUpIcon, { className: "w-4 h-4" }) })
+          ] })
+        ] }) : /* @__PURE__ */ jsxs10("div", { className: "selection-popup-buttons", children: [
+          /* @__PURE__ */ jsxs10("button", { className: "selection-popup-btn", onClick: () => setIsAiEditing(true), children: [
+            /* @__PURE__ */ jsx11(SparklesIcon, { className: "w-4 h-4 text-purple-400" }),
+            "\u7F16\u8F91 ",
+            /* @__PURE__ */ jsx11("span", { className: "text-xs text-gray-400", children: "Ctrl+I" })
+          ] }),
+          /* @__PURE__ */ jsx11("div", { className: "selection-popup-divider" }),
+          /* @__PURE__ */ jsxs10("button", { className: "selection-popup-btn", onClick: handleAddToChat, children: [
+            "\u6DFB\u52A0\u5230\u5BF9\u8BDD ",
+            /* @__PURE__ */ jsx11("span", { className: "text-xs text-gray-400", children: "Ctrl+U" })
+          ] })
+        ] })
+      }
+    );
+  };
   return /* @__PURE__ */ jsxs10("div", { className: "w-full h-full flex flex-row gap-2", children: [
     /* @__PURE__ */ jsxs10("aside", { className: "w-56 flex-shrink-0 h-full flex flex-col bg-white rounded-xl border border-gray-200 shadow-sm dark:bg-zinc-800 dark:border-zinc-700 min-h-0", children: [
       /* @__PURE__ */ jsx11("header", { className: "p-4 border-b border-gray-200 dark:border-zinc-600 flex-shrink-0", children: /* @__PURE__ */ jsx11("h2", { className: "font-semibold text-gray-800 dark:text-zinc-100", children: "\u5927\u7EB2\u4FE1\u606F" }) }),
@@ -3610,7 +3984,10 @@ ${att.data}`);
           }
         )
       ] }),
-      /* @__PURE__ */ jsx11("div", { className: "flex-grow relative editor-container min-h-0", children: /* @__PURE__ */ jsx11("textarea", { ref: textareaRef, style: { display: "none" } }) })
+      /* @__PURE__ */ jsxs10("div", { className: "flex-grow relative editor-container min-h-0", children: [
+        renderSelectionPopup(),
+        /* @__PURE__ */ jsx11("textarea", { ref: textareaRef, style: { display: "none" } })
+      ] })
     ] }),
     /* @__PURE__ */ jsxs10("aside", { className: "w-96 flex-shrink-0 h-full flex flex-col bg-white rounded-xl border border-gray-200 shadow-sm dark:bg-zinc-800 dark:border-zinc-700 min-h-0", children: [
       /* @__PURE__ */ jsxs10("header", { className: "flex-shrink-0 p-3 border-b border-gray-200 dark:border-zinc-600 flex justify-between items-center", children: [
@@ -3684,7 +4061,11 @@ ${att.data}`);
               backgroundOrigin: "border-box"
             },
             children: [
-              attachments.length > 0 && /* @__PURE__ */ jsx11("div", { className: "px-2 pt-2 border-b border-gray-200 dark:border-zinc-700", children: /* @__PURE__ */ jsxs10("div", { className: "flex items-center gap-3 overflow-x-auto custom-scrollbar pb-2", children: [
+              (attachments.length > 0 || chatReferences.length > 0) && /* @__PURE__ */ jsx11("div", { className: "px-3 pt-2 border-b border-gray-200 dark:border-zinc-700", children: /* @__PURE__ */ jsxs10("div", { className: "flex items-start flex-wrap gap-2 pb-2", children: [
+                chatReferences.map((ref, index) => /* @__PURE__ */ jsxs10("div", { className: "chat-reference-pill", children: [
+                  /* @__PURE__ */ jsx11("button", { type: "button", onClick: () => handleRemoveReference(index), className: "chat-reference-pill-btn", "aria-label": `\u5220\u9664\u5F15\u7528 ${ref}`, children: "\xD7" }),
+                  /* @__PURE__ */ jsx11("span", { children: ref })
+                ] }, `ref-${index}`)),
                 attachments.map((att, index) => /* @__PURE__ */ jsxs10("div", { className: "relative flex-shrink-0 bg-gray-100 dark:bg-zinc-700 p-1.5 rounded-lg", children: [
                   att.type === "image" ? /* @__PURE__ */ jsx11("img", { src: `data:image/jpeg;base64,${att.data}`, alt: "Preview", className: "h-16 w-auto rounded" }) : /* @__PURE__ */ jsxs10("div", { className: "h-16 w-20 flex flex-col items-center justify-center text-center p-1", children: [
                     /* @__PURE__ */ jsx11(DocumentPlusIcon, { className: "w-6 h-6 text-gray-500 dark:text-zinc-400" }),
@@ -3700,7 +4081,7 @@ ${att.data}`);
                       children: "\xD7"
                     }
                   )
-                ] }, index)),
+                ] }, `att-${index}`)),
                 attachments.length >= MAX_ATTACHMENTS && /* @__PURE__ */ jsx11("div", { className: "text-xs text-red-500 pl-2 flex-shrink-0 self-center", children: "\u8FBE\u5230\u6700\u5927\u6570\u91CF" })
               ] }) }),
               /* @__PURE__ */ jsxs10("div", { className: "relative flex-grow", children: [
@@ -3762,10 +4143,73 @@ ${att.data}`);
                     onPaste: handlePaste,
                     disabled: isChatLoading,
                     placeholder: chatMode === "assistant" ? "\u6709\u4EC0\u4E48\u53EF\u4EE5\u5E2E\u60A8\u4FEE\u6539\u5927\u7EB2\uFF1F" : "\u7C98\u8D34\u56FE\u7247\u6216\u8F93\u5165\u6587\u5B57...",
-                    className: "w-full pl-12 pr-24 py-3 text-base rounded-b-xl focus:outline-none custom-scrollbar resize-none bg-transparent placeholder:text-gray-400 transition-all duration-300 dark:text-white dark:placeholder:text-zinc-500 min-h-[56px]"
+                    className: "w-full pl-12 pr-36 py-3 text-base rounded-b-xl focus:outline-none custom-scrollbar resize-none bg-transparent placeholder:text-gray-400 transition-all duration-300 dark:text-white dark:placeholder:text-zinc-500 min-h-[56px]"
                   }
                 ),
                 /* @__PURE__ */ jsxs10("div", { className: "absolute bottom-3 right-3 flex items-center gap-1 z-10", children: [
+                  /* @__PURE__ */ jsxs10("div", { ref: mentionMenuRef, className: "relative", children: [
+                    /* @__PURE__ */ jsx11(
+                      "button",
+                      {
+                        type: "button",
+                        onClick: () => setIsMentionMenuOpen((prev) => !prev),
+                        className: "p-2 rounded-full transition-colors text-gray-500 hover:text-gray-800 hover:bg-gray-100 disabled:text-gray-300 dark:text-zinc-400 dark:hover:text-zinc-100 dark:hover:bg-zinc-700",
+                        "aria-label": "\u63D0\u53CA\u5361\u7247",
+                        title: "\u63D0\u53CA\u5361\u7247",
+                        "aria-haspopup": "true",
+                        "aria-expanded": isMentionMenuOpen,
+                        disabled: isChatLoading,
+                        children: /* @__PURE__ */ jsx11(AtSymbolIcon, { className: "w-5 h-5" })
+                      }
+                    ),
+                    isMentionMenuOpen && /* @__PURE__ */ jsxs10("div", { className: "absolute bottom-full right-0 mb-2 w-80 bg-white dark:bg-zinc-800 rounded-xl shadow-lg border border-gray-200 dark:border-zinc-700 z-20 flex flex-col", children: [
+                      /* @__PURE__ */ jsx11("div", { className: "p-2 border-b border-gray-200 dark:border-zinc-700", children: /* @__PURE__ */ jsx11(
+                        "input",
+                        {
+                          type: "text",
+                          value: mentionSearch,
+                          onChange: (e) => setMentionSearch(e.target.value),
+                          placeholder: "\u641C\u7D22\u5361\u7247...",
+                          className: "w-full px-2 py-1.5 text-sm border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-gray-500 focus:border-gray-500 dark:bg-zinc-700 dark:border-zinc-600 dark:text-white",
+                          autoFocus: true
+                        }
+                      ) }),
+                      /* @__PURE__ */ jsx11("ul", { className: "max-h-80 overflow-y-auto custom-scrollbar p-2", children: Object.keys(groupedAndFilteredCards).length > 0 ? Object.entries(groupedAndFilteredCards).map(([type, cards]) => {
+                        const isExpanded = expandedMentionCategories.includes(type);
+                        return /* @__PURE__ */ jsxs10("li", { children: [
+                          /* @__PURE__ */ jsxs10(
+                            "button",
+                            {
+                              type: "button",
+                              onClick: () => toggleMentionCategory(type),
+                              className: "w-full flex justify-between items-center px-2 py-2 text-sm font-semibold text-gray-600 dark:text-zinc-300 rounded-md hover:bg-gray-100 dark:hover:bg-zinc-700",
+                              children: [
+                                /* @__PURE__ */ jsx11("span", { children: CARD_TYPE_NAMES[type] }),
+                                /* @__PURE__ */ jsx11(ChevronDownIcon, { className: `w-4 h-4 transition-transform ${isExpanded ? "rotate-180" : ""}` })
+                              ]
+                            }
+                          ),
+                          isExpanded && /* @__PURE__ */ jsx11("ul", { className: "pl-2 pt-1 pb-2", children: cards.map((card) => /* @__PURE__ */ jsx11("li", { children: /* @__PURE__ */ jsxs10(
+                            "button",
+                            {
+                              type: "button",
+                              onClick: () => {
+                                setChatInput((prev) => prev + `@${card.name} `);
+                                setIsMentionMenuOpen(false);
+                                setMentionSearch("");
+                                chatInputRef.current?.focus();
+                              },
+                              className: "w-full text-left flex items-center gap-3 px-2 py-2 rounded-md hover:bg-gray-100 dark:hover:bg-zinc-700 transition-colors",
+                              children: [
+                                React8.cloneElement(card.icon, { className: "w-4 h-4 text-gray-500 dark:text-zinc-400 flex-shrink-0" }),
+                                /* @__PURE__ */ jsx11("span", { className: "text-sm text-gray-800 dark:text-zinc-200 truncate", children: card.name })
+                              ]
+                            }
+                          ) }, card.id)) })
+                        ] }, type);
+                      }) : /* @__PURE__ */ jsx11("li", { className: "p-4 text-sm text-gray-500 dark:text-zinc-400 text-center", children: "\u672A\u627E\u5230\u5361\u7247\u3002" }) })
+                    ] })
+                  ] }),
                   /* @__PURE__ */ jsxs10("div", { ref: uploadMenuRef, className: "relative", children: [
                     /* @__PURE__ */ jsx11(
                       "button",
@@ -3819,7 +4263,7 @@ ${att.data}`);
                     {
                       type: isChatLoading ? "button" : "submit",
                       onClick: isChatLoading ? handleInterrupt : void 0,
-                      disabled: !isChatLoading && !chatInput.trim() && attachments.length === 0,
+                      disabled: !isChatLoading && !chatInput.trim() && attachments.length === 0 && chatReferences.length === 0,
                       className: `p-2 rounded-full transition-colors ${isChatLoading ? "text-gray-600 bg-gray-100 hover:bg-red-100 hover:text-red-600 dark:text-zinc-300 dark:bg-zinc-700 dark:hover:bg-red-900/50 dark:hover:text-red-500" : "text-white bg-gray-800 hover:bg-gray-900 disabled:bg-transparent disabled:text-gray-400 dark:bg-slate-100 dark:text-gray-800 dark:hover:bg-slate-200 dark:disabled:text-zinc-600 dark:disabled:cursor-not-allowed"}`,
                       "aria-label": isChatLoading ? "\u4E2D\u65AD" : "\u53D1\u9001",
                       children: isChatLoading ? /* @__PURE__ */ jsx11(StopIcon, { className: "w-5 h-5" }) : /* @__PURE__ */ jsx11(ArrowUpIcon, { className: "w-5 h-5" })
@@ -5523,6 +5967,7 @@ var App = () => {
             isGenerating,
             setIsGenerating,
             combinedCards,
+            allCards,
             onSaveToArchive: handleSaveToArchive,
             assistantHistory,
             setAssistantHistory,
