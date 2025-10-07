@@ -1,5 +1,6 @@
-import { GoogleGenAI } from "@google/genai";
-import type { CombinedCards, AIConfig, AIProvider, Card, NovelInfo, ChatMessage } from '../types';
+
+import { GoogleGenAI, Type } from "@google/genai";
+import type { CombinedCards, AIConfig, AIProvider, Card, NovelInfo, ChatMessage, CharacterProfile } from '../types';
 import { CardType } from '../types';
 import { CARD_TYPE_NAMES } from '../constants';
 
@@ -11,7 +12,7 @@ interface OllamaModel {
   name: string;
 }
 
-const createPrompt = (cards: CombinedCards, customPrompt: string, novelInfo: NovelInfo): string => {
+const createPrompt = (cards: CombinedCards, customPrompt: string, novelInfo: NovelInfo, characterProfiles?: CharacterProfile[] | null): string => {
     
     const formatCards = (cardType: CardType): string => {
         const cardArray = cards[cardType];
@@ -56,9 +57,51 @@ const createPrompt = (cards: CombinedCards, customPrompt: string, novelInfo: Nov
 请同时参考以下小说基本信息：
 ${novelInfoParts.join('\n')}` : '';
 
+    let characterProfileSection = '';
+    if (characterProfiles && characterProfiles.length > 0) {
+        const profileStrings = characterProfiles.map(profile => {
+            const profileDetails: string[] = [];
+            const fieldLabels: Record<keyof CharacterProfile, string> = {
+                role: '角色定位',
+                name: '角色名称',
+                image: '形象',
+                selfAwareness: '自我意识',
+                reactionLogic: '合理反应',
+                stakes: '利害关系',
+                emotion: '核心情绪',
+                likability: '好感度',
+                competence: '能力',
+                proactivity: '主动性',
+                power: '限制'
+            };
+
+            const orderedKeys: Array<keyof CharacterProfile> = [
+                'role', 'name', 'image', 'selfAwareness', 'reactionLogic', 'stakes', 
+                'emotion', 'likability', 'competence', 'proactivity', 'power'
+            ];
+
+            orderedKeys.forEach(key => {
+                const value = profile[key];
+                if (value && String(value).trim()) {
+                    profileDetails.push(`- ${fieldLabels[key]}: ${value}`);
+                }
+            });
+
+            return profileDetails.join('\n');
+        }).filter(Boolean).join('\n\n');
+
+        if (profileStrings) {
+            characterProfileSection = `
+请额外参考以下角色设定信息，将其融入到故事和角色设计中：
+${profileStrings}
+`;
+        }
+    }
+
     return `
 ${customPrompt}
 ${novelInfoSection}
+${characterProfileSection}
 
 请基于以下故事核心要素进行创作：
 ${promptParts.join('\n')}
@@ -66,7 +109,7 @@ ${promptParts.join('\n')}
 }
 
 
-async function* generateWithGemini(promptOrMessages: string | ChatMessage[], config: AIConfig, signal?: AbortSignal): AsyncGenerator<string> {
+async function* generateWithGemini(promptOrMessages: string | ChatMessage[], config: AIConfig, signal?: AbortSignal, responseSchema?: any): AsyncGenerator<string> {
     const apiKey = config.apiKey;
     if (!apiKey) {
         throw new Error("Gemini API 密钥未配置。请在“设置”页面中提供您的密钥。");
@@ -83,15 +126,20 @@ async function* generateWithGemini(promptOrMessages: string | ChatMessage[], con
         topP?: number; 
         maxOutputTokens?: number;
         thinkingConfig?: { thinkingBudget: number };
+        responseMimeType?: string;
+        responseSchema?: any;
     } = {};
     if (config.temperature !== undefined) generationConfig.temperature = config.temperature;
     if (config.topP !== undefined) generationConfig.topP = config.topP;
     if (config.maxTokens !== undefined) {
         generationConfig.maxOutputTokens = config.maxTokens;
-        // FIX: Per Gemini API guidelines, set thinkingBudget when maxOutputTokens is set.
         if (config.model === 'gemini-2.5-flash') {
             generationConfig.thinkingConfig = { thinkingBudget: Math.floor(config.maxTokens / 4) };
         }
+    }
+    if (responseSchema) {
+        generationConfig.responseMimeType = "application/json";
+        generationConfig.responseSchema = responseSchema;
     }
 
 
@@ -123,7 +171,7 @@ async function* generateWithGemini(promptOrMessages: string | ChatMessage[], con
         };
     });
 
-    if (config.streaming) {
+    if (config.streaming && !responseSchema) { // Cannot stream with responseSchema
         const response = await ai.models.generateContentStream({
             model: modelName,
             contents: contents as any,
@@ -144,10 +192,11 @@ async function* generateWithGemini(promptOrMessages: string | ChatMessage[], con
             config: generationConfig,
         });
         if (signal?.aborted) throw new DOMException('用户中止操作', 'AbortError');
-        if (!response.text) {
+        const text = response.text;
+        if (!text) {
             throw new Error("API 返回了空响应。");
         }
-        yield response.text.trim();
+        yield text.trim();
     }
 }
 
@@ -173,12 +222,13 @@ const getEndpoint = (url: string, path: 'chat' | 'models'): string => {
 };
 
 
-async function* generateWithOpenAICompatible(promptOrMessages: string | ChatMessage[], config: AIConfig, signal?: AbortSignal): AsyncGenerator<string> {
+async function* generateWithOpenAICompatible(promptOrMessages: string | ChatMessage[], config: AIConfig, signal?: AbortSignal, asJson: boolean = false): AsyncGenerator<string> {
     const providersThatNeedKey: AIProvider[] = ['openai', 'deepseek', 'openrouter', 'siliconflow', 'modelscope', 'custom'];
     const isOllama = config.provider === 'ollama';
+    const apiKey = config.apiKey;
 
-    if (!isOllama && providersThatNeedKey.includes(config.provider) && !config.apiKey) {
-        throw new Error(`需要为 ${config.provider} 提供商提供 API 密钥。`);
+    if (!isOllama && providersThatNeedKey.includes(config.provider) && !apiKey) {
+        throw new Error(`需要为 ${config.provider} 提供商提供 API 密钥。请在“设置”页面中提供您的密钥。`);
     }
     if (!config.endpoint) throw new Error("Endpoint URL 不能为空。");
     if (!config.model) throw new Error("模型名称不能为空。");
@@ -189,8 +239,8 @@ async function* generateWithOpenAICompatible(promptOrMessages: string | ChatMess
     
     const headers: HeadersInit = { 'Content-Type': 'application/json' };
 
-    if (!isOllama && config.apiKey) {
-        headers['Authorization'] = `Bearer ${config.apiKey}`;
+    if (!isOllama && apiKey) {
+        headers['Authorization'] = `Bearer ${apiKey}`;
     }
     
     const body: Record<string, any> = {
@@ -222,12 +272,17 @@ async function* generateWithOpenAICompatible(promptOrMessages: string | ChatMess
     });
     body.messages = preparedMessages;
 
+    if (asJson) {
+        body.response_format = { type: "json_object" };
+    }
+
     if (isOllama) {
         body.options = {};
         if (config.temperature !== undefined) body.options.temperature = config.temperature;
         if (config.maxTokens !== undefined) body.options.num_predict = config.maxTokens;
         if (config.topP !== undefined) body.options.top_p = config.topP;
         if (config.frequencyPenalty !== undefined) body.options.repeat_penalty = config.frequencyPenalty;
+        if (asJson) body.format = "json";
     } else {
         if (config.temperature !== undefined) body.temperature = config.temperature;
         if (config.maxTokens !== undefined) body.max_tokens = config.maxTokens;
@@ -240,7 +295,7 @@ async function* generateWithOpenAICompatible(promptOrMessages: string | ChatMess
     }
 
 
-    if (config.streaming) {
+    if (config.streaming && !asJson) { // Cannot stream with JSON mode
         body.stream = true;
         const response = await fetch(endpoint, { method: 'POST', headers, body: JSON.stringify(body), signal });
         if (!response.ok || !response.body) {
@@ -325,13 +380,13 @@ async function* generateWithOpenAICompatible(promptOrMessages: string | ChatMess
 }
 
 
-export async function* generateOutline(cards: CombinedCards, config: AIConfig, novelInfo: NovelInfo): AsyncGenerator<string> {
+export async function* generateOutline(cards: CombinedCards, config: AIConfig, novelInfo: NovelInfo, characterProfiles?: CharacterProfile[] | null): AsyncGenerator<string> {
     const activePrompt = config.prompts.find(p => p.id === config.activePromptId) || config.prompts[0];
     if (!activePrompt) {
         throw new Error("找不到有效的提示词模板。请检查您的设置。");
     }
 
-    const prompt = createPrompt(cards, activePrompt.content, novelInfo);
+    const prompt = createPrompt(cards, activePrompt.content, novelInfo, characterProfiles);
     const openAICompatibleProviders: AIProvider[] = ['openai', 'deepseek', 'openrouter', 'siliconflow', 'ollama', 'custom', 'modelscope'];
     
     try {
@@ -454,8 +509,9 @@ ${originalText}
 
 
 export const fetchModels = async (config: AIConfig): Promise<string[]> => {
+    const apiKey = config.apiKey;
+
     if (config.provider === 'gemini') {
-        const apiKey = config.apiKey;
         if (!apiKey) {
             throw new Error("Gemini API 密钥未配置。请在“设置”页面提供。");
         }
@@ -465,11 +521,8 @@ export const fetchModels = async (config: AIConfig): Promise<string[]> => {
         const endpoint = `${endpointUrl.trim().replace(/\/+$/, '')}/v1beta/models`;
         
         try {
-            const response = await fetch(endpoint, {
+            const response = await fetch(`${endpoint}?key=${apiKey}`, {
                 method: 'GET',
-                headers: {
-                    'x-goog-api-key': apiKey,
-                },
             });
 
             if (!response.ok) {
@@ -522,8 +575,8 @@ export const fetchModels = async (config: AIConfig): Promise<string[]> => {
 
     const headers: HeadersInit = { 'Content-Type': 'application/json' };
 
-    if (config.provider !== 'ollama' && config.apiKey) {
-        headers['Authorization'] = `Bearer ${config.apiKey}`;
+    if (config.provider !== 'ollama' && apiKey) {
+        headers['Authorization'] = `Bearer ${apiKey}`;
     }
 
     try {
@@ -608,5 +661,71 @@ export async function generateCardDetails(cardName: string, cardType: CardType, 
     } catch (error) {
         console.error("AI 生成或解析卡片详情失败:", error);
         throw new Error(`AI生成卡片详情失败: ${error instanceof Error ? error.message : '请检查网络和AI设置。'}`);
+    }
+}
+
+export async function generateCharacterProfile(profile: CharacterProfile, config: AIConfig): Promise<CharacterProfile> {
+    const prompt = `你是一位世界级的角色设计大师。你的任务是基于用户提供的一个核心角色概念，进行创意扩写，填充并完善一份完整、自洽且富有深度的角色资料。
+
+**核心规则:**
+1.  **以“形象”为种子:** 将用户在 \`image\` 字段中输入的概念作为创作的核心和起点。
+2.  **全面生成:** 基于这个核心概念，为 **所有** 以下字段生成内容：\`selfAwareness\`, \`reactionLogic\`, \`stakes\`, \`emotion\`, \`likability\`, \`competence\`, \`proactivity\`, \`power\`。
+3.  **优化“形象”:** 将用户原始的 \`image\` 输入提炼和重写，使其成为一段更精炼、更专注于视觉和第一印象的描述。
+4.  **保持逻辑一致:** 确保所有生成的内容都围绕核心概念展开，并且彼此之间逻辑自洽。
+
+请严格按照以下JSON格式返回你的创作结果，不要包含任何markdown标记或解释性文字。
+
+这是用户提供的初始角色资料（请重点参考 \`image\` 字段）:
+${JSON.stringify(profile, null, 2)}
+`;
+    
+    const getFullResponse = async (prompt: string, config: AIConfig): Promise<string> => {
+        const openAICompatibleProviders: AIProvider[] = ['openai', 'deepseek', 'openrouter', 'siliconflow', 'ollama', 'custom', 'modelscope'];
+        const nonStreamingConfig = { ...config, streaming: false };
+
+        let stream: AsyncGenerator<string>;
+        
+        const schema = {
+            type: Type.OBJECT,
+            properties: {
+                image: { type: Type.STRING },
+                selfAwareness: { type: Type.STRING },
+                reactionLogic: { type: Type.STRING },
+                stakes: { type: Type.STRING },
+                emotion: { type: Type.STRING },
+                likability: { type: Type.STRING },
+                competence: { type: Type.STRING },
+                proactivity: { type: Type.STRING },
+                power: { type: Type.STRING },
+            },
+            required: ['image', 'selfAwareness', 'reactionLogic', 'stakes', 'emotion', 'likability', 'competence', 'proactivity', 'power']
+        };
+
+        if (nonStreamingConfig.provider === 'gemini') {
+            stream = generateWithGemini(prompt, nonStreamingConfig, undefined, schema);
+        } else if (openAICompatibleProviders.includes(nonStreamingConfig.provider)) {
+            stream = generateWithOpenAICompatible(prompt, nonStreamingConfig, undefined, true);
+        } else {
+            throw new Error(`不支持的 AI 提供商: ${nonStreamingConfig.provider}`);
+        }
+
+        const { value } = await stream.next();
+        return value || "";
+    }
+
+    try {
+        const responseText = await getFullResponse(prompt, config);
+        const cleanedResponse = responseText.replace(/```json/g, '').replace(/```/g, '').trim();
+        const parsed = JSON.parse(cleanedResponse);
+
+        // Basic validation
+        if (typeof parsed.image === 'string') {
+            return parsed as CharacterProfile;
+        } else {
+            throw new Error("AI 响应未包含预期的 JSON 结构。");
+        }
+    } catch (error) {
+        console.error("AI 生成或解析角色详情失败:", error);
+        throw new Error(`AI生成角色详情失败: ${error instanceof Error ? error.message : '请检查网络和AI设置。'}`);
     }
 }

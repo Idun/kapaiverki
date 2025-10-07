@@ -1,7 +1,5 @@
-
-
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import type { AIConfig, Card, CombinedCards, CardType, NovelInfo, PromptTemplate, InspirationCategory, InspirationItem, UISettings, StoryArchiveItem, ChatMessage, Topic, SavedCombination } from './types';
+import type { AIConfig, Card, CombinedCards, CardType, NovelInfo, PromptTemplate, InspirationCategory, InspirationItem, UISettings, StoryArchiveItem, ChatMessage, Topic, SavedCombination, CharacterProfile } from './types';
 import { DEFAULT_CARDS, BRAINSTORM_TOOLS } from './constants';
 import { DEFAULT_PROMPTS, DEFAULT_SNOWFLAKE_PROMPT_TEMPLATE } from './prompts';
 import { DEFAULT_INSPIRATION_DATA } from './inspirationConstants';
@@ -13,6 +11,7 @@ import InspirationView from './components/InspirationView';
 import AboutView from './components/AboutView';
 import ArchiveView from './components/ArchiveView';
 import TipsView from './components/TipsView';
+import CharacterShapingView from './components/CharacterShapingView';
 import { CardType as CardTypeEnum } from './types';
 import { SparklesIcon, LightbulbIcon } from './components/icons';
 
@@ -56,7 +55,7 @@ const loadAndMigrateChatHistory = (key: string, defaultMessage: ChatMessage): Ch
 
 
 const App: React.FC = () => {
-    const [view, setView] = useState<'writer' | 'result' | 'inspiration' | 'settings' | 'about' | 'archive' | 'tips'>('writer');
+    const [view, setView] = useState<'writer' | 'result' | 'inspiration' | 'settings' | 'about' | 'archive' | 'tips' | 'characterShaping'>('writer');
     
     const [outline, setOutline] = useState<string>(() => {
         try {
@@ -136,10 +135,19 @@ const App: React.FC = () => {
     });
 
     const [novelInfo, setNovelInfo] = useState<NovelInfo>(() => {
-        const defaultState = { name: '', wordCount: '', synopsis: '', perspective: '', channel: '', emotion: '无' };
+        const defaultState: NovelInfo = { name: '', wordCount: '', synopsis: '', perspective: '', channel: '', emotion: '无', characterProfileIds: [] };
         try {
             const savedInfo = localStorage.getItem('novelInfo');
-            return savedInfo ? { ...defaultState, ...JSON.parse(savedInfo) } : defaultState;
+            if (savedInfo) {
+                const parsed = JSON.parse(savedInfo);
+                // Migration for old single character ID
+                if (parsed.characterProfileId && !parsed.characterProfileIds) {
+                    parsed.characterProfileIds = [parsed.characterProfileId];
+                    delete parsed.characterProfileId;
+                }
+                return { ...defaultState, ...parsed };
+            }
+            return defaultState;
         } catch (error) {
             console.error("Failed to parse novel info from localStorage", error);
             return defaultState;
@@ -301,6 +309,36 @@ const App: React.FC = () => {
         }
     });
 
+    const defaultCharacterProfile: CharacterProfile = { 
+        role: '其他角色',
+        name: '',
+        image: '', 
+        selfAwareness: '', 
+        reactionLogic: '', 
+        stakes: '', 
+        emotion: '',
+        likability: '',
+        competence: '',
+        proactivity: '',
+        power: ''
+    };
+
+    const [characterProfile, setCharacterProfile] = useState<CharacterProfile>(() => {
+        try {
+            const saved = localStorage.getItem('characterProfile');
+            return saved ? { ...defaultCharacterProfile, ...JSON.parse(saved) } : defaultCharacterProfile;
+        } catch (error) {
+            console.error("Failed to parse character profile from localStorage", error);
+            return defaultCharacterProfile;
+        }
+    });
+
+    useEffect(() => {
+        try {
+            localStorage.setItem('characterProfile', JSON.stringify(characterProfile));
+        } catch (e) { console.error("Failed to save character profile", e); }
+    }, [characterProfile]);
+
     useEffect(() => {
         try {
             localStorage.setItem('topics', JSON.stringify(topics));
@@ -369,6 +407,7 @@ const App: React.FC = () => {
         }
     }, [inspirationCards]);
     
+
     const allCards = useMemo((): Card[] => {
         // Re-hydrate custom writing cards with an icon
         const rehydratedCustomCards = customCards.map(card => ({
@@ -494,6 +533,7 @@ const App: React.FC = () => {
         } else {
             const newArchiveItem: StoryArchiveItem = {
                 id: `story-${Date.now()}`,
+                type: 'story',
                 novelInfo: novelInfoForArchive,
                 outline,
                 lastModified: Date.now()
@@ -503,13 +543,75 @@ const App: React.FC = () => {
         }
     }, [currentStoryId, novelInfo, outline, storyArchive]);
 
+    const handleSaveCharacter = useCallback(() => {
+        if (!characterProfile.name.trim()) {
+            alert("角色名称不能为空。");
+            return;
+        }
+
+        const description = [characterProfile.image, characterProfile.emotion, characterProfile.competence]
+            .filter(Boolean)
+            .join(' | ');
+
+        const novelInfoForArchive = {
+            name: characterProfile.name.trim(),
+            synopsis: description || '暂无描述',
+            wordCount: '',
+            channel: '' as const,
+            emotion: '',
+            characterProfileIds: [],
+        };
+        
+        const existingIndex = currentStoryId ? storyArchive.findIndex(item => item.id === currentStoryId && item.type === 'character') : -1;
+
+        if (existingIndex !== -1) {
+            // Update
+            const updatedArchive = [...storyArchive];
+            updatedArchive[existingIndex] = {
+                ...updatedArchive[existingIndex],
+                novelInfo: novelInfoForArchive,
+                characterProfile: characterProfile,
+                lastModified: Date.now()
+            };
+            updatedArchive.sort((a, b) => b.lastModified - a.lastModified);
+            setStoryArchive(updatedArchive);
+            alert(`角色 “${characterProfile.name}” 已更新。`);
+        } else {
+            // Create
+            // FIX: Add missing 'outline' property to satisfy the 'StoryArchiveItem' type. Characters do not have an outline, so an empty string is appropriate.
+            const newArchiveItem: StoryArchiveItem = {
+                id: `character-${Date.now()}`,
+                type: 'character',
+                novelInfo: novelInfoForArchive,
+                characterProfile: characterProfile,
+                outline: '',
+                lastModified: Date.now()
+            };
+            setStoryArchive(prev => [newArchiveItem, ...prev].sort((a, b) => b.lastModified - a.lastModified));
+            setCurrentStoryId(newArchiveItem.id);
+            alert(`角色 “${characterProfile.name}” 已保存至存档。`);
+        }
+    }, [characterProfile, currentStoryId, storyArchive]);
+
     const handleLoadStory = useCallback((storyId: string) => {
         const storyToLoad = storyArchive.find(item => item.id === storyId);
         if (storyToLoad) {
-            setCurrentStoryId(storyToLoad.id);
-            setNovelInfo(storyToLoad.novelInfo);
-            setAndPersistOutline(storyToLoad.outline);
-            setView('result');
+            const type = storyToLoad.type || 'story';
+            if (type === 'character' && storyToLoad.characterProfile) {
+                const completeProfile: CharacterProfile = {
+                    ...defaultCharacterProfile,
+                    ...storyToLoad.characterProfile,
+                    name: storyToLoad.novelInfo.name,
+                };
+                setCurrentStoryId(storyToLoad.id);
+                setCharacterProfile(completeProfile);
+                setView('characterShaping');
+            } else { // 'story'
+                setCurrentStoryId(storyToLoad.id);
+                setNovelInfo(storyToLoad.novelInfo);
+                setAndPersistOutline(storyToLoad.outline);
+                setView('result');
+            }
         }
     }, [storyArchive, setAndPersistOutline]);
 
@@ -518,7 +620,7 @@ const App: React.FC = () => {
             setStoryArchive(prev => prev.filter(item => item.id !== storyId));
             if (currentStoryId === storyId) {
                 setCurrentStoryId(null);
-                setNovelInfo({ name: '', wordCount: '', synopsis: '', perspective: '', channel: '', emotion: '无' });
+                setNovelInfo({ name: '', wordCount: '', synopsis: '', perspective: '', channel: '', emotion: '无', characterProfileIds: [] });
                 setAndPersistOutline('');
             }
         }
@@ -733,6 +835,13 @@ const App: React.FC = () => {
         }
     }, [allCards]);
 
+    const handleClearCharacterForm = useCallback(() => {
+        if (window.confirm("您确定要清空所有角色塑造信息吗？此操作无法撤销。")) {
+            setCurrentStoryId(null);
+            setCharacterProfile(defaultCharacterProfile);
+        }
+    }, [defaultCharacterProfile]);
+
 
     const renderView = () => {
         switch (view) {
@@ -758,6 +867,7 @@ const App: React.FC = () => {
                         onSaveCombination={handleSaveCombination}
                         onLoadCombination={handleLoadCombination}
                         onDeleteCombination={handleDeleteCombination}
+                        storyArchive={storyArchive}
                     />
                 );
             case 'result':
@@ -778,6 +888,7 @@ const App: React.FC = () => {
                             setAssistantHistory={setAssistantHistory}
                             chatHistory={chatHistory}
                             setChatHistory={setChatHistory}
+                            storyArchive={storyArchive}
                         />;
             case 'inspiration':
                 return <InspirationView 
@@ -795,6 +906,14 @@ const App: React.FC = () => {
                             setTopics={setTopics}
                             config={config} 
                             storyArchive={storyArchive}
+                        />;
+            case 'characterShaping':
+                return <CharacterShapingView 
+                            profile={characterProfile}
+                            setProfile={setCharacterProfile}
+                            config={config}
+                            onSaveCharacter={handleSaveCharacter}
+                            onClearAll={handleClearCharacterForm}
                         />;
             case 'archive':
                 return <ArchiveView
@@ -833,6 +952,7 @@ const App: React.FC = () => {
                         onSaveCombination={handleSaveCombination}
                         onLoadCombination={handleLoadCombination}
                         onDeleteCombination={handleDeleteCombination}
+                        storyArchive={storyArchive}
                     />
                 );
         }

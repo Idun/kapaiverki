@@ -627,12 +627,13 @@ __export(aiService_exports, {
   editText: () => editText,
   fetchModels: () => fetchModels,
   generateCardDetails: () => generateCardDetails,
+  generateCharacterProfile: () => generateCharacterProfile,
   generateChatResponse: () => generateChatResponse,
   generateOutline: () => generateOutline,
   polishOutline: () => polishOutline
 });
-import { GoogleGenAI } from "@google/genai";
-async function* generateWithGemini(promptOrMessages, config, signal) {
+import { GoogleGenAI, Type } from "@google/genai";
+async function* generateWithGemini(promptOrMessages, config, signal, responseSchema) {
   const apiKey = config.apiKey;
   if (!apiKey) {
     throw new Error("Gemini API \u5BC6\u94A5\u672A\u914D\u7F6E\u3002\u8BF7\u5728\u201C\u8BBE\u7F6E\u201D\u9875\u9762\u4E2D\u63D0\u4F9B\u60A8\u7684\u5BC6\u94A5\u3002");
@@ -650,6 +651,10 @@ async function* generateWithGemini(promptOrMessages, config, signal) {
     if (config.model === "gemini-2.5-flash") {
       generationConfig.thinkingConfig = { thinkingBudget: Math.floor(config.maxTokens / 4) };
     }
+  }
+  if (responseSchema) {
+    generationConfig.responseMimeType = "application/json";
+    generationConfig.responseSchema = responseSchema;
   }
   const messages = typeof promptOrMessages === "string" ? [{ role: "user", content: promptOrMessages }] : promptOrMessages;
   const contents = messages.map((msg) => {
@@ -673,7 +678,7 @@ async function* generateWithGemini(promptOrMessages, config, signal) {
       parts
     };
   });
-  if (config.streaming) {
+  if (config.streaming && !responseSchema) {
     const response = await ai.models.generateContentStream({
       model: modelName,
       contents,
@@ -694,24 +699,26 @@ async function* generateWithGemini(promptOrMessages, config, signal) {
       config: generationConfig
     });
     if (signal?.aborted) throw new DOMException("\u7528\u6237\u4E2D\u6B62\u64CD\u4F5C", "AbortError");
-    if (!response.text) {
+    const text = response.text;
+    if (!text) {
       throw new Error("API \u8FD4\u56DE\u4E86\u7A7A\u54CD\u5E94\u3002");
     }
-    yield response.text.trim();
+    yield text.trim();
   }
 }
-async function* generateWithOpenAICompatible(promptOrMessages, config, signal) {
+async function* generateWithOpenAICompatible(promptOrMessages, config, signal, asJson = false) {
   const providersThatNeedKey = ["openai", "deepseek", "openrouter", "siliconflow", "modelscope", "custom"];
   const isOllama = config.provider === "ollama";
-  if (!isOllama && providersThatNeedKey.includes(config.provider) && !config.apiKey) {
-    throw new Error(`\u9700\u8981\u4E3A ${config.provider} \u63D0\u4F9B\u5546\u63D0\u4F9B API \u5BC6\u94A5\u3002`);
+  const apiKey = config.apiKey;
+  if (!isOllama && providersThatNeedKey.includes(config.provider) && !apiKey) {
+    throw new Error(`\u9700\u8981\u4E3A ${config.provider} \u63D0\u4F9B\u5546\u63D0\u4F9B API \u5BC6\u94A5\u3002\u8BF7\u5728\u201C\u8BBE\u7F6E\u201D\u9875\u9762\u4E2D\u63D0\u4F9B\u60A8\u7684\u5BC6\u94A5\u3002`);
   }
   if (!config.endpoint) throw new Error("Endpoint URL \u4E0D\u80FD\u4E3A\u7A7A\u3002");
   if (!config.model) throw new Error("\u6A21\u578B\u540D\u79F0\u4E0D\u80FD\u4E3A\u7A7A\u3002");
   const endpoint = isOllama ? `${config.endpoint.trim().replace(/\/+$/, "")}/api/chat` : getEndpoint(config.endpoint, "chat");
   const headers = { "Content-Type": "application/json" };
-  if (!isOllama && config.apiKey) {
-    headers["Authorization"] = `Bearer ${config.apiKey}`;
+  if (!isOllama && apiKey) {
+    headers["Authorization"] = `Bearer ${apiKey}`;
   }
   const body = {
     model: config.model
@@ -733,12 +740,16 @@ async function* generateWithOpenAICompatible(promptOrMessages, config, signal) {
     return { role, content: contentParts };
   });
   body.messages = preparedMessages;
+  if (asJson) {
+    body.response_format = { type: "json_object" };
+  }
   if (isOllama) {
     body.options = {};
     if (config.temperature !== void 0) body.options.temperature = config.temperature;
     if (config.maxTokens !== void 0) body.options.num_predict = config.maxTokens;
     if (config.topP !== void 0) body.options.top_p = config.topP;
     if (config.frequencyPenalty !== void 0) body.options.repeat_penalty = config.frequencyPenalty;
+    if (asJson) body.format = "json";
   } else {
     if (config.temperature !== void 0) body.temperature = config.temperature;
     if (config.maxTokens !== void 0) body.max_tokens = config.maxTokens;
@@ -748,7 +759,7 @@ async function* generateWithOpenAICompatible(promptOrMessages, config, signal) {
       if (config.presencePenalty !== void 0) body.presence_penalty = config.presencePenalty;
     }
   }
-  if (config.streaming) {
+  if (config.streaming && !asJson) {
     body.stream = true;
     const response = await fetch(endpoint, { method: "POST", headers, body: JSON.stringify(body), signal });
     if (!response.ok || !response.body) {
@@ -820,12 +831,12 @@ async function* generateWithOpenAICompatible(promptOrMessages, config, signal) {
     yield content.trim();
   }
 }
-async function* generateOutline(cards, config, novelInfo) {
+async function* generateOutline(cards, config, novelInfo, characterProfiles) {
   const activePrompt = config.prompts.find((p) => p.id === config.activePromptId) || config.prompts[0];
   if (!activePrompt) {
     throw new Error("\u627E\u4E0D\u5230\u6709\u6548\u7684\u63D0\u793A\u8BCD\u6A21\u677F\u3002\u8BF7\u68C0\u67E5\u60A8\u7684\u8BBE\u7F6E\u3002");
   }
-  const prompt2 = createPrompt(cards, activePrompt.content, novelInfo);
+  const prompt2 = createPrompt(cards, activePrompt.content, novelInfo, characterProfiles);
   const openAICompatibleProviders = ["openai", "deepseek", "openrouter", "siliconflow", "ollama", "custom", "modelscope"];
   try {
     if (config.provider === "gemini") {
@@ -979,12 +990,69 @@ async function generateCardDetails(cardName, cardType, config) {
     throw new Error(`AI\u751F\u6210\u5361\u7247\u8BE6\u60C5\u5931\u8D25: ${error instanceof Error ? error.message : "\u8BF7\u68C0\u67E5\u7F51\u7EDC\u548CAI\u8BBE\u7F6E\u3002"}`);
   }
 }
+async function generateCharacterProfile(profile, config) {
+  const prompt2 = `\u4F60\u662F\u4E00\u4F4D\u4E16\u754C\u7EA7\u7684\u89D2\u8272\u8BBE\u8BA1\u5927\u5E08\u3002\u4F60\u7684\u4EFB\u52A1\u662F\u57FA\u4E8E\u7528\u6237\u63D0\u4F9B\u7684\u4E00\u4E2A\u6838\u5FC3\u89D2\u8272\u6982\u5FF5\uFF0C\u8FDB\u884C\u521B\u610F\u6269\u5199\uFF0C\u586B\u5145\u5E76\u5B8C\u5584\u4E00\u4EFD\u5B8C\u6574\u3001\u81EA\u6D3D\u4E14\u5BCC\u6709\u6DF1\u5EA6\u7684\u89D2\u8272\u8D44\u6599\u3002
+
+**\u6838\u5FC3\u89C4\u5219:**
+1.  **\u4EE5\u201C\u5F62\u8C61\u201D\u4E3A\u79CD\u5B50:** \u5C06\u7528\u6237\u5728 \`image\` \u5B57\u6BB5\u4E2D\u8F93\u5165\u7684\u6982\u5FF5\u4F5C\u4E3A\u521B\u4F5C\u7684\u6838\u5FC3\u548C\u8D77\u70B9\u3002
+2.  **\u5168\u9762\u751F\u6210:** \u57FA\u4E8E\u8FD9\u4E2A\u6838\u5FC3\u6982\u5FF5\uFF0C\u4E3A **\u6240\u6709** \u4EE5\u4E0B\u5B57\u6BB5\u751F\u6210\u5185\u5BB9\uFF1A\`selfAwareness\`, \`reactionLogic\`, \`stakes\`, \`emotion\`, \`likability\`, \`competence\`, \`proactivity\`, \`power\`\u3002
+3.  **\u4F18\u5316\u201C\u5F62\u8C61\u201D:** \u5C06\u7528\u6237\u539F\u59CB\u7684 \`image\` \u8F93\u5165\u63D0\u70BC\u548C\u91CD\u5199\uFF0C\u4F7F\u5176\u6210\u4E3A\u4E00\u6BB5\u66F4\u7CBE\u70BC\u3001\u66F4\u4E13\u6CE8\u4E8E\u89C6\u89C9\u548C\u7B2C\u4E00\u5370\u8C61\u7684\u63CF\u8FF0\u3002
+4.  **\u4FDD\u6301\u903B\u8F91\u4E00\u81F4:** \u786E\u4FDD\u6240\u6709\u751F\u6210\u7684\u5185\u5BB9\u90FD\u56F4\u7ED5\u6838\u5FC3\u6982\u5FF5\u5C55\u5F00\uFF0C\u5E76\u4E14\u5F7C\u6B64\u4E4B\u95F4\u903B\u8F91\u81EA\u6D3D\u3002
+
+\u8BF7\u4E25\u683C\u6309\u7167\u4EE5\u4E0BJSON\u683C\u5F0F\u8FD4\u56DE\u4F60\u7684\u521B\u4F5C\u7ED3\u679C\uFF0C\u4E0D\u8981\u5305\u542B\u4EFB\u4F55markdown\u6807\u8BB0\u6216\u89E3\u91CA\u6027\u6587\u5B57\u3002
+
+\u8FD9\u662F\u7528\u6237\u63D0\u4F9B\u7684\u521D\u59CB\u89D2\u8272\u8D44\u6599\uFF08\u8BF7\u91CD\u70B9\u53C2\u8003 \`image\` \u5B57\u6BB5\uFF09:
+${JSON.stringify(profile, null, 2)}
+`;
+  const getFullResponse = async (prompt3, config2) => {
+    const openAICompatibleProviders = ["openai", "deepseek", "openrouter", "siliconflow", "ollama", "custom", "modelscope"];
+    const nonStreamingConfig = { ...config2, streaming: false };
+    let stream;
+    const schema = {
+      type: Type.OBJECT,
+      properties: {
+        image: { type: Type.STRING },
+        selfAwareness: { type: Type.STRING },
+        reactionLogic: { type: Type.STRING },
+        stakes: { type: Type.STRING },
+        emotion: { type: Type.STRING },
+        likability: { type: Type.STRING },
+        competence: { type: Type.STRING },
+        proactivity: { type: Type.STRING },
+        power: { type: Type.STRING }
+      },
+      required: ["image", "selfAwareness", "reactionLogic", "stakes", "emotion", "likability", "competence", "proactivity", "power"]
+    };
+    if (nonStreamingConfig.provider === "gemini") {
+      stream = generateWithGemini(prompt3, nonStreamingConfig, void 0, schema);
+    } else if (openAICompatibleProviders.includes(nonStreamingConfig.provider)) {
+      stream = generateWithOpenAICompatible(prompt3, nonStreamingConfig, void 0, true);
+    } else {
+      throw new Error(`\u4E0D\u652F\u6301\u7684 AI \u63D0\u4F9B\u5546: ${nonStreamingConfig.provider}`);
+    }
+    const { value } = await stream.next();
+    return value || "";
+  };
+  try {
+    const responseText = await getFullResponse(prompt2, config);
+    const cleanedResponse = responseText.replace(/```json/g, "").replace(/```/g, "").trim();
+    const parsed = JSON.parse(cleanedResponse);
+    if (typeof parsed.image === "string") {
+      return parsed;
+    } else {
+      throw new Error("AI \u54CD\u5E94\u672A\u5305\u542B\u9884\u671F\u7684 JSON \u7ED3\u6784\u3002");
+    }
+  } catch (error) {
+    console.error("AI \u751F\u6210\u6216\u89E3\u6790\u89D2\u8272\u8BE6\u60C5\u5931\u8D25:", error);
+    throw new Error(`AI\u751F\u6210\u89D2\u8272\u8BE6\u60C5\u5931\u8D25: ${error instanceof Error ? error.message : "\u8BF7\u68C0\u67E5\u7F51\u7EDC\u548CAI\u8BBE\u7F6E\u3002"}`);
+  }
+}
 var createPrompt, getEndpoint, fetchModels;
 var init_aiService = __esm({
   "services/aiService.ts"() {
     init_types();
     init_constants();
-    createPrompt = (cards, customPrompt, novelInfo) => {
+    createPrompt = (cards, customPrompt, novelInfo, characterProfiles) => {
       const formatCards = (cardType) => {
         const cardArray = cards[cardType];
         if (!cardArray || cardArray.every((c) => c === null)) return "";
@@ -1019,9 +1087,55 @@ var init_aiService = __esm({
       const novelInfoSection = novelInfoParts.length > 0 ? `
 \u8BF7\u540C\u65F6\u53C2\u8003\u4EE5\u4E0B\u5C0F\u8BF4\u57FA\u672C\u4FE1\u606F\uFF1A
 ${novelInfoParts.join("\n")}` : "";
+      let characterProfileSection = "";
+      if (characterProfiles && characterProfiles.length > 0) {
+        const profileStrings = characterProfiles.map((profile) => {
+          const profileDetails = [];
+          const fieldLabels = {
+            role: "\u89D2\u8272\u5B9A\u4F4D",
+            name: "\u89D2\u8272\u540D\u79F0",
+            image: "\u5F62\u8C61",
+            selfAwareness: "\u81EA\u6211\u610F\u8BC6",
+            reactionLogic: "\u5408\u7406\u53CD\u5E94",
+            stakes: "\u5229\u5BB3\u5173\u7CFB",
+            emotion: "\u6838\u5FC3\u60C5\u7EEA",
+            likability: "\u597D\u611F\u5EA6",
+            competence: "\u80FD\u529B",
+            proactivity: "\u4E3B\u52A8\u6027",
+            power: "\u9650\u5236"
+          };
+          const orderedKeys = [
+            "role",
+            "name",
+            "image",
+            "selfAwareness",
+            "reactionLogic",
+            "stakes",
+            "emotion",
+            "likability",
+            "competence",
+            "proactivity",
+            "power"
+          ];
+          orderedKeys.forEach((key) => {
+            const value = profile[key];
+            if (value && String(value).trim()) {
+              profileDetails.push(`- ${fieldLabels[key]}: ${value}`);
+            }
+          });
+          return profileDetails.join("\n");
+        }).filter(Boolean).join("\n\n");
+        if (profileStrings) {
+          characterProfileSection = `
+\u8BF7\u989D\u5916\u53C2\u8003\u4EE5\u4E0B\u89D2\u8272\u8BBE\u5B9A\u4FE1\u606F\uFF0C\u5C06\u5176\u878D\u5165\u5230\u6545\u4E8B\u548C\u89D2\u8272\u8BBE\u8BA1\u4E2D\uFF1A
+${profileStrings}
+`;
+        }
+      }
       return `
 ${customPrompt}
 ${novelInfoSection}
+${characterProfileSection}
 
 \u8BF7\u57FA\u4E8E\u4EE5\u4E0B\u6545\u4E8B\u6838\u5FC3\u8981\u7D20\u8FDB\u884C\u521B\u4F5C\uFF1A
 ${promptParts.join("\n")}
@@ -1043,19 +1157,16 @@ ${promptParts.join("\n")}
       return `${basePath}${finalPath}`;
     };
     fetchModels = async (config) => {
+      const apiKey = config.apiKey;
       if (config.provider === "gemini") {
-        const apiKey = config.apiKey;
         if (!apiKey) {
           throw new Error("Gemini API \u5BC6\u94A5\u672A\u914D\u7F6E\u3002\u8BF7\u5728\u201C\u8BBE\u7F6E\u201D\u9875\u9762\u63D0\u4F9B\u3002");
         }
         const endpointUrl = config.endpoint || "https://generativelanguage.googleapis.com";
         const endpoint2 = `${endpointUrl.trim().replace(/\/+$/, "")}/v1beta/models`;
         try {
-          const response = await fetch(endpoint2, {
-            method: "GET",
-            headers: {
-              "x-goog-api-key": apiKey
-            }
+          const response = await fetch(`${endpoint2}?key=${apiKey}`, {
+            method: "GET"
           });
           if (!response.ok) {
             let errorData;
@@ -1092,8 +1203,8 @@ ${promptParts.join("\n")}
       }
       const endpoint = config.provider === "ollama" ? `${config.endpoint.trim().replace(/\/+$/, "")}/api/tags` : getEndpoint(config.endpoint, "models");
       const headers = { "Content-Type": "application/json" };
-      if (config.provider !== "ollama" && config.apiKey) {
-        headers["Authorization"] = `Bearer ${config.apiKey}`;
+      if (config.provider !== "ollama" && apiKey) {
+        headers["Authorization"] = `Bearer ${apiKey}`;
       }
       try {
         const response = await fetch(endpoint, { method: "GET", headers });
@@ -1128,12 +1239,12 @@ ${promptParts.join("\n")}
 });
 
 // index.tsx
-import React14 from "react";
+import React15 from "react";
 import ReactDOM from "react-dom/client";
 
 // App.tsx
 init_constants();
-import { useState as useState11, useEffect as useEffect8, useCallback as useCallback5, useMemo as useMemo5 } from "react";
+import { useState as useState12, useEffect as useEffect9, useCallback as useCallback5, useMemo as useMemo6 } from "react";
 
 // prompts.ts
 var DEFAULT_SNOWFLAKE_PROMPT_CONTENT = `\u4F60\u662F\u4E00\u4F4D\u4E13\u4E1A\u7684\u5C0F\u8BF4\u4F5C\u5BB6\uFF0C\u8BF7\u9075\u5FAA\u300C\u96EA\u82B1\u5199\u4F5C\u6CD5\u300D\u7684\u539F\u5219\uFF0C\u6839\u636E\u6211\u63D0\u4F9B\u7684\u6545\u4E8B\u6838\u5FC3\u8981\u7D20\uFF0C\u4E3A\u6211\u751F\u6210\u4E00\u4EFD\u8BE6\u5C3D\u7684\u5C0F\u8BF4\u5927\u7EB2\u3002
@@ -1498,6 +1609,7 @@ var Sidebar = ({ currentView, setView }) => {
       /* @__PURE__ */ jsx3(NavItem, { label: "\u5361\u724C\u5199\u4F5C", view: "writer", icon: /* @__PURE__ */ jsx3(PenSparkleIcon, {}), currentView, setView }),
       /* @__PURE__ */ jsx3(NavItem, { label: "\u7075\u611F\u96C6", view: "inspiration", icon: /* @__PURE__ */ jsx3(LightbulbIcon, {}), currentView, setView }),
       /* @__PURE__ */ jsx3(NavItem, { label: "\u5927\u7EB2\u5185\u5BB9", view: "result", icon: /* @__PURE__ */ jsx3(DocumentTextIcon, {}), currentView, setView }),
+      /* @__PURE__ */ jsx3(NavItem, { label: "\u89D2\u8272\u5851\u9020", view: "characterShaping", icon: /* @__PURE__ */ jsx3(CharacterIcon, {}), currentView, setView }),
       /* @__PURE__ */ jsx3(NavItem, { label: "\u6545\u4E8B\u5B58\u6863", view: "archive", icon: /* @__PURE__ */ jsx3(ArchiveBoxIcon, {}), currentView, setView }),
       /* @__PURE__ */ jsx3(NavItem, { label: "\u6545\u4E8B\u6280\u5DE7", view: "tips", icon: /* @__PURE__ */ jsx3(QuestionMarkCircleIcon, {}), currentView, setView })
     ] }),
@@ -2098,7 +2210,8 @@ var WriterView = ({
   savedCombinations,
   onSaveCombination,
   onLoadCombination,
-  onDeleteCombination
+  onDeleteCombination,
+  storyArchive
 }) => {
   const [isLoading, setIsLoading] = useState4(false);
   const [activeDragType, setActiveDragType] = useState4(null);
@@ -2110,10 +2223,39 @@ var WriterView = ({
   const [isModelListLoading, setIsModelListLoading] = useState4(false);
   const [isModelSelectOpen, setIsModelSelectOpen] = useState4(false);
   const [isCombinationManagerOpen, setIsCombinationManagerOpen] = useState4(false);
+  const [isCharacterSelectOpen, setIsCharacterSelectOpen] = useState4(false);
   const [modelSearch, setModelSearch] = useState4("");
   const modelSelectRef = useRef2(null);
   const combinationManagerRef = useRef2(null);
+  const characterSelectRef = useRef2(null);
   const fileInputRef = useRef2(null);
+  const characterProfiles = useMemo(
+    () => storyArchive.filter((item) => item.type === "character"),
+    [storyArchive]
+  );
+  const groupedCharacters = useMemo(() => {
+    const roleOrder = ["\u7537\u4E3B\u89D2", "\u5973\u4E3B\u89D2", "\u7537\u4E8C", "\u5973\u4E8C", "\u53CD\u6D3E", "\u914D\u89D2", "\u5176\u4ED6\u89D2\u8272"];
+    const groups = {};
+    characterProfiles.forEach((charItem) => {
+      const role = charItem.characterProfile?.role || "\u5176\u4ED6\u89D2\u8272";
+      if (!groups[role]) {
+        groups[role] = [];
+      }
+      groups[role].push(charItem);
+    });
+    const orderedGroups = [];
+    roleOrder.forEach((role) => {
+      if (groups[role]) {
+        orderedGroups.push({ role, characters: groups[role] });
+      }
+    });
+    Object.keys(groups).forEach((role) => {
+      if (!roleOrder.includes(role)) {
+        orderedGroups.push({ role, characters: groups[role] });
+      }
+    });
+    return orderedGroups;
+  }, [characterProfiles]);
   const totalPanels = 2;
   useEffect3(() => {
     const handleClickOutside = (event) => {
@@ -2122,6 +2264,9 @@ var WriterView = ({
       }
       if (combinationManagerRef.current && !combinationManagerRef.current.contains(event.target)) {
         setIsCombinationManagerOpen(false);
+      }
+      if (characterSelectRef.current && !characterSelectRef.current.contains(event.target)) {
+        setIsCharacterSelectOpen(false);
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
@@ -2147,12 +2292,9 @@ var WriterView = ({
   useEffect3(() => {
     const loadModels = async () => {
       if (!config.provider) return;
-      if (config.provider !== "ollama" && (!config.apiKey || !config.endpoint)) {
-        if (config.provider === "gemini" && config.apiKey) {
-        } else {
-          setModelList([]);
-          return;
-        }
+      if (config.provider !== "gemini" && config.provider !== "ollama" && !config.endpoint) {
+        setModelList([]);
+        return;
       }
       setIsModelListLoading(true);
       try {
@@ -2173,7 +2315,7 @@ var WriterView = ({
       }
     };
     loadModels();
-  }, [config.provider, config.apiKey, config.endpoint, setConfig]);
+  }, [config.provider, config.endpoint, setConfig]);
   const isGenerationReady = useMemo(() => {
     const coreCardsMet = CORE_CARD_TYPES.every((type) => combinedCards[type]?.some((c) => c !== null));
     const novelInfoMet = novelInfo.name && novelInfo.wordCount && novelInfo.synopsis && novelInfo.perspective && novelInfo.channel != null && // FIX: Allow '' (None) as a valid choice
@@ -2276,6 +2418,13 @@ var WriterView = ({
     if (name) {
       onSaveCombination(name);
     }
+  };
+  const handleCharacterSelect = (characterId) => {
+    setNovelInfo((prev) => {
+      const currentIds = prev.characterProfileIds || [];
+      const newIds = currentIds.includes(characterId) ? currentIds.filter((id) => id !== characterId) : [...currentIds, characterId];
+      return { ...prev, characterProfileIds: newIds };
+    });
   };
   return /* @__PURE__ */ jsxs8("div", { className: "w-full max-w-7xl mx-auto flex flex-col h-full", children: [
     /* @__PURE__ */ jsxs8("header", { className: "flex justify-start items-center mb-6 gap-4 flex-wrap", children: [
@@ -2508,26 +2657,60 @@ var WriterView = ({
                         "\u6982\u8981 ",
                         /* @__PURE__ */ jsx9("span", { className: "text-red-500", children: "*" })
                       ] }),
-                      /* @__PURE__ */ jsx9(
-                        "button",
-                        {
-                          type: "button",
-                          onClick: handleImportClick,
-                          className: "p-1.5 text-gray-400 hover:text-gray-700 rounded-full hover:bg-gray-100 transition-colors dark:text-zinc-500 dark:hover:text-zinc-200 dark:hover:bg-zinc-700",
-                          title: "\u5BFC\u5165\u672C\u5730\u6587\u6863",
-                          children: /* @__PURE__ */ jsx9(UploadIcon, { className: "w-4 h-4" })
-                        }
-                      ),
-                      /* @__PURE__ */ jsx9(
-                        "input",
-                        {
-                          type: "file",
-                          ref: fileInputRef,
-                          onChange: handleFileImport,
-                          accept: ".md,.txt",
-                          className: "hidden"
-                        }
-                      )
+                      /* @__PURE__ */ jsxs8("div", { className: "flex items-center gap-2", children: [
+                        /* @__PURE__ */ jsxs8("div", { ref: characterSelectRef, className: "relative", children: [
+                          /* @__PURE__ */ jsxs8(
+                            "button",
+                            {
+                              type: "button",
+                              onClick: () => setIsCharacterSelectOpen((prev) => !prev),
+                              className: "flex items-center gap-2 px-3 py-1.5 text-sm border border-gray-300 rounded-md shadow-sm bg-white hover:bg-gray-50 dark:bg-zinc-700 dark:border-zinc-600 dark:text-white dark:hover:bg-zinc-600",
+                              children: [
+                                /* @__PURE__ */ jsxs8("span", { children: [
+                                  "\u53EF\u9009\u89D2\u8272 ",
+                                  novelInfo.characterProfileIds && novelInfo.characterProfileIds.length > 0 ? `(${novelInfo.characterProfileIds.length})` : ""
+                                ] }),
+                                /* @__PURE__ */ jsx9(ChevronDownIcon, { className: "w-4 h-4 text-gray-400" })
+                              ]
+                            }
+                          ),
+                          isCharacterSelectOpen && /* @__PURE__ */ jsx9("div", { className: "absolute z-10 mt-1 w-64 bg-white dark:bg-zinc-800 rounded-md shadow-lg border border-gray-200 dark:border-zinc-700", children: /* @__PURE__ */ jsx9("ul", { className: "max-h-60 overflow-y-auto text-sm custom-scrollbar p-1 space-y-1", children: characterProfiles.length > 0 ? groupedCharacters.map(({ role, characters }) => /* @__PURE__ */ jsxs8("li", { children: [
+                            /* @__PURE__ */ jsx9("h4", { className: "px-2 pt-1 pb-0.5 text-xs font-bold text-gray-500 dark:text-zinc-400 sticky top-0 bg-white/80 dark:bg-zinc-800/80 backdrop-blur-sm", children: role }),
+                            /* @__PURE__ */ jsx9("ul", { className: "pl-2", children: characters.map((charItem) => /* @__PURE__ */ jsx9("li", { children: /* @__PURE__ */ jsxs8("label", { className: "flex items-center w-full px-2 py-1.5 cursor-pointer hover:bg-gray-100 dark:hover:bg-zinc-700 rounded-md", children: [
+                              /* @__PURE__ */ jsx9(
+                                "input",
+                                {
+                                  type: "checkbox",
+                                  checked: novelInfo.characterProfileIds?.includes(charItem.id) || false,
+                                  onChange: () => handleCharacterSelect(charItem.id),
+                                  className: "h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                                }
+                              ),
+                              /* @__PURE__ */ jsx9("span", { className: "ml-3 text-gray-800 dark:text-zinc-200 truncate", children: charItem.novelInfo.name })
+                            ] }) }, charItem.id)) })
+                          ] }, role)) : /* @__PURE__ */ jsx9("li", { className: "px-3 py-2 text-gray-500 dark:text-zinc-400", children: "\u65E0\u53EF\u7528\u89D2\u8272" }) }) })
+                        ] }),
+                        /* @__PURE__ */ jsx9(
+                          "button",
+                          {
+                            type: "button",
+                            onClick: handleImportClick,
+                            className: "p-1.5 text-gray-400 hover:text-gray-700 rounded-full hover:bg-gray-100 transition-colors dark:text-zinc-500 dark:hover:text-zinc-200 dark:hover:bg-zinc-700",
+                            title: "\u5BFC\u5165\u672C\u5730\u6587\u6863",
+                            children: /* @__PURE__ */ jsx9(UploadIcon, { className: "w-4 h-4" })
+                          }
+                        ),
+                        /* @__PURE__ */ jsx9(
+                          "input",
+                          {
+                            type: "file",
+                            ref: fileInputRef,
+                            onChange: handleFileImport,
+                            accept: ".md,.txt",
+                            className: "hidden"
+                          }
+                        )
+                      ] })
                     ] }),
                     /* @__PURE__ */ jsx9("textarea", { id: "synopsis", value: novelInfo.synopsis, onChange: handleInfoChange, className: "w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-gray-500 focus:border-gray-500 flex-grow dark:bg-zinc-700 dark:border-zinc-600 dark:text-white", placeholder: "\u6545\u4E8B\u6838\u5FC3\u6982\u5FF5\u7684\u4E00\u53E5\u8BDD\u603B\u7ED3" })
                   ] })
@@ -2844,13 +3027,11 @@ var SettingsView = ({ currentConfig, onSave, currentUISettings, onSaveUISettings
   const handleProviderChange = (e) => {
     const newProvider = e.target.value;
     const defaults = PROVIDER_DEFAULTS[newProvider];
-    const preservedApiKey = config.provider === "ollama" && newProvider !== "ollama" ? "" : config.apiKey;
     setConfig((prev) => ({
       ...prev,
       provider: newProvider,
       model: "",
-      endpoint: defaults.endpoint,
-      apiKey: newProvider === "ollama" ? "" : preservedApiKey
+      endpoint: defaults.endpoint
     }));
     setTestResult({ status: "idle", message: "" });
     setModelList([]);
@@ -2955,7 +3136,7 @@ var SettingsView = ({ currentConfig, onSave, currentUISettings, onSaveUISettings
             {
               id: "apiKey",
               type: "password",
-              value: config.apiKey,
+              value: config.apiKey || "",
               onChange: (e) => setConfig((prev) => ({ ...prev, apiKey: e.target.value })),
               className: "w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-gray-500 focus:border-gray-500 dark:bg-zinc-700 dark:border-zinc-600 dark:text-white",
               placeholder: "\u8F93\u5165\u60A8\u7684 API \u5BC6\u94A5"
@@ -3266,6 +3447,7 @@ init_aiService();
 init_icons();
 import React8, { useState as useState6, useEffect as useEffect5, useRef as useRef3, useCallback as useCallback3, useMemo as useMemo2 } from "react";
 import EasyMDE from "easymde";
+import "codemirror";
 import { jsx as jsx11, jsxs as jsxs10 } from "react/jsx-runtime";
 var MAX_ATTACHMENTS = 5;
 var ResultView = ({
@@ -3284,7 +3466,8 @@ var ResultView = ({
   assistantHistory,
   setAssistantHistory,
   chatHistory,
-  setChatHistory
+  setChatHistory,
+  storyArchive
 }) => {
   const textareaRef = useRef3(null);
   const easyMdeInstance = useRef3(null);
@@ -3457,7 +3640,7 @@ var ResultView = ({
       }
     };
     loadModels();
-  }, [config.provider, config.apiKey, config.endpoint]);
+  }, [config.provider, config.endpoint]);
   useEffect5(() => {
     const handleClickOutside = (event) => {
       if (modelSelectRef.current && !modelSelectRef.current.contains(event.target)) {
@@ -3483,9 +3666,11 @@ var ResultView = ({
     let active = true;
     const generate = async () => {
       try {
+        const selectedCharacters = novelInfo.characterProfileIds ? storyArchive.filter((item) => novelInfo.characterProfileIds.includes(item.id)) : [];
+        const characterProfiles = selectedCharacters.map((item) => item.characterProfile).filter((p) => !!p);
         let accumulatedOutline = "";
         setOutline("");
-        const stream = generateOutline(combinedCards, config, novelInfo);
+        const stream = generateOutline(combinedCards, config, novelInfo, characterProfiles.length > 0 ? characterProfiles : null);
         for await (const chunk of stream) {
           if (!active) break;
           accumulatedOutline += chunk;
@@ -3503,7 +3688,7 @@ var ResultView = ({
     return () => {
       active = false;
     };
-  }, [isGenerating, combinedCards, config, novelInfo, setOutline, setIsGenerating]);
+  }, [isGenerating, combinedCards, config, novelInfo, setOutline, setIsGenerating, storyArchive]);
   const groupedAndFilteredCards = useMemo2(() => {
     const searchTarget = isAiEditMentionOpen ? aiEditMentionSearch : mentionSearch;
     const filtered = allCards.filter(
@@ -4569,7 +4754,7 @@ var AboutView = () => {
           /* @__PURE__ */ jsx14("li", { children: "\u7CBE\u7B80\u7684\u5927\u7EB2\u7F16\u8F91\u5668\u4E0E\u4EA4\u4E92\u5F0F\u5DE5\u4F5C\u7A7A\u95F4" })
         ] })
       ] }),
-      /* @__PURE__ */ jsx14("div", { className: "pt-4 text-center", children: /* @__PURE__ */ jsx14("p", { className: "text-xs text-gray-500 dark:text-zinc-400", children: "\u7248\u672C: 1.1.0" }) })
+      /* @__PURE__ */ jsx14("div", { className: "pt-4 text-center", children: /* @__PURE__ */ jsx14("p", { className: "text-xs text-gray-500 dark:text-zinc-400", children: "\u7248\u672C: 1.1.1" }) })
     ] }) })
   ] });
 };
@@ -4584,6 +4769,63 @@ var ArchiveCard = ({ item, onLoad, onDelete }) => {
     e.stopPropagation();
     onDelete();
   };
+  const handleExportClick = (e) => {
+    e.stopPropagation();
+    const type = item.type || "story";
+    try {
+      if (type === "story") {
+        const blob = new Blob([item.outline], { type: "text/markdown;charset=utf-8" });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        const downloadName = item.novelInfo.name ? `${item.novelInfo.name}.md` : "story-outline.md";
+        link.href = url;
+        link.download = downloadName;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+      } else if (type === "character") {
+        const content = JSON.stringify(item.characterProfile, null, 2);
+        const blob = new Blob([content], { type: "application/json;charset=utf-8" });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        const downloadName = item.novelInfo.name ? `${item.novelInfo.name}.json` : "character-profile.json";
+        link.href = url;
+        link.download = downloadName;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+      }
+    } catch (error) {
+      console.error("Failed to export file:", error);
+      alert("\u5BFC\u51FA\u6587\u4EF6\u5931\u8D25\uFF01");
+    }
+  };
+  const isCharacter = item.type === "character";
+  const labelText = isCharacter ? item.characterProfile?.role || "\u89D2\u8272" : "\u5927\u7EB2";
+  const getLabelStyle = () => {
+    if (!isCharacter) {
+      return "bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-300";
+    }
+    switch (item.characterProfile?.role) {
+      case "\u7537\u4E3B\u89D2":
+      case "\u5973\u4E3B\u89D2":
+        return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/40 dark:text-yellow-300";
+      case "\u53CD\u6D3E":
+        return "bg-red-100 text-red-800 dark:bg-red-900/40 dark:text-red-300";
+      case "\u7537\u4E8C":
+      case "\u5973\u4E8C":
+        return "bg-purple-100 text-purple-800 dark:bg-purple-900/40 dark:text-purple-300";
+      case "\u914D\u89D2":
+        return "bg-gray-200 text-gray-800 dark:bg-zinc-700 dark:text-zinc-300";
+      case "\u5176\u4ED6\u89D2\u8272":
+        return "bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-300";
+      default:
+        return "bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-300";
+    }
+  };
+  const labelStyle = getLabelStyle();
   return /* @__PURE__ */ jsxs14(
     "div",
     {
@@ -4594,21 +4836,34 @@ var ArchiveCard = ({ item, onLoad, onDelete }) => {
         /* @__PURE__ */ jsx15("div", { className: "absolute z-[1] top-1/2 left-1/2 w-48 h-48 rounded-full bg-purple-300 dark:bg-purple-900/80 opacity-80 filter blur-2xl animate-blob-bounce" }),
         /* @__PURE__ */ jsxs14("div", { className: "absolute top-1.5 left-1.5 w-[calc(100%-12px)] h-[calc(100%-12px)] z-[2] bg-white/80 backdrop-blur-xl rounded-xl overflow-hidden outline-2 outline-white p-4 flex flex-col justify-between dark:bg-zinc-800/80", children: [
           /* @__PURE__ */ jsxs14("div", { children: [
-            /* @__PURE__ */ jsx15("h3", { className: "font-bold text-lg text-gray-800 dark:text-zinc-100 break-words", children: item.novelInfo.name }),
+            /* @__PURE__ */ jsx15("span", { className: `px-2 py-0.5 text-xs font-bold rounded-full ${labelStyle}`, children: labelText }),
+            /* @__PURE__ */ jsx15("h3", { className: "font-bold text-lg text-gray-800 dark:text-zinc-100 break-words mt-2", children: item.novelInfo.name }),
             /* @__PURE__ */ jsx15("p", { className: "text-xs text-gray-500 dark:text-zinc-400 mt-1", children: new Date(item.lastModified).toLocaleString() })
           ] }),
           /* @__PURE__ */ jsx15("p", { className: "text-sm text-gray-600 dark:text-zinc-300 overflow-hidden text-ellipsis", style: { display: "-webkit-box", WebkitLineClamp: 5, WebkitBoxOrient: "vertical" }, children: item.novelInfo.synopsis || "\u65E0\u6982\u8981" })
         ] }),
-        /* @__PURE__ */ jsx15(
-          "button",
-          {
-            onClick: handleDeleteClick,
-            className: "absolute top-3 right-3 z-10 p-2 text-gray-400 hover:text-red-600 rounded-full bg-white/50 hover:bg-red-50 dark:bg-zinc-700/50 dark:hover:bg-red-900/50 opacity-0 group-hover:opacity-100 transition-opacity",
-            "aria-label": `\u5220\u9664 ${item.novelInfo.name}`,
-            title: "\u5220\u9664",
-            children: /* @__PURE__ */ jsx15(TrashIcon, { className: "w-4 h-4" })
-          }
-        )
+        /* @__PURE__ */ jsxs14("div", { className: "absolute top-3 right-3 z-10 flex items-center space-x-1 opacity-0 group-hover:opacity-100 transition-opacity", children: [
+          /* @__PURE__ */ jsx15(
+            "button",
+            {
+              onClick: handleExportClick,
+              className: "p-2 text-gray-400 hover:text-blue-600 rounded-full bg-white/50 hover:bg-blue-50 dark:bg-zinc-700/50 dark:hover:bg-blue-900/50 dark:hover:text-blue-400",
+              "aria-label": `\u5BFC\u51FA ${item.novelInfo.name}`,
+              title: "\u5BFC\u51FA",
+              children: /* @__PURE__ */ jsx15(DownloadIcon, { className: "w-4 h-4" })
+            }
+          ),
+          /* @__PURE__ */ jsx15(
+            "button",
+            {
+              onClick: handleDeleteClick,
+              className: "p-2 text-gray-400 hover:text-red-600 rounded-full bg-white/50 hover:bg-red-50 dark:bg-zinc-700/50 dark:hover:bg-red-900/50 dark:hover:text-red-500",
+              "aria-label": `\u5220\u9664 ${item.novelInfo.name}`,
+              title: "\u5220\u9664",
+              children: /* @__PURE__ */ jsx15(TrashIcon, { className: "w-4 h-4" })
+            }
+          )
+        ] })
       ]
     }
   );
@@ -4780,7 +5035,7 @@ var TipsView = ({ topics, setTopics, config, storyArchive }) => {
       }
     };
     loadModels();
-  }, [config.provider, config.apiKey, config.endpoint, config.model, config.assistantModel]);
+  }, [config.provider, config.endpoint, config.model, config.assistantModel]);
   useEffect7(() => {
     const handleClickOutside = (event) => {
       if (modelSelectRef.current && !modelSelectRef.current.contains(event.target)) {
@@ -5303,10 +5558,591 @@ ${selectedArchive.outline}
 };
 var TipsView_default = TipsView;
 
+// components/CharacterShapingView.tsx
+init_icons();
+import { useState as useState11, useEffect as useEffect8, useMemo as useMemo5, useRef as useRef5 } from "react";
+init_aiService();
+import { Fragment as Fragment4, jsx as jsx17, jsxs as jsxs16 } from "react/jsx-runtime";
+var CHARACTER_ROLES = ["\u7537\u4E3B\u89D2", "\u5973\u4E3B\u89D2", "\u7537\u4E8C", "\u5973\u4E8C", "\u914D\u89D2", "\u53CD\u6D3E", "\u5176\u4ED6\u89D2\u8272"];
+var FormField = ({ id, label, description, value, onChange, placeholder, className = "" }) => /* @__PURE__ */ jsxs16("div", { className: `mb-8 ${className}`, children: [
+  /* @__PURE__ */ jsx17("label", { htmlFor: id, className: "block text-xl font-semibold text-gray-800 dark:text-zinc-100 mb-2", children: label }),
+  /* @__PURE__ */ jsx17("p", { className: "text-sm text-gray-500 dark:text-zinc-400 mb-3", dangerouslySetInnerHTML: { __html: description } }),
+  /* @__PURE__ */ jsx17(
+    "textarea",
+    {
+      id,
+      name: id,
+      rows: 5,
+      value,
+      onChange,
+      placeholder,
+      className: "w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-400 dark:bg-zinc-700 dark:border-zinc-600 dark:text-white custom-scrollbar transition"
+    }
+  )
+] });
+var CharacterPreviewModal = ({ profile, onClose, onSave }) => {
+  const [editingKey, setEditingKey] = useState11(null);
+  const [internalProfile, setInternalProfile] = useState11(profile);
+  const textareaRef = useRef5(null);
+  useEffect8(() => {
+    if (!editingKey) {
+      setInternalProfile(profile);
+    }
+  }, [profile, editingKey]);
+  useEffect8(() => {
+    if (editingKey && textareaRef.current) {
+      textareaRef.current.focus();
+      textareaRef.current.setSelectionRange(textareaRef.current.value.length, textareaRef.current.value.length);
+    }
+  }, [editingKey]);
+  const handleSave = () => {
+    onSave(internalProfile);
+    setEditingKey(null);
+  };
+  const handleCancel = () => {
+    setInternalProfile(profile);
+    setEditingKey(null);
+  };
+  const handleFieldChange = (key, value) => {
+    setInternalProfile((prev) => ({ ...prev, [key]: value }));
+  };
+  const labels = {
+    role: "\u89D2\u8272\u5B9A\u4F4D",
+    name: "\u89D2\u8272\u540D\u79F0",
+    image: "\u5F62\u8C61",
+    selfAwareness: "\u81EA\u6211\u610F\u8BC6",
+    reactionLogic: "\u5408\u7406\u53CD\u5E94",
+    stakes: "\u5229\u5BB3\u5173\u7CFB",
+    emotion: "\u6838\u5FC3\u60C5\u7EEA",
+    likability: "\u597D\u611F\u5EA6",
+    competence: "\u80FD\u529B",
+    proactivity: "\u4E3B\u52A8\u6027",
+    power: "\u9650\u5236"
+  };
+  const profileKeysInOrder = [
+    "role",
+    "name",
+    "image",
+    "selfAwareness",
+    "reactionLogic",
+    "stakes",
+    "emotion",
+    "likability",
+    "competence",
+    "proactivity",
+    "power"
+  ];
+  const hasContent = profileKeysInOrder.some((key) => profile[key] && String(profile[key]).trim() !== "");
+  return /* @__PURE__ */ jsxs16(
+    "div",
+    {
+      className: "fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50 p-4 transition-opacity duration-300 animate-fade-in",
+      onClick: onClose,
+      role: "dialog",
+      "aria-modal": "true",
+      children: [
+        /* @__PURE__ */ jsxs16(
+          "div",
+          {
+            className: "bg-white rounded-lg shadow-xl w-full max-w-2xl max-h-[90vh] flex flex-col transform transition-all duration-300 scale-95 opacity-0 animate-fade-in-scale dark:bg-zinc-800",
+            onClick: (e) => e.stopPropagation(),
+            children: [
+              /* @__PURE__ */ jsxs16("header", { className: "flex-shrink-0 flex justify-between items-center p-4 border-b border-gray-200 dark:border-zinc-700", children: [
+                /* @__PURE__ */ jsx17("h2", { className: "text-xl font-bold text-gray-800 dark:text-zinc-100", children: "\u89D2\u8272\u9884\u89C8" }),
+                /* @__PURE__ */ jsx17(
+                  "button",
+                  {
+                    onClick: onClose,
+                    className: "p-2 text-2xl leading-none text-gray-400 hover:text-gray-700 dark:hover:text-zinc-200 rounded-full hover:bg-gray-100 dark:hover:bg-zinc-700",
+                    "aria-label": "\u5173\u95ED\u9884\u89C8",
+                    children: "\xD7"
+                  }
+                )
+              ] }),
+              /* @__PURE__ */ jsx17("div", { className: "p-6 overflow-y-auto custom-scrollbar", children: hasContent ? /* @__PURE__ */ jsx17("div", { className: "space-y-6", children: profileKeysInOrder.map((key) => {
+                const value = profile[key];
+                if (!value || String(value).trim() === "") return null;
+                return /* @__PURE__ */ jsxs16("div", { children: [
+                  /* @__PURE__ */ jsx17("h3", { className: "font-semibold text-lg text-gray-700 dark:text-zinc-200 mb-2 pb-1 border-b border-gray-200 dark:border-zinc-600", children: labels[key] }),
+                  editingKey === key ? /* @__PURE__ */ jsxs16("div", { children: [
+                    /* @__PURE__ */ jsx17(
+                      "textarea",
+                      {
+                        ref: textareaRef,
+                        value: internalProfile[key],
+                        onChange: (e) => handleFieldChange(key, e.target.value),
+                        className: "w-full px-3 py-2 border border-purple-400 rounded-md bg-purple-50 dark:bg-zinc-700/50 dark:border-purple-500 focus:outline-none focus:ring-1 focus:ring-purple-500 custom-scrollbar",
+                        rows: Math.max(5, (String(internalProfile[key]).split("\n").length || 1) + 2)
+                      }
+                    ),
+                    /* @__PURE__ */ jsxs16("div", { className: "mt-2 flex justify-end gap-2", children: [
+                      /* @__PURE__ */ jsx17("button", { onClick: handleCancel, className: "text-sm px-3 py-1 rounded bg-gray-200 hover:bg-gray-300 dark:bg-zinc-600 dark:hover:bg-zinc-500", children: "\u53D6\u6D88" }),
+                      /* @__PURE__ */ jsx17("button", { onClick: handleSave, className: "text-sm px-3 py-1 rounded bg-purple-600 hover:bg-purple-700 text-white", children: "\u4FDD\u5B58" })
+                    ] })
+                  ] }) : /* @__PURE__ */ jsx17(
+                    "p",
+                    {
+                      onDoubleClick: () => setEditingKey(key),
+                      className: "text-gray-600 dark:text-zinc-300 whitespace-pre-wrap leading-relaxed cursor-pointer rounded-md p-2 -m-2 hover:bg-gray-100 dark:hover:bg-zinc-700/50",
+                      title: "\u53CC\u51FB\u7F16\u8F91",
+                      children: value
+                    }
+                  )
+                ] }, key);
+              }) }) : /* @__PURE__ */ jsx17("p", { className: "text-center text-gray-500 dark:text-zinc-400 py-10", children: "\u89D2\u8272\u8D44\u6599\u4E3A\u7A7A\uFF0C\u8BF7\u5148\u586B\u5199\u5185\u5BB9\u3002" }) })
+            ]
+          }
+        ),
+        /* @__PURE__ */ jsx17("style", { children: `
+                @keyframes fade-in {
+                    from { opacity: 0; }
+                    to { opacity: 1; }
+                }
+                .animate-fade-in {
+                    animation: fade-in 0.2s ease-out forwards;
+                }
+                @keyframes fade-in-scale {
+                    from { transform: scale(0.95); opacity: 0; }
+                    to { transform: scale(1); opacity: 1; }
+                }
+                .animate-fade-in-scale {
+                    animation: fade-in-scale 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+                }
+            ` })
+      ]
+    }
+  );
+};
+var CharacterShapingView = ({ profile, setProfile, config, onSaveCharacter, onClearAll }) => {
+  const [isAiGenerating, setIsAiGenerating] = useState11(false);
+  const [isPreviewOpen, setIsPreviewOpen] = useState11(false);
+  const [localModel, setLocalModel] = useState11("");
+  const [isModelSelectOpen, setIsModelSelectOpen] = useState11(false);
+  const [modelList, setModelList] = useState11([]);
+  const [isModelListLoading, setIsModelListLoading] = useState11(false);
+  const [modelSearch, setModelSearch] = useState11("");
+  const [saveStatus, setSaveStatus] = useState11("idle");
+  const modelSelectRef = useRef5(null);
+  const importFileRef = useRef5(null);
+  useEffect8(() => {
+    const loadModels = async () => {
+      if (!config.provider) return;
+      setIsModelListLoading(true);
+      try {
+        const models = await fetchModels(config);
+        setModelList(models);
+        if (models.length > 0) {
+          const preferredModel = config.assistantModel && models.includes(config.assistantModel) ? config.assistantModel : config.model && models.includes(config.model) ? config.model : models[0];
+          setLocalModel(preferredModel);
+        }
+      } catch (error) {
+        console.error("Failed to fetch models for character shaping:", error);
+        setModelList([]);
+      } finally {
+        setIsModelListLoading(false);
+      }
+    };
+    loadModels();
+  }, [config.provider, config.endpoint, config.model, config.assistantModel]);
+  useEffect8(() => {
+    const handleClickOutside = (event) => {
+      if (modelSelectRef.current && !modelSelectRef.current.contains(event.target)) {
+        setIsModelSelectOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+  const filteredModels = useMemo5(() => {
+    if (!modelSearch) return modelList;
+    return modelList.filter((m) => m.toLowerCase().includes(modelSearch.toLowerCase()));
+  }, [modelList, modelSearch]);
+  const handleChange = (e) => {
+    const { id, value } = e.target;
+    setProfile((prev) => ({ ...prev, [id]: value }));
+  };
+  const handleSaveCharacter = () => {
+    onSaveCharacter();
+    setSaveStatus("saved");
+    setTimeout(() => setSaveStatus("idle"), 2e3);
+  };
+  const handleAiGenerateDetails = async () => {
+    setIsAiGenerating(true);
+    try {
+      const generationConfig = { ...config, model: localModel };
+      const result = await generateCharacterProfile(profile, generationConfig);
+      setProfile((prev) => ({ ...prev, ...result }));
+    } catch (error) {
+      alert(error instanceof Error ? error.message : "AI \u751F\u6210\u5931\u8D25\uFF0C\u8BF7\u68C0\u67E5\u60A8\u7684\u7F51\u7EDC\u548CAI\u8BBE\u7F6E\u3002");
+    } finally {
+      setIsAiGenerating(false);
+    }
+  };
+  const handleExport = () => {
+    const characterName = profile.name || "character";
+    const fileName = prompt("\u8BF7\u8F93\u5165\u8981\u5BFC\u51FA\u7684\u6587\u4EF6\u540D\uFF1A", characterName);
+    if (!fileName || !fileName.trim()) {
+      return;
+    }
+    try {
+      const jsonString = JSON.stringify(profile, null, 2);
+      const blob = new Blob([jsonString], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `${fileName.trim()}.json`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("Failed to export character profile:", error);
+      alert("\u5BFC\u51FA\u89D2\u8272\u6587\u4EF6\u5931\u8D25\uFF01");
+    }
+  };
+  const handleImportClick = () => {
+    importFileRef.current?.click();
+  };
+  const handleFileImport = (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      try {
+        const content = event.target?.result;
+        const parsedData = JSON.parse(content);
+        const profileKeys = ["role", "name", "image", "selfAwareness", "reactionLogic", "stakes", "emotion", "likability", "competence", "proactivity", "power"];
+        const hasAtLeastOneKey = profileKeys.some((key) => key in parsedData);
+        if (typeof parsedData === "object" && parsedData !== null && hasAtLeastOneKey) {
+          const defaultProfile = {
+            role: "\u5176\u4ED6\u89D2\u8272",
+            name: "",
+            image: "",
+            selfAwareness: "",
+            reactionLogic: "",
+            stakes: "",
+            emotion: "",
+            likability: "",
+            competence: "",
+            proactivity: "",
+            power: ""
+          };
+          setProfile({ ...defaultProfile, ...parsedData });
+          alert("\u89D2\u8272\u8D44\u6599\u5BFC\u5165\u6210\u529F\uFF01");
+        } else {
+          throw new Error("JSON \u6587\u4EF6\u683C\u5F0F\u4E0D\u6B63\u786E\u6216\u4E0D\u5305\u542B\u6709\u6548\u7684\u89D2\u8272\u8D44\u6599\u3002");
+        }
+      } catch (error) {
+        alert(`\u5BFC\u5165\u5931\u8D25: ${error instanceof Error ? error.message : "\u65E0\u6CD5\u8BFB\u53D6\u6587\u4EF6\u3002"}`);
+      }
+    };
+    reader.onerror = () => {
+      alert("\u8BFB\u53D6\u6587\u4EF6\u5931\u8D25\u3002");
+    };
+    reader.readAsText(file);
+    e.target.value = "";
+  };
+  return /* @__PURE__ */ jsxs16("div", { className: "w-full max-w-4xl mx-auto h-full flex flex-col", children: [
+    /* @__PURE__ */ jsxs16("header", { className: "mb-8 flex-shrink-0 flex justify-between items-center", children: [
+      /* @__PURE__ */ jsxs16("div", { children: [
+        /* @__PURE__ */ jsx17("h1", { className: "text-3xl font-bold text-gray-800 dark:text-zinc-100", children: "\u89D2\u8272\u5851\u9020" }),
+        /* @__PURE__ */ jsx17("p", { className: "mt-2 text-gray-600 dark:text-zinc-300", children: "\u8FD0\u7528\u4E13\u4E1A\u7684\u89D2\u8272\u6784\u5EFA\u5DE5\u5177\uFF0C\u4ECE\u96F6\u5F00\u59CB\u96D5\u7422\u4E00\u4E2A\u6709\u8840\u6709\u8089\u3001\u4EE4\u4EBA\u5370\u8C61\u6DF1\u523B\u7684\u89D2\u8272\u3002" })
+      ] }),
+      /* @__PURE__ */ jsxs16("div", { className: "flex items-center gap-2", children: [
+        /* @__PURE__ */ jsxs16(
+          "button",
+          {
+            onClick: () => setIsPreviewOpen(true),
+            className: "flex items-center justify-center gap-1.5 px-4 py-2 text-sm font-semibold text-gray-700 bg-white border border-gray-300 rounded-lg shadow-sm hover:bg-gray-50 transition-colors dark:bg-zinc-700 dark:text-zinc-200 dark:border-zinc-600 dark:hover:bg-zinc-600",
+            title: "\u9884\u89C8\u5F53\u524D\u89D2\u8272\u5851\u9020\u60C5\u51B5",
+            children: [
+              /* @__PURE__ */ jsx17(PreviewIcon, { className: "w-4 h-4" }),
+              /* @__PURE__ */ jsx17("span", { className: "whitespace-nowrap", children: "\u9884\u89C8" })
+            ]
+          }
+        ),
+        /* @__PURE__ */ jsxs16(
+          "button",
+          {
+            onClick: handleExport,
+            className: "flex items-center justify-center gap-1.5 px-4 py-2 text-sm font-semibold text-gray-700 bg-white border border-gray-300 rounded-lg shadow-sm hover:bg-gray-50 transition-colors dark:bg-zinc-700 dark:text-zinc-200 dark:border-zinc-600 dark:hover:bg-zinc-600",
+            title: "\u5C06\u89D2\u8272\u8D44\u6599\u5BFC\u51FA\u4E3A JSON \u6587\u4EF6",
+            children: [
+              /* @__PURE__ */ jsx17(DownloadIcon, { className: "w-4 h-4" }),
+              /* @__PURE__ */ jsx17("span", { className: "whitespace-nowrap", children: "\u5BFC\u51FA" })
+            ]
+          }
+        ),
+        /* @__PURE__ */ jsxs16(
+          "button",
+          {
+            onClick: handleImportClick,
+            className: "flex items-center justify-center gap-1.5 px-4 py-2 text-sm font-semibold text-gray-700 bg-white border border-gray-300 rounded-lg shadow-sm hover:bg-gray-50 transition-colors dark:bg-zinc-700 dark:text-zinc-200 dark:border-zinc-600 dark:hover:bg-zinc-600",
+            title: "\u4ECE JSON \u6587\u4EF6\u5BFC\u5165\u89D2\u8272\u8D44\u6599",
+            children: [
+              /* @__PURE__ */ jsx17(UploadIcon, { className: "w-4 h-4" }),
+              /* @__PURE__ */ jsx17("span", { className: "whitespace-nowrap", children: "\u5BFC\u5165" })
+            ]
+          }
+        ),
+        /* @__PURE__ */ jsx17(
+          "button",
+          {
+            onClick: handleSaveCharacter,
+            disabled: saveStatus === "saved",
+            className: `flex items-center justify-center gap-1.5 px-4 py-2 text-sm font-semibold rounded-lg shadow-sm transition-all ${saveStatus === "saved" ? "bg-green-600 text-white cursor-default" : "bg-gray-800 text-white hover:bg-gray-900 dark:bg-slate-100 dark:text-gray-800 dark:hover:bg-slate-200"}`,
+            title: "\u5C06\u5F53\u524D\u89D2\u8272\u4FDD\u5B58\u5230\u6545\u4E8B\u5B58\u6863",
+            children: saveStatus === "saved" ? /* @__PURE__ */ jsx17("span", { className: "whitespace-nowrap", children: "\u2713 \u5DF2\u4FDD\u5B58" }) : /* @__PURE__ */ jsxs16(Fragment4, { children: [
+              /* @__PURE__ */ jsx17(ArchiveBoxIcon, { className: "w-4 h-4" }),
+              /* @__PURE__ */ jsx17("span", { className: "whitespace-nowrap", children: "\u4FDD\u5B58" })
+            ] })
+          }
+        ),
+        /* @__PURE__ */ jsxs16(
+          "button",
+          {
+            onClick: onClearAll,
+            className: "flex items-center justify-center gap-1.5 px-4 py-2 text-sm font-semibold text-gray-700 bg-white border border-gray-300 rounded-lg shadow-sm hover:bg-gray-50 transition-colors dark:bg-zinc-700 dark:text-zinc-200 dark:border-zinc-600 dark:hover:bg-zinc-600",
+            title: "\u6E05\u7A7A\u6240\u6709\u5B57\u6BB5",
+            children: [
+              /* @__PURE__ */ jsx17(TrashIcon, { className: "w-4 h-4" }),
+              /* @__PURE__ */ jsx17("span", { className: "whitespace-nowrap", children: "\u6E05\u7A7A" })
+            ]
+          }
+        )
+      ] })
+    ] }),
+    /* @__PURE__ */ jsx17("div", { className: "flex-grow overflow-y-auto custom-scrollbar -mr-6 pr-6", children: /* @__PURE__ */ jsx17("div", { className: "bg-white p-8 rounded-xl border border-gray-200 shadow-sm dark:bg-zinc-800/50 dark:border-zinc-700", children: /* @__PURE__ */ jsxs16("form", { children: [
+      /* @__PURE__ */ jsxs16("div", { className: "mb-8", children: [
+        /* @__PURE__ */ jsx17("label", { htmlFor: "character-name", className: "block text-xl font-semibold text-gray-800 dark:text-zinc-100 mb-2", children: "\u89D2\u8272\u540D\u79F0" }),
+        /* @__PURE__ */ jsx17("p", { className: "text-sm text-gray-500 dark:text-zinc-400 mb-3", children: "\u4E3A\u4F60\u7684\u89D2\u8272\u8D77\u4E00\u4E2A\u72EC\u4E00\u65E0\u4E8C\u7684\u540D\u5B57\uFF0C\u5E76\u9009\u62E9\u5176\u5728\u6545\u4E8B\u4E2D\u7684\u5B9A\u4F4D\u3002" }),
+        /* @__PURE__ */ jsxs16("div", { className: "flex items-center gap-4", children: [
+          /* @__PURE__ */ jsxs16("div", { className: "relative", children: [
+            /* @__PURE__ */ jsx17(
+              "select",
+              {
+                id: "character-role",
+                name: "role",
+                value: profile.role || "\u5176\u4ED6\u89D2\u8272",
+                onChange: (e) => setProfile((prev) => ({ ...prev, role: e.target.value })),
+                className: "w-32 px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-400 bg-white dark:bg-zinc-700 dark:border-zinc-600 dark:text-white transition appearance-none",
+                children: CHARACTER_ROLES.map((role) => /* @__PURE__ */ jsx17("option", { value: role, children: role }, role))
+              }
+            ),
+            /* @__PURE__ */ jsx17("div", { className: "pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-500 dark:text-zinc-400", children: /* @__PURE__ */ jsx17("svg", { className: "fill-current h-4 w-4", xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 20 20", children: /* @__PURE__ */ jsx17("path", { d: "M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" }) }) })
+          ] }),
+          /* @__PURE__ */ jsx17(
+            "input",
+            {
+              id: "character-name",
+              name: "name",
+              type: "text",
+              value: profile.name,
+              onChange: (e) => setProfile((prev) => ({ ...prev, name: e.target.value })),
+              placeholder: "\u4F8B\u5982\uFF1A\u6797\u60CA\u7FBD\u3001\u827E\u8389\u4E9A\xB7\u53F2\u5854\u514B...",
+              className: "flex-grow px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-400 dark:bg-zinc-700 dark:border-zinc-600 dark:text-white transition"
+            }
+          )
+        ] })
+      ] }),
+      /* @__PURE__ */ jsxs16("div", { children: [
+        /* @__PURE__ */ jsx17(
+          FormField,
+          {
+            id: "image",
+            label: "\u7B2C\u4E00\u9636\u6BB5\uFF1A\u5F62\u8C61",
+            description: "\u4E3A\u89D2\u8272\u8BBE\u8BA1\u4E00\u4E2A\u9C9C\u660E\u7684\u7B2C\u4E00\u5370\u8C61\u3002\u5173\u952E\u5728\u4E8E<b>\u6253\u7834\u5E38\u89C4</b>\uFF0C\u8D4B\u4E88\u89D2\u8272\u4E00\u4E2A\u4E0E\u4F17\u4E0D\u540C\u7684\u7279\u8D28\u3001\u4E60\u60EF\u6216\u80CC\u666F\uFF0C\u8BA9\u4ED6/\u5979\u4ECE\u4E00\u5F00\u59CB\u5C31\u5145\u6EE1\u5438\u5F15\u529B\u3002",
+            value: profile.image,
+            onChange: handleChange,
+            placeholder: "\u4F8B\u5982\uFF1A\u4E00\u4E2A\u8EAB\u624B\u4E0D\u51E1\u7684\u7535\u8111\u9ED1\u5BA2\uFF0C\u5374\u6709\u4E25\u91CD\u7684\u793E\u4EA4\u6050\u60E7\u75C7\uFF1B\u4E00\u4F4D\u575A\u6301\u7D20\u98DF\u4E3B\u4E49\u7684\u5438\u8840\u9B3C\uFF1B\u4E00\u4E2A\u68A6\u60F3\u6210\u4E3A\u6447\u6EDA\u660E\u661F\u7684\u53E4\u4EE3\u4E66\u751F..."
+          }
+        ),
+        /* @__PURE__ */ jsxs16("div", { className: "flex items-center justify-start -mt-6 gap-2", children: [
+          /* @__PURE__ */ jsxs16(
+            "button",
+            {
+              type: "button",
+              onClick: handleAiGenerateDetails,
+              disabled: isAiGenerating,
+              className: "flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-gray-600 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors disabled:opacity-70 disabled:cursor-not-allowed dark:bg-zinc-600 dark:text-zinc-200 dark:hover:bg-zinc-500",
+              title: "AI\u5C06\u6839\u636E\u6240\u6709\u5DF2\u586B\u5199\u7684\u4FE1\u606F\uFF0C\u81EA\u52A8\u5B8C\u5584\u6574\u4E2A\u89D2\u8272\u8D44\u6599",
+              children: [
+                isAiGenerating ? /* @__PURE__ */ jsx17(Spinner_default, {}) : /* @__PURE__ */ jsx17(SparklesIcon, { className: "w-4 h-4 text-purple-400" }),
+                /* @__PURE__ */ jsx17("span", { children: "AI \u751F\u6210" })
+              ]
+            }
+          ),
+          /* @__PURE__ */ jsxs16("div", { ref: modelSelectRef, className: "relative w-40", children: [
+            /* @__PURE__ */ jsxs16(
+              "button",
+              {
+                type: "button",
+                onClick: () => setIsModelSelectOpen(!isModelSelectOpen),
+                disabled: isModelListLoading,
+                className: "w-full flex items-center justify-between pl-3 pr-2 py-1.5 text-xs bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-gray-500 focus:border-gray-500 disabled:opacity-60 disabled:bg-gray-100 transition-all dark:bg-zinc-700 dark:border-zinc-600 dark:text-zinc-100 dark:disabled:bg-zinc-600",
+                "aria-haspopup": "listbox",
+                "aria-expanded": isModelSelectOpen,
+                "aria-label": "\u9009\u62E9\u6A21\u578B",
+                children: [
+                  /* @__PURE__ */ jsx17("span", { className: "truncate", children: isModelListLoading ? "\u52A0\u8F7D\u4E2D..." : localModel || "\u9009\u62E9\u6A21\u578B" }),
+                  /* @__PURE__ */ jsx17("svg", { className: "fill-current h-4 w-4 opacity-50", xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 20 20", children: /* @__PURE__ */ jsx17("path", { d: "M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" }) })
+                ]
+              }
+            ),
+            isModelSelectOpen && /* @__PURE__ */ jsxs16("div", { className: "absolute z-10 mt-1 w-full bg-white dark:bg-zinc-700 rounded-md shadow-lg border border-gray-200 dark:border-zinc-600", children: [
+              /* @__PURE__ */ jsx17("div", { className: "p-2", children: /* @__PURE__ */ jsx17(
+                "input",
+                {
+                  type: "text",
+                  value: modelSearch,
+                  onChange: (e) => setModelSearch(e.target.value),
+                  placeholder: "\u641C\u7D22\u6A21\u578B...",
+                  className: "w-full px-2 py-1.5 text-sm border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-gray-500 focus:border-gray-500 dark:bg-zinc-600 dark:border-zinc-500 dark:text-white"
+                }
+              ) }),
+              /* @__PURE__ */ jsx17("ul", { className: "max-h-60 overflow-y-auto text-sm custom-scrollbar", role: "listbox", children: filteredModels.length > 0 ? filteredModels.map((modelName) => /* @__PURE__ */ jsx17(
+                "li",
+                {
+                  onClick: () => {
+                    setLocalModel(modelName);
+                    setIsModelSelectOpen(false);
+                    setModelSearch("");
+                  },
+                  className: `px-3 py-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-zinc-600 ${localModel === modelName ? "font-semibold text-blue-600 dark:text-blue-400" : ""}`,
+                  role: "option",
+                  "aria-selected": localModel === modelName,
+                  children: modelName
+                },
+                modelName
+              )) : /* @__PURE__ */ jsx17("li", { className: "px-3 py-2 text-gray-500 dark:text-zinc-400", children: isModelListLoading ? "\u52A0\u8F7D\u4E2D..." : "\u65E0\u5339\u914D\u6A21\u578B" }) })
+            ] })
+          ] })
+        ] })
+      ] }),
+      /* @__PURE__ */ jsxs16("div", { className: "mt-12", children: [
+        /* @__PURE__ */ jsx17("h2", { className: "text-2xl font-bold text-gray-800 dark:text-zinc-100 mb-4 pb-2 border-b-2 border-purple-200 dark:border-purple-800", children: "\u7B2C\u4E8C\u9636\u6BB5\uFF1A\u903B\u8F91" }),
+        /* @__PURE__ */ jsxs16("p", { className: "text-gray-600 dark:text-zinc-300 leading-relaxed mb-6", children: [
+          "\u5F62\u8C61\u53EA\u662F\u5916\u58F3\uFF0C\u903B\u8F91\u624D\u662F\u9AA8\u67B6\u3002\u5728\u8FD9\u91CC\uFF0C\u4F60\u9700\u8981\u4E3A\u89D2\u8272\u7684\u72EC\u7279\u4E4B\u5904\u5EFA\u7ACB\u5185\u5728\u7684\u884C\u4E3A\u51C6\u5219\uFF0C\u8BA9\u8BFB\u8005\u76F8\u4FE1\u2014\u2014",
+          /* @__PURE__ */ jsx17("b", { children: "\u4ED6/\u5979\u5C31\u662F\u4F1A\u8FD9\u4E48\u505A" }),
+          "\u3002"
+        ] }),
+        /* @__PURE__ */ jsxs16("div", { className: "grid grid-cols-1 md:grid-cols-2 md:gap-x-8", children: [
+          /* @__PURE__ */ jsx17(
+            FormField,
+            {
+              id: "selfAwareness",
+              label: "\u81EA\u6211\u610F\u8BC6",
+              description: "\u89D2\u8272\u7684\u6838\u5FC3\u884C\u4E3A\u6A21\u5F0F\u3002\u628A\u4ED6/\u5979\u4E22\u8FDB\u4EFB\u4F55\u4E00\u4E2A\u60C5\u5883\u4E2D\uFF0C\u4F60\u90FD\u80FD\u7ACB\u523B\u9884\u5224\u5176\u53CD\u5E94\u5417\uFF1F\u8FD9\u662F\u6210\u719F\u89D2\u8272\u7684\u6807\u5FD7\u3002",
+              value: profile.selfAwareness,
+              onChange: handleChange,
+              placeholder: "\u4F8B\u5982\uFF1A\u9047\u5230\u65E0\u6CD5\u89E3\u91CA\u7684\u8D85\u81EA\u7136\u73B0\u8C61\uFF0C\u4E00\u4E2A\u575A\u5B9A\u7684\u65E0\u795E\u8BBA\u8005\u79D1\u5B66\u5BB6\u4F1A\u8BD5\u56FE\u7528\u7269\u7406\u5B66\u89E3\u6784\u5B83\uFF0C\u800C\u4E00\u4E2A\u8654\u8BDA\u7684\u4FE1\u5F92\u5219\u4F1A\u5C06\u5176\u89C6\u4E3A\u795E\u8FF9\u3002"
+            }
+          ),
+          /* @__PURE__ */ jsx17(
+            FormField,
+            {
+              id: "reactionLogic",
+              label: "\u5408\u7406\u53CD\u5E94",
+              description: "\u884C\u4E3A\u5FC5\u987B\u7B26\u5408\u6027\u683C\u3002\u4E00\u4E2A\u89D2\u8272\u7684\u6BCF\u4E2A\u9009\u62E9\u90FD\u5E94\u690D\u6839\u4E8E\u5176\u7ECF\u5386\u3002\u53CD\u590D\u68C0\u67E5\uFF1A\u8FD9\u4E2A\u53CD\u5E94\u662F\u5426\u5938\u5F20\u6216\u5E73\u6DE1\uFF1F\u662F\u5426\u4E0E\u4E4B\u524D\u7684\u60C5\u8282\u77DB\u76FE\uFF1F",
+              value: profile.reactionLogic,
+              onChange: handleChange,
+              placeholder: "\u4F8B\u5982\uFF1A\u4E00\u4F4D\u8EAB\u7ECF\u767E\u6218\u3001\u51B7\u9177\u65E0\u60C5\u7684\u5C06\u519B\uFF0C\u5728\u6218\u573A\u4E0A\u4E3A\u4F55\u4F1A\u4E3A\u4E00\u4E2A\u654C\u65B9\u7684\u5C0F\u5175\u6C42\u60C5\uFF1F\u8FD9\u4E2A\u201C\u53CD\u5E38\u201D\u884C\u4E3A\u7684\u80CC\u540E\uFF0C\u662F\u5426\u9690\u85CF\u7740\u4E00\u6BB5\u4E0D\u4E3A\u4EBA\u77E5\u7684\u5F80\u4E8B\uFF1F"
+            }
+          )
+        ] }),
+        /* @__PURE__ */ jsx17(
+          FormField,
+          {
+            id: "stakes",
+            label: "\u5229\u5BB3\u5173\u7CFB",
+            description: "\u89D2\u8272\u5E76\u975E\u5B64\u7ACB\u5B58\u5728\u3002\u4ED6\u4EEC\u4E4B\u95F4\u7684\u5173\u7CFB\u2014\u2014\u65E0\u8BBA\u662F\u5408\u4F5C\u3001\u7ADE\u4E89\u3001\u7231\u6155\u8FD8\u662F\u4EC7\u6068\u2014\u2014\u90FD\u662F\u9A71\u52A8\u60C5\u8282\u7684\u6838\u5FC3\u52A8\u529B\u3002",
+            value: profile.stakes,
+            onChange: handleChange,
+            placeholder: "\u4F8B\u5982\uFF1A\u4E24\u4F4D\u631A\u53CB\u56E0\u4FE1\u4EF0\u4E0D\u540C\u800C\u5206\u9053\u626C\u9573\uFF0C\u6700\u7EC8\u5175\u620E\u76F8\u89C1\uFF1B\u4E00\u4E2A\u4FA6\u63A2\u53D1\u73B0\u81EA\u5DF1\u8FFD\u67E5\u7684\u51F6\u624B\u7ADF\u662F\u81EA\u5DF1\u7684\u6069\u4EBA\uFF1B\u4E3A\u4E86\u62EF\u6551\u7231\u4EBA\uFF0C\u4E3B\u89D2\u5FC5\u987B\u4E0E\u6614\u65E5\u7684\u76DF\u53CB\u4E3A\u654C\u3002"
+          }
+        )
+      ] }),
+      /* @__PURE__ */ jsx17("div", { className: "mt-12", children: /* @__PURE__ */ jsx17(
+        FormField,
+        {
+          id: "emotion",
+          label: "\u7B2C\u4E09\u9636\u6BB5\uFF1A\u6838\u5FC3\u60C5\u7EEA",
+          description: "\u5982\u679C\u8BF4\u903B\u8F91\u662F\u9AA8\u67B6\uFF0C\u60C5\u7EEA\u5C31\u662F\u9A71\u52A8\u89D2\u8272\u7684\u8840\u6DB2\u3002\u4E3A\u4F60\u7684\u89D2\u8272\u6CE8\u5165\u4E00\u79CD\u5F3A\u70C8\u3001\u751A\u81F3\u662F\u504F\u6267\u7684\u6838\u5FC3\u60C5\u7EEA\uFF0C\u8FD9\u5C06\u6210\u4E3A\u4ED6/\u5979\u6240\u6709\u884C\u52A8\u7684\u6700\u7EC8\u89E3\u91CA\u3002",
+          value: profile.emotion,
+          onChange: handleChange,
+          placeholder: "\u4F8B\u5982\uFF1A\u5BF9\u590D\u4EC7\u7684\u6267\u5FF5\uFF0C\u53EF\u4EE5\u4E3A\u6B64\u727A\u7272\u4E00\u5207\uFF1B\u5BF9\u67D0\u4E2A\u76EE\u6807\u7684\u75C5\u6001\u8FFD\u6C42\uFF0C\u4E0D\u60DC\u4F17\u53DB\u4EB2\u79BB\uFF1B\u6E90\u4E8E\u7AE5\u5E74\u9634\u5F71\u7684\u6781\u5EA6\u81EA\u5351\uFF0C\u6216\u662F\u4E00\u79CD\u60F3\u8981\u8BC1\u660E\u81EA\u5DF1\u7684\u72C2\u70ED\u6E34\u671B\u3002"
+        }
+      ) }),
+      /* @__PURE__ */ jsxs16("div", { className: "mt-12", children: [
+        /* @__PURE__ */ jsx17("h2", { className: "text-2xl font-bold text-gray-800 dark:text-zinc-100 mb-4 pb-2 border-b-2 border-green-200 dark:border-green-800", children: "\u89D2\u8272\u8C03\u8282\u5668" }),
+        /* @__PURE__ */ jsx17("p", { className: "text-gray-600 dark:text-zinc-300 leading-relaxed mb-6", children: "\u8FD9\u662F\u4E00\u4E2A\u5B8F\u89C2\u89C6\u89D2\u4E0B\u7684\u89D2\u8272\u5E73\u8861\u5DE5\u5177\u3002\u901A\u8FC7\u8C03\u6574\u4EE5\u4E0B\u56DB\u4E2A\u7EF4\u5EA6\uFF0C\u4F60\u53EF\u4EE5\u5FEB\u901F\u5B9A\u4F4D\u89D2\u8272\u7684\u7C7B\u578B\uFF0C\u5E76\u53D1\u73B0\u6F5C\u5728\u7684\u5851\u9020\u7A7A\u95F4\u6216\u7F3A\u9677\u3002" }),
+        /* @__PURE__ */ jsxs16("div", { className: "grid grid-cols-1 md:grid-cols-2 md:gap-x-8 items-start", children: [
+          /* @__PURE__ */ jsx17(
+            FormField,
+            {
+              id: "likability",
+              label: "\u597D\u611F\u5EA6",
+              description: "\u5982\u4F55\u8BA9\u8BFB\u8005\u4E0E\u89D2\u8272\u4EA7\u751F\u5171\u9E23\uFF1F\u8D4B\u4E88\u5176\u4EE4\u4EBA\u94A6\u4F69\u7684\u54C1\u8D28\uFF08\u52C7\u6562\u3001\u8BDA\u5B9E\uFF09\uFF0C\u8BBE\u8BA1\u4E00\u4E2A\u80FD\u5F15\u53D1\u540C\u60C5\u7684\u80CC\u666F\u6216\u884C\u4E3A\uFF08\u201C\u6551\u732B\u54AA\u201D\u7406\u8BBA\uFF09\u3002",
+              value: profile.likability,
+              onChange: handleChange,
+              placeholder: "\u4F8B\u5982\uFF1A\u4E00\u4E2A\u6124\u4E16\u5AC9\u4FD7\u7684\u4FA6\u63A2\uFF0C\u5374\u4F1A\u4E3A\u8857\u8FB9\u7684\u5B64\u513F\u4E70\u4E00\u4E2A\u70ED\u9762\u5305\uFF1B\u89D2\u8272\u80CC\u8D1F\u7740\u5BB6\u65CF\u7684\u8840\u6D77\u6DF1\u4EC7\uFF1B\u4ED6/\u5979\u8EAB\u8FB9\u603B\u6709\u4E00\u7FA4\u613F\u4E3A\u5176\u4E24\u808B\u63D2\u5200\u7684\u670B\u53CB\u3002"
+            }
+          ),
+          /* @__PURE__ */ jsx17(
+            FormField,
+            {
+              id: "competence",
+              label: "\u80FD\u529B",
+              description: "\u89D2\u8272\u7684\u6838\u5FC3\u6280\u80FD\u662F\u4EC0\u4E48\uFF1F\u4E00\u4E2A\u6709\u8DA3\u7684\u89D2\u8272\u4E0D\u5E94\u662F\u5168\u80FD\u7684\uFF0C\u9002\u5F53\u7684\u201C\u65E0\u80FD\u201D\u9886\u57DF\u53CD\u800C\u80FD\u521B\u9020\u66F4\u591A\u620F\u5267\u6027\u3002",
+              value: profile.competence,
+              onChange: handleChange,
+              placeholder: "\u4F8B\u5982\uFF1A\u5353\u8D8A\u7684\u6218\u7565\u5BB6\uFF0C\u5584\u4E8E\u8A00\u8F9E\uFF1B\u80FD\u64CD\u63A7\u5F71\u5B50\u3002\u80FD\u529B\u53D7\u9650\u7684\u573A\u666F\uFF1A\u5728\u4E00\u4E2A\u5B8C\u5168\u6CA1\u6709\u5149\u7684\u5730\u65B9\uFF0C\u4ED6\u7684\u5F71\u5B50\u80FD\u529B\u5C06\u6BEB\u65E0\u7528\u5904\u3002"
+            }
+          ),
+          /* @__PURE__ */ jsx17(
+            FormField,
+            {
+              id: "proactivity",
+              label: "\u4E3B\u52A8\u6027",
+              description: "\u89D2\u8272\u662F\u63A8\u52A8\u60C5\u8282\uFF0C\u8FD8\u662F\u88AB\u60C5\u8282\u63A8\u52A8\uFF1F\u4E00\u4E2A\u4E3B\u52A8\u7684\u89D2\u8272\u62E5\u6709\u660E\u786E\u76EE\u6807\uFF0C\u80FD\u8BA9\u8BFB\u8005\u8FC5\u901F\u6295\u5165\u3002\u5BF9\u4E8E\u88AB\u52A8\u89D2\u8272\uFF0C\u9700\u8981\u4E0D\u65AD\u63D0\u9AD8\u98CE\u9669\u6765\u8FEB\u4F7F\u4ED6\u884C\u52A8\u3002",
+              value: profile.proactivity,
+              onChange: handleChange,
+              placeholder: "\u4F8B\u5982\uFF1A\u4E00\u4E2A\u53EA\u60F3\u8FC7\u5E73\u51E1\u751F\u6D3B\u7684\u519C\u592B\uFF0C\u5728\u5BB6\u56ED\u88AB\u6BC1\u540E\uFF0C\u4E3A\u4E86\u590D\u4EC7\u548C\u4FDD\u62A4\u5E78\u5B58\u8005\uFF0C\u4E0D\u5F97\u4E0D\u62FF\u8D77\u6B66\u5668\u3002\u5916\u90E8\u538B\u529B\u8FEB\u4F7F\u4ED6\u91C7\u53D6\u4E3B\u52A8\u3002"
+            }
+          ),
+          /* @__PURE__ */ jsx17(
+            FormField,
+            {
+              id: "power",
+              label: "\u9650\u5236",
+              description: "\u89D2\u8272\u7684\u5F31\u70B9\u6BD4\u8D85\u80FD\u529B\u66F4\u6709\u8DA3\u3002\u4E00\u4E2A\u89D2\u8272\u7684\u201C\u4E0D\u80FD\u505A\u4EC0\u4E48\u201D\u6BD4\u201C\u80FD\u505A\u4EC0\u4E48\u201D\u66F4\u80FD\u5851\u9020\u5176\u5F62\u8C61\u3002\u8BB0\u4F4F\uFF1A<b>\u9650\u5236 > \u80FD\u529B</b>\u3002",
+              value: profile.power,
+              onChange: handleChange,
+              placeholder: "\u4F8B\u5982\uFF1A\u4E00\u4E2A\u80FD\u9884\u77E5\u672A\u6765\u7684\u5148\u77E5\uFF0C\u5374\u65E0\u6CD5\u6539\u53D8\u81EA\u5DF1\u770B\u5230\u7684\u60B2\u5267\uFF1B\u4E00\u4E2A\u62E5\u6709\u4E0D\u6B7B\u4E4B\u8EAB\u7684\u89D2\u8272\uFF0C\u5374\u6E34\u671B\u4F53\u9A8C\u771F\u6B63\u7684\u6B7B\u4EA1\uFF1B\u4E00\u4E2A\u80FD\u64CD\u63A7\u65F6\u95F4\u7684\u523A\u5BA2\uFF0C\u4F46\u6BCF\u6B21\u4F7F\u7528\u80FD\u529B\u90FD\u4F1A\u52A0\u901F\u81EA\u5DF1\u7684\u8870\u8001\u3002"
+            }
+          )
+        ] })
+      ] })
+    ] }) }) }),
+    isPreviewOpen && /* @__PURE__ */ jsx17(CharacterPreviewModal, { profile, onClose: () => setIsPreviewOpen(false), onSave: setProfile }),
+    /* @__PURE__ */ jsx17(
+      "input",
+      {
+        type: "file",
+        ref: importFileRef,
+        onChange: handleFileImport,
+        accept: "application/json",
+        className: "hidden"
+      }
+    )
+  ] });
+};
+var CharacterShapingView_default = CharacterShapingView;
+
 // App.tsx
 init_types();
 init_icons();
-import { jsx as jsx17, jsxs as jsxs16 } from "react/jsx-runtime";
+import { jsx as jsx18, jsxs as jsxs17 } from "react/jsx-runtime";
 var loadAndMigrateChatHistory = (key, defaultMessage) => {
   try {
     const saved = localStorage.getItem(key);
@@ -5339,8 +6175,8 @@ var loadAndMigrateChatHistory = (key, defaultMessage) => {
   }
 };
 var App = () => {
-  const [view, setView] = useState11("writer");
-  const [outline, setOutline] = useState11(() => {
+  const [view, setView] = useState12("writer");
+  const [outline, setOutline] = useState12(() => {
     try {
       return localStorage.getItem("storyOutline") || "";
     } catch (e) {
@@ -5348,8 +6184,8 @@ var App = () => {
       return "";
     }
   });
-  const [isGenerating, setIsGenerating] = useState11(false);
-  const [config, setConfig] = useState11(() => {
+  const [isGenerating, setIsGenerating] = useState12(false);
+  const [config, setConfig] = useState12(() => {
     const defaultConfig = {
       provider: "gemini",
       apiKey: "",
@@ -5401,17 +6237,25 @@ var App = () => {
       return defaultConfig;
     }
   });
-  const [novelInfo, setNovelInfo] = useState11(() => {
-    const defaultState = { name: "", wordCount: "", synopsis: "", perspective: "", channel: "", emotion: "\u65E0" };
+  const [novelInfo, setNovelInfo] = useState12(() => {
+    const defaultState = { name: "", wordCount: "", synopsis: "", perspective: "", channel: "", emotion: "\u65E0", characterProfileIds: [] };
     try {
       const savedInfo = localStorage.getItem("novelInfo");
-      return savedInfo ? { ...defaultState, ...JSON.parse(savedInfo) } : defaultState;
+      if (savedInfo) {
+        const parsed = JSON.parse(savedInfo);
+        if (parsed.characterProfileId && !parsed.characterProfileIds) {
+          parsed.characterProfileIds = [parsed.characterProfileId];
+          delete parsed.characterProfileId;
+        }
+        return { ...defaultState, ...parsed };
+      }
+      return defaultState;
     } catch (error) {
       console.error("Failed to parse novel info from localStorage", error);
       return defaultState;
     }
   });
-  const [selectedCardIds, setSelectedCardIds] = useState11(() => {
+  const [selectedCardIds, setSelectedCardIds] = useState12(() => {
     try {
       const savedIds = localStorage.getItem("selectedCardIds");
       const defaultState = {
@@ -5453,7 +6297,7 @@ var App = () => {
       };
     }
   });
-  const [customCards, setCustomCards] = useState11(() => {
+  const [customCards, setCustomCards] = useState12(() => {
     try {
       const savedCards = localStorage.getItem("customCards");
       return savedCards ? JSON.parse(savedCards) : [];
@@ -5462,7 +6306,7 @@ var App = () => {
       return [];
     }
   });
-  const [inspirationCards, setInspirationCards] = useState11(() => {
+  const [inspirationCards, setInspirationCards] = useState12(() => {
     try {
       const saved = localStorage.getItem("inspirationCards");
       if (saved) {
@@ -5477,7 +6321,7 @@ var App = () => {
       return DEFAULT_INSPIRATION_DATA;
     }
   });
-  const [uiSettings, setUISettings] = useState11(() => {
+  const [uiSettings, setUISettings] = useState12(() => {
     const defaultSettings = {
       theme: "light",
       editorFontFamily: "sans-serif",
@@ -5492,14 +6336,14 @@ var App = () => {
       return defaultSettings;
     }
   });
-  const [currentStoryId, setCurrentStoryId] = useState11(() => {
+  const [currentStoryId, setCurrentStoryId] = useState12(() => {
     try {
       return localStorage.getItem("currentStoryId") || null;
     } catch {
       return null;
     }
   });
-  const [storyArchive, setStoryArchive] = useState11(() => {
+  const [storyArchive, setStoryArchive] = useState12(() => {
     try {
       const saved = localStorage.getItem("storyArchive");
       return saved ? JSON.parse(saved) : [];
@@ -5507,7 +6351,7 @@ var App = () => {
       return [];
     }
   });
-  const [savedCombinations, setSavedCombinations] = useState11(() => {
+  const [savedCombinations, setSavedCombinations] = useState12(() => {
     try {
       const saved = localStorage.getItem("savedCombinations");
       return saved ? JSON.parse(saved) : [];
@@ -5515,13 +6359,13 @@ var App = () => {
       return [];
     }
   });
-  const [assistantHistory, setAssistantHistory] = useState11(
+  const [assistantHistory, setAssistantHistory] = useState12(
     () => loadAndMigrateChatHistory("assistantHistory", { id: `sys-asst-${Date.now()}`, role: "system", content: "\u60A8\u53EF\u4EE5\u901A\u8FC7\u5BF9\u8BDD\u6765\u4FEE\u6539\u548C\u5B8C\u5584\u5927\u7EB2\u3002" })
   );
-  const [chatHistory, setChatHistory] = useState11(
+  const [chatHistory, setChatHistory] = useState12(
     () => loadAndMigrateChatHistory("chatHistory", { id: `sys-chat-${Date.now()}`, role: "system", content: "\u60A8\u53EF\u4EE5\u50CF\u548C\u670B\u53CB\u4E00\u6837\u4E0E AI \u804A\u5929\u3002" })
   );
-  const [topics, setTopics] = useState11(() => {
+  const [topics, setTopics] = useState12(() => {
     try {
       const savedTopicsRaw = localStorage.getItem("topics");
       let currentTopics = savedTopicsRaw ? JSON.parse(savedTopicsRaw) : [];
@@ -5554,42 +6398,71 @@ var App = () => {
       return [];
     }
   });
-  useEffect8(() => {
+  const defaultCharacterProfile = {
+    role: "\u5176\u4ED6\u89D2\u8272",
+    name: "",
+    image: "",
+    selfAwareness: "",
+    reactionLogic: "",
+    stakes: "",
+    emotion: "",
+    likability: "",
+    competence: "",
+    proactivity: "",
+    power: ""
+  };
+  const [characterProfile, setCharacterProfile] = useState12(() => {
+    try {
+      const saved = localStorage.getItem("characterProfile");
+      return saved ? { ...defaultCharacterProfile, ...JSON.parse(saved) } : defaultCharacterProfile;
+    } catch (error) {
+      console.error("Failed to parse character profile from localStorage", error);
+      return defaultCharacterProfile;
+    }
+  });
+  useEffect9(() => {
+    try {
+      localStorage.setItem("characterProfile", JSON.stringify(characterProfile));
+    } catch (e) {
+      console.error("Failed to save character profile", e);
+    }
+  }, [characterProfile]);
+  useEffect9(() => {
     try {
       localStorage.setItem("topics", JSON.stringify(topics));
     } catch (e) {
       console.error("Failed to save topics", e);
     }
   }, [topics]);
-  useEffect8(() => {
+  useEffect9(() => {
     try {
       localStorage.setItem("storyArchive", JSON.stringify(storyArchive));
     } catch (e) {
       console.error("Failed to save story archive", e);
     }
   }, [storyArchive]);
-  useEffect8(() => {
+  useEffect9(() => {
     try {
       localStorage.setItem("savedCombinations", JSON.stringify(savedCombinations));
     } catch (e) {
       console.error("Failed to save combinations", e);
     }
   }, [savedCombinations]);
-  useEffect8(() => {
+  useEffect9(() => {
     try {
       localStorage.setItem("assistantHistory", JSON.stringify(assistantHistory));
     } catch (e) {
       console.error("Failed to save assistant history", e);
     }
   }, [assistantHistory]);
-  useEffect8(() => {
+  useEffect9(() => {
     try {
       localStorage.setItem("chatHistory", JSON.stringify(chatHistory));
     } catch (e) {
       console.error("Failed to save chat history", e);
     }
   }, [chatHistory]);
-  useEffect8(() => {
+  useEffect9(() => {
     try {
       if (currentStoryId) {
         localStorage.setItem("currentStoryId", currentStoryId);
@@ -5600,7 +6473,7 @@ var App = () => {
       console.error("Failed to save current story ID", e);
     }
   }, [currentStoryId]);
-  useEffect8(() => {
+  useEffect9(() => {
     try {
       localStorage.setItem("uiSettings", JSON.stringify(uiSettings));
       document.documentElement.classList.toggle("dark", uiSettings.theme === "dark");
@@ -5608,7 +6481,7 @@ var App = () => {
       console.error("Failed to save UI settings to localStorage", error);
     }
   }, [uiSettings]);
-  useEffect8(() => {
+  useEffect9(() => {
     try {
       const cardsToSave = customCards.map(({ icon, ...rest }) => rest);
       localStorage.setItem("customCards", JSON.stringify(cardsToSave));
@@ -5616,17 +6489,17 @@ var App = () => {
       console.error("Failed to save custom cards to localStorage", error);
     }
   }, [customCards]);
-  useEffect8(() => {
+  useEffect9(() => {
     try {
       localStorage.setItem("inspirationCards", JSON.stringify(inspirationCards));
     } catch (error) {
       console.error("Failed to save inspiration cards to localStorage", error);
     }
   }, [inspirationCards]);
-  const allCards = useMemo5(() => {
+  const allCards = useMemo6(() => {
     const rehydratedCustomCards = customCards.map((card) => ({
       ...card,
-      icon: /* @__PURE__ */ jsx17(SparklesIcon, { className: "w-6 h-6" })
+      icon: /* @__PURE__ */ jsx18(SparklesIcon, { className: "w-6 h-6" })
     }));
     const transformedInspirationCards = inspirationCards.flatMap(
       (category) => category.items.map((item) => ({
@@ -5635,34 +6508,34 @@ var App = () => {
         name: item.title,
         description: item.description,
         tooltipText: item.description,
-        icon: /* @__PURE__ */ jsx17(LightbulbIcon, { className: "w-6 h-6" }),
+        icon: /* @__PURE__ */ jsx18(LightbulbIcon, { className: "w-6 h-6" }),
         isCustom: item.isCustom
       }))
     );
     return [...DEFAULT_CARDS, ...rehydratedCustomCards, ...transformedInspirationCards];
   }, [customCards, inspirationCards]);
-  useEffect8(() => {
+  useEffect9(() => {
     try {
       localStorage.setItem("aiConfig", JSON.stringify(config));
     } catch (error) {
       console.error("Failed to save AI config to localStorage", error);
     }
   }, [config]);
-  useEffect8(() => {
+  useEffect9(() => {
     try {
       localStorage.setItem("novelInfo", JSON.stringify(novelInfo));
     } catch (error) {
       console.error("Failed to save novel info to localStorage", error);
     }
   }, [novelInfo]);
-  useEffect8(() => {
+  useEffect9(() => {
     try {
       localStorage.setItem("selectedCardIds", JSON.stringify(selectedCardIds));
     } catch (error) {
       console.error("Failed to save selected card IDs to localStorage", error);
     }
   }, [selectedCardIds]);
-  const combinedCards = useMemo5(() => {
+  const combinedCards = useMemo6(() => {
     const rehydratedCards = {};
     for (const type in selectedCardIds) {
       const cardType = type;
@@ -5725,6 +6598,7 @@ var App = () => {
     } else {
       const newArchiveItem = {
         id: `story-${Date.now()}`,
+        type: "story",
         novelInfo: novelInfoForArchive,
         outline,
         lastModified: Date.now()
@@ -5733,13 +6607,65 @@ var App = () => {
       setCurrentStoryId(newArchiveItem.id);
     }
   }, [currentStoryId, novelInfo, outline, storyArchive]);
+  const handleSaveCharacter = useCallback5(() => {
+    if (!characterProfile.name.trim()) {
+      alert("\u89D2\u8272\u540D\u79F0\u4E0D\u80FD\u4E3A\u7A7A\u3002");
+      return;
+    }
+    const description = [characterProfile.image, characterProfile.emotion, characterProfile.competence].filter(Boolean).join(" | ");
+    const novelInfoForArchive = {
+      name: characterProfile.name.trim(),
+      synopsis: description || "\u6682\u65E0\u63CF\u8FF0",
+      wordCount: "",
+      channel: "",
+      emotion: "",
+      characterProfileIds: []
+    };
+    const existingIndex = currentStoryId ? storyArchive.findIndex((item) => item.id === currentStoryId && item.type === "character") : -1;
+    if (existingIndex !== -1) {
+      const updatedArchive = [...storyArchive];
+      updatedArchive[existingIndex] = {
+        ...updatedArchive[existingIndex],
+        novelInfo: novelInfoForArchive,
+        characterProfile,
+        lastModified: Date.now()
+      };
+      updatedArchive.sort((a, b) => b.lastModified - a.lastModified);
+      setStoryArchive(updatedArchive);
+      alert(`\u89D2\u8272 \u201C${characterProfile.name}\u201D \u5DF2\u66F4\u65B0\u3002`);
+    } else {
+      const newArchiveItem = {
+        id: `character-${Date.now()}`,
+        type: "character",
+        novelInfo: novelInfoForArchive,
+        characterProfile,
+        outline: "",
+        lastModified: Date.now()
+      };
+      setStoryArchive((prev) => [newArchiveItem, ...prev].sort((a, b) => b.lastModified - a.lastModified));
+      setCurrentStoryId(newArchiveItem.id);
+      alert(`\u89D2\u8272 \u201C${characterProfile.name}\u201D \u5DF2\u4FDD\u5B58\u81F3\u5B58\u6863\u3002`);
+    }
+  }, [characterProfile, currentStoryId, storyArchive]);
   const handleLoadStory = useCallback5((storyId) => {
     const storyToLoad = storyArchive.find((item) => item.id === storyId);
     if (storyToLoad) {
-      setCurrentStoryId(storyToLoad.id);
-      setNovelInfo(storyToLoad.novelInfo);
-      setAndPersistOutline(storyToLoad.outline);
-      setView("result");
+      const type = storyToLoad.type || "story";
+      if (type === "character" && storyToLoad.characterProfile) {
+        const completeProfile = {
+          ...defaultCharacterProfile,
+          ...storyToLoad.characterProfile,
+          name: storyToLoad.novelInfo.name
+        };
+        setCurrentStoryId(storyToLoad.id);
+        setCharacterProfile(completeProfile);
+        setView("characterShaping");
+      } else {
+        setCurrentStoryId(storyToLoad.id);
+        setNovelInfo(storyToLoad.novelInfo);
+        setAndPersistOutline(storyToLoad.outline);
+        setView("result");
+      }
     }
   }, [storyArchive, setAndPersistOutline]);
   const handleDeleteStory = useCallback5((storyId) => {
@@ -5747,7 +6673,7 @@ var App = () => {
       setStoryArchive((prev) => prev.filter((item) => item.id !== storyId));
       if (currentStoryId === storyId) {
         setCurrentStoryId(null);
-        setNovelInfo({ name: "", wordCount: "", synopsis: "", perspective: "", channel: "", emotion: "\u65E0" });
+        setNovelInfo({ name: "", wordCount: "", synopsis: "", perspective: "", channel: "", emotion: "\u65E0", characterProfileIds: [] });
         setAndPersistOutline("");
       }
     }
@@ -5795,7 +6721,7 @@ var App = () => {
     const newCard = {
       ...newCardData,
       id: `custom-${Date.now()}`,
-      icon: /* @__PURE__ */ jsx17(SparklesIcon, { className: "w-6 h-6" }),
+      icon: /* @__PURE__ */ jsx18(SparklesIcon, { className: "w-6 h-6" }),
       isCustom: true
     };
     setCustomCards((prev) => [...prev, newCard]);
@@ -5926,10 +6852,16 @@ var App = () => {
       });
     }
   }, [allCards]);
+  const handleClearCharacterForm = useCallback5(() => {
+    if (window.confirm("\u60A8\u786E\u5B9A\u8981\u6E05\u7A7A\u6240\u6709\u89D2\u8272\u5851\u9020\u4FE1\u606F\u5417\uFF1F\u6B64\u64CD\u4F5C\u65E0\u6CD5\u64A4\u9500\u3002")) {
+      setCurrentStoryId(null);
+      setCharacterProfile(defaultCharacterProfile);
+    }
+  }, [defaultCharacterProfile]);
   const renderView = () => {
     switch (view) {
       case "writer":
-        return /* @__PURE__ */ jsx17(
+        return /* @__PURE__ */ jsx18(
           WriterView_default,
           {
             config,
@@ -5950,11 +6882,12 @@ var App = () => {
             savedCombinations,
             onSaveCombination: handleSaveCombination,
             onLoadCombination: handleLoadCombination,
-            onDeleteCombination: handleDeleteCombination
+            onDeleteCombination: handleDeleteCombination,
+            storyArchive
           }
         );
       case "result":
-        return /* @__PURE__ */ jsx17(
+        return /* @__PURE__ */ jsx18(
           ResultView_default,
           {
             outline,
@@ -5972,11 +6905,12 @@ var App = () => {
             assistantHistory,
             setAssistantHistory,
             chatHistory,
-            setChatHistory
+            setChatHistory,
+            storyArchive
           }
         );
       case "inspiration":
-        return /* @__PURE__ */ jsx17(
+        return /* @__PURE__ */ jsx18(
           InspirationView_default,
           {
             inspirationCards,
@@ -5989,7 +6923,7 @@ var App = () => {
           }
         );
       case "tips":
-        return /* @__PURE__ */ jsx17(
+        return /* @__PURE__ */ jsx18(
           TipsView_default,
           {
             topics,
@@ -5998,8 +6932,19 @@ var App = () => {
             storyArchive
           }
         );
+      case "characterShaping":
+        return /* @__PURE__ */ jsx18(
+          CharacterShapingView_default,
+          {
+            profile: characterProfile,
+            setProfile: setCharacterProfile,
+            config,
+            onSaveCharacter: handleSaveCharacter,
+            onClearAll: handleClearCharacterForm
+          }
+        );
       case "archive":
-        return /* @__PURE__ */ jsx17(
+        return /* @__PURE__ */ jsx18(
           ArchiveView_default,
           {
             archive: storyArchive,
@@ -6008,7 +6953,7 @@ var App = () => {
           }
         );
       case "settings":
-        return /* @__PURE__ */ jsx17(
+        return /* @__PURE__ */ jsx18(
           SettingsView_default,
           {
             currentConfig: config,
@@ -6018,9 +6963,9 @@ var App = () => {
           }
         );
       case "about":
-        return /* @__PURE__ */ jsx17(AboutView_default, {});
+        return /* @__PURE__ */ jsx18(AboutView_default, {});
       default:
-        return /* @__PURE__ */ jsx17(
+        return /* @__PURE__ */ jsx18(
           WriterView_default,
           {
             config,
@@ -6041,25 +6986,26 @@ var App = () => {
             savedCombinations,
             onSaveCombination: handleSaveCombination,
             onLoadCombination: handleLoadCombination,
-            onDeleteCombination: handleDeleteCombination
+            onDeleteCombination: handleDeleteCombination,
+            storyArchive
           }
         );
     }
   };
-  return /* @__PURE__ */ jsxs16("div", { className: "h-screen flex overflow-hidden bg-slate-50 dark:bg-zinc-900", children: [
-    /* @__PURE__ */ jsx17(Sidebar_default, { currentView: view, setView }),
-    /* @__PURE__ */ jsx17("main", { className: "flex-1 p-6 sm:p-8 lg:p-10 flex flex-col", children: renderView() })
+  return /* @__PURE__ */ jsxs17("div", { className: "h-screen flex overflow-hidden bg-slate-50 dark:bg-zinc-900", children: [
+    /* @__PURE__ */ jsx18(Sidebar_default, { currentView: view, setView }),
+    /* @__PURE__ */ jsx18("main", { className: "flex-1 p-6 sm:p-8 lg:p-10 flex flex-col", children: renderView() })
   ] });
 };
 var App_default = App;
 
 // index.tsx
-import { jsx as jsx18 } from "react/jsx-runtime";
+import { jsx as jsx19 } from "react/jsx-runtime";
 var rootElement = document.getElementById("root");
 if (!rootElement) {
   throw new Error("Could not find root element to mount to");
 }
 var root = ReactDOM.createRoot(rootElement);
 root.render(
-  /* @__PURE__ */ jsx18(React14.StrictMode, { children: /* @__PURE__ */ jsx18(App_default, {}) })
+  /* @__PURE__ */ jsx19(React15.StrictMode, { children: /* @__PURE__ */ jsx19(App_default, {}) })
 );

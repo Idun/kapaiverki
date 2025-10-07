@@ -171,19 +171,14 @@ const SettingsView: React.FC<SettingsViewProps> = ({ currentConfig, onSave, curr
     const handleProviderChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const newProvider = e.target.value as AIProvider;
         const defaults = PROVIDER_DEFAULTS[newProvider];
-        
-        const preservedApiKey = (config.provider === 'ollama' && newProvider !== 'ollama')
-            ? '' // If coming from Ollama, start with a fresh key field.
-            : config.apiKey;
-
+    
         setConfig(prev => ({
             ...prev,
             provider: newProvider,
             model: '',
             endpoint: defaults.endpoint,
-            apiKey: newProvider === 'ollama' ? '' : preservedApiKey,
         }));
-
+    
         setTestResult({ status: 'idle', message: '' });
         setModelList([]);
     };
@@ -285,13 +280,13 @@ const SettingsView: React.FC<SettingsViewProps> = ({ currentConfig, onSave, curr
                                         <option value="custom">自定义 (OpenAI 兼容)</option>
                                     </select>
                                 </InputField>
-                                
+
                                 {config.provider !== 'ollama' && (
                                     <InputField label="API 密钥" id="apiKey">
                                         <input
                                             id="apiKey"
                                             type="password"
-                                            value={config.apiKey}
+                                            value={config.apiKey || ''}
                                             onChange={(e) => setConfig(prev => ({ ...prev, apiKey: e.target.value }))}
                                             className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-gray-500 focus:border-gray-500 dark:bg-zinc-700 dark:border-zinc-600 dark:text-white"
                                             placeholder="输入您的 API 密钥"

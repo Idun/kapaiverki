@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useCallback, useEffect, useRef } from 'react';
-import type { Card, CombinedCards, AIConfig, CardType, NovelInfo, UISettings, SavedCombination, PromptTemplate } from '../types';
+import type { Card, CombinedCards, AIConfig, CardType, NovelInfo, UISettings, SavedCombination, PromptTemplate, StoryArchiveItem, CharacterRole } from '../types';
 import { CardType as CardTypeEnum } from '../types';
 import { CORE_CARD_TYPES, CARD_TYPE_NAMES, OPTIONAL_CARD_TYPES } from '../constants';
 import { fetchModels } from '../services/aiService';
@@ -8,7 +8,7 @@ import CardCarousel from './CardCarousel';
 import CardSlot from './CardSlot';
 import Spinner from './Spinner';
 import CreateCardModal from './CreateCardModal';
-import { PlusIcon, UploadIcon, TrashIcon, BookmarkSquareIcon, ArrowDownOnSquareIcon } from './icons';
+import { PlusIcon, UploadIcon, TrashIcon, BookmarkSquareIcon, ArrowDownOnSquareIcon, ChevronDownIcon } from './icons';
 
 
 interface WriterViewProps {
@@ -31,6 +31,7 @@ interface WriterViewProps {
     onSaveCombination: (name: string) => void;
     onLoadCombination: (id: string) => void;
     onDeleteCombination: (id: string) => void;
+    storyArchive: StoryArchiveItem[];
 }
 
 const LENGTH_PRESETS: Record<string, string> = {
@@ -59,7 +60,8 @@ const WriterView: React.FC<WriterViewProps> = ({
     config, setConfig, onStartGeneration, combinedCards, onCardSelect, 
     onClearCard, onAddCardSlot, onRemoveCardSlot, novelInfo, setNovelInfo, 
     allCards, onCreateCard, onUpdateCard, onDeleteCard, uiSettings,
-    savedCombinations, onSaveCombination, onLoadCombination, onDeleteCombination
+    savedCombinations, onSaveCombination, onLoadCombination, onDeleteCombination,
+    storyArchive
 }) => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [activeDragType, setActiveDragType] = useState<CardType | null>(null);
@@ -71,10 +73,44 @@ const WriterView: React.FC<WriterViewProps> = ({
     const [isModelListLoading, setIsModelListLoading] = useState(false);
     const [isModelSelectOpen, setIsModelSelectOpen] = useState(false);
     const [isCombinationManagerOpen, setIsCombinationManagerOpen] = useState(false);
+    const [isCharacterSelectOpen, setIsCharacterSelectOpen] = useState(false);
     const [modelSearch, setModelSearch] = useState('');
     const modelSelectRef = useRef<HTMLDivElement>(null);
     const combinationManagerRef = useRef<HTMLDivElement>(null);
+    const characterSelectRef = useRef<HTMLDivElement>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
+
+    const characterProfiles = useMemo(() => 
+        storyArchive.filter(item => item.type === 'character'), 
+    [storyArchive]);
+
+    const groupedCharacters = useMemo(() => {
+        const roleOrder: CharacterRole[] = ['男主角', '女主角', '男二', '女二', '反派', '配角', '其他角色'];
+        const groups: { [key in CharacterRole | string]?: StoryArchiveItem[] } = {};
+    
+        characterProfiles.forEach(charItem => {
+            const role = charItem.characterProfile?.role || '其他角色';
+            if (!groups[role]) {
+                groups[role] = [];
+            }
+            groups[role]!.push(charItem);
+        });
+        
+        const orderedGroups: Array<{ role: string, characters: StoryArchiveItem[] }> = [];
+        roleOrder.forEach(role => {
+            if (groups[role]) {
+                orderedGroups.push({ role, characters: groups[role]! });
+            }
+        });
+    
+        Object.keys(groups).forEach(role => {
+            if (!roleOrder.includes(role as CharacterRole)) {
+                orderedGroups.push({ role, characters: groups[role]! });
+            }
+        });
+    
+        return orderedGroups;
+    }, [characterProfiles]);
 
     const totalPanels = 2;
 
@@ -85,6 +121,9 @@ const WriterView: React.FC<WriterViewProps> = ({
             }
             if (combinationManagerRef.current && !combinationManagerRef.current.contains(event.target as Node)) {
                 setIsCombinationManagerOpen(false);
+            }
+            if (characterSelectRef.current && !characterSelectRef.current.contains(event.target as Node)) {
+                setIsCharacterSelectOpen(false);
             }
         };
         document.addEventListener('mousedown', handleClickOutside);
@@ -116,14 +155,10 @@ const WriterView: React.FC<WriterViewProps> = ({
         const loadModels = async () => {
             if (!config.provider) return;
 
-            // Don't fetch models if key/endpoint are missing, except for Ollama which doesn't need a key
-            if (config.provider !== 'ollama' && (!config.apiKey || !config.endpoint)) {
-                 if (config.provider === 'gemini' && config.apiKey) {
-                    // Gemini is a special case that doesn't need an endpoint check here
-                 } else {
-                    setModelList([]);
-                    return;
-                 }
+            // For providers other than Gemini and Ollama, an endpoint is required.
+            if (config.provider !== 'gemini' && config.provider !== 'ollama' && !config.endpoint) {
+                setModelList([]);
+                return;
             }
 
             setIsModelListLoading(true);
@@ -146,7 +181,7 @@ const WriterView: React.FC<WriterViewProps> = ({
         };
 
         loadModels();
-    }, [config.provider, config.apiKey, config.endpoint, setConfig]);
+    }, [config.provider, config.endpoint, setConfig]);
     
     const isGenerationReady = useMemo(() => {
         const coreCardsMet = CORE_CARD_TYPES.every(type => combinedCards[type]?.some(c => c !== null));
@@ -281,6 +316,16 @@ const WriterView: React.FC<WriterViewProps> = ({
         }
     };
 
+    const handleCharacterSelect = (characterId: string) => {
+        setNovelInfo(prev => {
+            const currentIds = prev.characterProfileIds || [];
+            const newIds = currentIds.includes(characterId)
+                ? currentIds.filter(id => id !== characterId)
+                : [...currentIds, characterId];
+            return { ...prev, characterProfileIds: newIds };
+        });
+    };
+
 
     return (
         <div className="w-full max-w-7xl mx-auto flex flex-col h-full">
@@ -355,7 +400,7 @@ const WriterView: React.FC<WriterViewProps> = ({
                         className="w-48 pl-3 pr-8 py-2 text-sm bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-gray-500 focus:border-gray-500 appearance-none transition-all dark:bg-zinc-700 dark:border-zinc-600 dark:text-zinc-100"
                         aria-label="选择提示词模板"
                     >
-                        {/* Fix: Add explicit type `PromptTemplate` to the map function's parameter to resolve TypeScript error. */}
+                        {/* FIX: Add explicit type `PromptTemplate` to the map function's parameter to resolve TypeScript error where it was inferred as `unknown`. */}
                         {config.prompts.map((prompt: PromptTemplate) => (
                             <option key={prompt.id} value={prompt.id}>
                                 {prompt.name}
@@ -484,6 +529,7 @@ const WriterView: React.FC<WriterViewProps> = ({
                                                     </select>
                                                 </div>
                                             </div>
+                                            
                                             <div className="grid grid-cols-2 gap-4">
                                                 <div>
                                                     <label htmlFor="length" className="block text-sm font-medium text-gray-600 mb-1 dark:text-zinc-300">篇幅 <span className="text-red-500">*</span></label>
@@ -503,21 +549,65 @@ const WriterView: React.FC<WriterViewProps> = ({
                                         <div className="flex flex-col flex-grow mt-4">
                                             <div className="flex justify-between items-center mb-1">
                                                 <label htmlFor="synopsis" className="block text-sm font-medium text-gray-600 dark:text-zinc-300">概要 <span className="text-red-500">*</span></label>
-                                                <button
-                                                    type="button"
-                                                    onClick={handleImportClick}
-                                                    className="p-1.5 text-gray-400 hover:text-gray-700 rounded-full hover:bg-gray-100 transition-colors dark:text-zinc-500 dark:hover:text-zinc-200 dark:hover:bg-zinc-700"
-                                                    title="导入本地文档"
-                                                >
-                                                    <UploadIcon className="w-4 h-4" />
-                                                </button>
-                                                <input
-                                                    type="file"
-                                                    ref={fileInputRef}
-                                                    onChange={handleFileImport}
-                                                    accept=".md,.txt"
-                                                    className="hidden"
-                                                />
+                                                <div className="flex items-center gap-2">
+                                                    <div ref={characterSelectRef} className="relative">
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => setIsCharacterSelectOpen(prev => !prev)}
+                                                            className="flex items-center gap-2 px-3 py-1.5 text-sm border border-gray-300 rounded-md shadow-sm bg-white hover:bg-gray-50 dark:bg-zinc-700 dark:border-zinc-600 dark:text-white dark:hover:bg-zinc-600"
+                                                        >
+                                                            <span>
+                                                                可选角色 {novelInfo.characterProfileIds && novelInfo.characterProfileIds.length > 0 ? `(${novelInfo.characterProfileIds.length})` : ''}
+                                                            </span>
+                                                            <ChevronDownIcon className="w-4 h-4 text-gray-400" />
+                                                        </button>
+                                                        {isCharacterSelectOpen && (
+                                                            <div className="absolute z-10 mt-1 w-64 bg-white dark:bg-zinc-800 rounded-md shadow-lg border border-gray-200 dark:border-zinc-700">
+                                                                <ul className="max-h-60 overflow-y-auto text-sm custom-scrollbar p-1 space-y-1">
+                                                                    {characterProfiles.length > 0 ? (
+                                                                        groupedCharacters.map(({ role, characters }) => (
+                                                                            <li key={role}>
+                                                                                <h4 className="px-2 pt-1 pb-0.5 text-xs font-bold text-gray-500 dark:text-zinc-400 sticky top-0 bg-white/80 dark:bg-zinc-800/80 backdrop-blur-sm">{role}</h4>
+                                                                                <ul className="pl-2">
+                                                                                    {characters.map(charItem => (
+                                                                                        <li key={charItem.id}>
+                                                                                            <label className="flex items-center w-full px-2 py-1.5 cursor-pointer hover:bg-gray-100 dark:hover:bg-zinc-700 rounded-md">
+                                                                                                <input
+                                                                                                    type="checkbox"
+                                                                                                    checked={novelInfo.characterProfileIds?.includes(charItem.id) || false}
+                                                                                                    onChange={() => handleCharacterSelect(charItem.id)}
+                                                                                                    className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                                                                                                />
+                                                                                                <span className="ml-3 text-gray-800 dark:text-zinc-200 truncate">{charItem.novelInfo.name}</span>
+                                                                                            </label>
+                                                                                        </li>
+                                                                                    ))}
+                                                                                </ul>
+                                                                            </li>
+                                                                        ))
+                                                                    ) : (
+                                                                        <li className="px-3 py-2 text-gray-500 dark:text-zinc-400">无可用角色</li>
+                                                                    )}
+                                                                </ul>
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                    <button
+                                                        type="button"
+                                                        onClick={handleImportClick}
+                                                        className="p-1.5 text-gray-400 hover:text-gray-700 rounded-full hover:bg-gray-100 transition-colors dark:text-zinc-500 dark:hover:text-zinc-200 dark:hover:bg-zinc-700"
+                                                        title="导入本地文档"
+                                                    >
+                                                        <UploadIcon className="w-4 h-4" />
+                                                    </button>
+                                                    <input
+                                                        type="file"
+                                                        ref={fileInputRef}
+                                                        onChange={handleFileImport}
+                                                        accept=".md,.txt"
+                                                        className="hidden"
+                                                    />
+                                                </div>
                                             </div>
                                             <textarea id="synopsis" value={novelInfo.synopsis} onChange={handleInfoChange} className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-gray-500 focus:border-gray-500 flex-grow dark:bg-zinc-700 dark:border-zinc-600 dark:text-white" placeholder="故事核心概念的一句话总结"></textarea>
                                         </div>

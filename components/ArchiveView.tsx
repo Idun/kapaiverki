@@ -1,7 +1,6 @@
-
 import React, { useState, useMemo } from 'react';
-import type { StoryArchiveItem } from '../types';
-import { TrashIcon } from './icons';
+import type { StoryArchiveItem, CharacterRole } from '../types';
+import { TrashIcon, DownloadIcon } from './icons';
 
 interface ArchiveViewProps {
     archive: StoryArchiveItem[];
@@ -19,7 +18,69 @@ const ArchiveCard: React.FC<{
         e.stopPropagation();
         onDelete();
     };
+
+    const handleExportClick = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        const type = item.type || 'story';
+        try {
+            if (type === 'story') {
+                const blob = new Blob([item.outline], { type: 'text/markdown;charset=utf-8' });
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                const downloadName = item.novelInfo.name ? `${item.novelInfo.name}.md` : 'story-outline.md';
+                link.href = url;
+                link.download = downloadName;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                URL.revokeObjectURL(url);
+            } else if (type === 'character') {
+                const content = JSON.stringify(item.characterProfile, null, 2);
+                const blob = new Blob([content], { type: 'application/json;charset=utf-8' });
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                const downloadName = item.novelInfo.name ? `${item.novelInfo.name}.json` : 'character-profile.json';
+                link.href = url;
+                link.download = downloadName;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                URL.revokeObjectURL(url);
+            }
+        } catch (error) {
+            console.error("Failed to export file:", error);
+            alert("导出文件失败！");
+        }
+    };
     
+    const isCharacter = item.type === 'character';
+    const labelText = isCharacter ? (item.characterProfile?.role || '角色') : '大纲';
+    
+    const getLabelStyle = () => {
+        if (!isCharacter) {
+            return 'bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-300'; // Story outline
+        }
+    
+        switch (item.characterProfile?.role) {
+            case '男主角':
+            case '女主角':
+                return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/40 dark:text-yellow-300';
+            case '反派':
+                return 'bg-red-100 text-red-800 dark:bg-red-900/40 dark:text-red-300';
+            case '男二':
+            case '女二':
+                return 'bg-purple-100 text-purple-800 dark:bg-purple-900/40 dark:text-purple-300';
+            case '配角':
+                return 'bg-gray-200 text-gray-800 dark:bg-zinc-700 dark:text-zinc-300';
+            case '其他角色':
+                 return 'bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-300';
+            default:
+                return 'bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-300'; // Default '角色'
+        }
+    };
+    
+    const labelStyle = getLabelStyle();
+
     return (
         <div 
             className="relative w-64 h-80 rounded-2xl overflow-hidden flex flex-col items-center justify-center transition-transform hover:scale-105 cursor-pointer group border border-gray-200 dark:border-zinc-700/50"
@@ -33,7 +94,8 @@ const ArchiveCard: React.FC<{
             {/* Card Content */}
             <div className="absolute top-1.5 left-1.5 w-[calc(100%-12px)] h-[calc(100%-12px)] z-[2] bg-white/80 backdrop-blur-xl rounded-xl overflow-hidden outline-2 outline-white p-4 flex flex-col justify-between dark:bg-zinc-800/80">
                 <div>
-                    <h3 className="font-bold text-lg text-gray-800 dark:text-zinc-100 break-words">{item.novelInfo.name}</h3>
+                    <span className={`px-2 py-0.5 text-xs font-bold rounded-full ${labelStyle}`}>{labelText}</span>
+                    <h3 className="font-bold text-lg text-gray-800 dark:text-zinc-100 break-words mt-2">{item.novelInfo.name}</h3>
                     <p className="text-xs text-gray-500 dark:text-zinc-400 mt-1">{new Date(item.lastModified).toLocaleString()}</p>
                 </div>
                 <p className="text-sm text-gray-600 dark:text-zinc-300 overflow-hidden text-ellipsis" style={{ display: '-webkit-box', WebkitLineClamp: 5, WebkitBoxOrient: 'vertical' }}>
@@ -41,15 +103,25 @@ const ArchiveCard: React.FC<{
                 </p>
             </div>
 
-            {/* Delete button */}
-            <button
-                onClick={handleDeleteClick}
-                className="absolute top-3 right-3 z-10 p-2 text-gray-400 hover:text-red-600 rounded-full bg-white/50 hover:bg-red-50 dark:bg-zinc-700/50 dark:hover:bg-red-900/50 opacity-0 group-hover:opacity-100 transition-opacity"
-                aria-label={`删除 ${item.novelInfo.name}`}
-                title="删除"
-            >
-                <TrashIcon className="w-4 h-4" />
-            </button>
+            {/* Action buttons */}
+            <div className="absolute top-3 right-3 z-10 flex items-center space-x-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                <button
+                    onClick={handleExportClick}
+                    className="p-2 text-gray-400 hover:text-blue-600 rounded-full bg-white/50 hover:bg-blue-50 dark:bg-zinc-700/50 dark:hover:bg-blue-900/50 dark:hover:text-blue-400"
+                    aria-label={`导出 ${item.novelInfo.name}`}
+                    title="导出"
+                >
+                    <DownloadIcon className="w-4 h-4" />
+                </button>
+                <button
+                    onClick={handleDeleteClick}
+                    className="p-2 text-gray-400 hover:text-red-600 rounded-full bg-white/50 hover:bg-red-50 dark:bg-zinc-700/50 dark:hover:bg-red-900/50 dark:hover:text-red-500"
+                    aria-label={`删除 ${item.novelInfo.name}`}
+                    title="删除"
+                >
+                    <TrashIcon className="w-4 h-4" />
+                </button>
+            </div>
         </div>
     );
 };

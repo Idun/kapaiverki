@@ -24,7 +24,7 @@ const AboutView: React.FC = () => {
                         </ul>
                     </div>
                     <div className="pt-4 text-center">
-                        <p className="text-xs text-gray-500 dark:text-zinc-400">版本: 1.1.0</p>
+                        <p className="text-xs text-gray-500 dark:text-zinc-400">版本: 1.1.1</p>
                     </div>
                 </div>
             </div>

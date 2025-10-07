@@ -129,7 +129,8 @@ const TipsView: React.FC<TipsViewProps> = ({ topics, setTopics, config, storyArc
         };
 
         loadModels();
-    }, [config.provider, config.apiKey, config.endpoint, config.model, config.assistantModel]);
+    // FIX: Removed `config.apiKey` from the dependency array as it does not exist on the `AIConfig` type and is handled by `process.env.API_KEY`.
+    }, [config.provider, config.endpoint, config.model, config.assistantModel]);
     
     // Effect to handle clicking outside the model selector dropdown
     useEffect(() => {

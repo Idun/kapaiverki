@@ -1,24 +1,21 @@
 
-
-
-
 import React from 'react';
-import { PenSparkleIcon, SettingsIcon, DocumentTextIcon, LightbulbIcon, InformationCircleIcon, ArchiveBoxIcon, QuestionMarkCircleIcon } from './icons';
+import { PenSparkleIcon, SettingsIcon, DocumentTextIcon, LightbulbIcon, InformationCircleIcon, ArchiveBoxIcon, QuestionMarkCircleIcon, CharacterIcon } from './icons';
 
 interface SidebarProps {
-    currentView: 'writer' | 'result' | 'inspiration' | 'settings' | 'about' | 'archive' | 'tips';
-    setView: (view: 'writer' | 'result' | 'inspiration' | 'settings' | 'about' | 'archive' | 'tips') => void;
+    currentView: 'writer' | 'result' | 'inspiration' | 'settings' | 'about' | 'archive' | 'tips' | 'characterShaping';
+    setView: (view: 'writer' | 'result' | 'inspiration' | 'settings' | 'about' | 'archive' | 'tips' | 'characterShaping') => void;
 }
 
 // Moved NavItem outside the Sidebar component to prevent re-creation on re-renders.
 const NavItem: React.FC<{
     label: string;
-    view: 'writer' | 'result' | 'inspiration' | 'settings' | 'about' | 'archive' | 'tips';
+    view: 'writer' | 'result' | 'inspiration' | 'settings' | 'about' | 'archive' | 'tips' | 'characterShaping';
     // FIX: Use React.ReactElement instead of JSX.Element to avoid namespace error
     // FIX: Specify props for ReactElement to allow cloning with className.
     icon: React.ReactElement<React.SVGProps<SVGSVGElement>>;
-    currentView: 'writer' | 'result' | 'inspiration' | 'settings' | 'about' | 'archive' | 'tips';
-    setView: (view: 'writer' | 'result' | 'inspiration' | 'settings' | 'about' | 'archive' | 'tips') => void;
+    currentView: 'writer' | 'result' | 'inspiration' | 'settings' | 'about' | 'archive' | 'tips' | 'characterShaping';
+    setView: (view: 'writer' | 'result' | 'inspiration' | 'settings' | 'about' | 'archive' | 'tips' | 'characterShaping') => void;
 }> = ({ label, view, icon, currentView, setView }) => {
     const isActive = currentView === view;
     return (
@@ -46,6 +43,7 @@ const Sidebar: React.FC<SidebarProps> = ({ currentView, setView }) => {
                  <NavItem label="卡牌写作" view="writer" icon={<PenSparkleIcon />} currentView={currentView} setView={setView} />
                  <NavItem label="灵感集" view="inspiration" icon={<LightbulbIcon />} currentView={currentView} setView={setView} />
                  <NavItem label="大纲内容" view="result" icon={<DocumentTextIcon />} currentView={currentView} setView={setView} />
+                 <NavItem label="角色塑造" view="characterShaping" icon={<CharacterIcon />} currentView={currentView} setView={setView} />
                  <NavItem label="故事存档" view="archive" icon={<ArchiveBoxIcon />} currentView={currentView} setView={setView} />
                  <NavItem label="故事技巧" view="tips" icon={<QuestionMarkCircleIcon />} currentView={currentView} setView={setView} />
             </nav>

@@ -1,5 +1,3 @@
-
-
 import type { ReactElement, SVGProps } from 'react';
 
 export enum CardType {
@@ -38,6 +36,7 @@ export interface NovelInfo {
   perspective?: string;
   channel?: 'male' | 'female' | '';
   emotion?: string;
+  characterProfileIds?: string[];
 }
 
 export interface PromptTemplate {
@@ -94,6 +93,8 @@ export interface StoryArchiveItem {
   novelInfo: NovelInfo;
   outline: string;
   lastModified: number;
+  type?: 'story' | 'character';
+  characterProfile?: CharacterProfile;
 }
 
 export interface SavedCombination {
@@ -109,4 +110,20 @@ export interface Topic {
   history: ChatMessage[];
   toolId?: string;
   selectedArchiveId?: string | null;
+}
+
+export type CharacterRole = '男主角' | '女主角' | '男二' | '女二' | '配角' | '反派' | '其他角色';
+
+export interface CharacterProfile {
+  role: CharacterRole;
+  name: string;
+  image: string;
+  selfAwareness: string;
+  reactionLogic: string;
+  stakes: string;
+  emotion: string;
+  likability: string;
+  competence: string;
+  proactivity: string;
+  power: string;
 }

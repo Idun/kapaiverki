@@ -1,9 +1,10 @@
-// FIX: Replaced triple-slash directive with a direct type import to resolve 'Cannot find namespace "CodeMirror"' error.
 import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import EasyMDE from 'easymde';
-// FIX: The CodeMirror v5 types use `export =`. Correctly import the namespace for type usage.
+// FIX: The 'CodeMirror' namespace is not exported by 'easymde', so it must be imported from the 'codemirror' package directly to resolve type errors.
+import 'codemirror';
+// FIX: The `Position` type is not a named export from 'codemirror'. It's part of the `CodeMirror` namespace.
 import type * as CodeMirror from 'codemirror';
-import type { AIConfig, NovelInfo, UISettings, CombinedCards, ChatMessage, Card, CardType } from '../types';
+import type { AIConfig, NovelInfo, UISettings, CombinedCards, ChatMessage, Card, CardType, StoryArchiveItem, CharacterProfile } from '../types';
 import { CARD_TYPE_NAMES } from '../constants';
 import { polishOutline, fetchModels, generateOutline, generateChatResponse, editText } from '../services/aiService';
 import { DownloadIcon, PreviewIcon, AiIcon, UploadIcon, StopIcon, DocumentPlusIcon, PhotoIcon, TrashIcon, PlusIcon, ArrowUpIcon, AtSymbolIcon, ChevronDownIcon, SparklesIcon } from './icons';
@@ -26,6 +27,7 @@ interface ResultViewProps {
     setAssistantHistory: React.Dispatch<React.SetStateAction<ChatMessage[]>>;
     chatHistory: ChatMessage[];
     setChatHistory: React.Dispatch<React.SetStateAction<ChatMessage[]>>;
+    storyArchive: StoryArchiveItem[];
 }
 
 const MAX_ATTACHMENTS = 5;
@@ -46,7 +48,8 @@ const ResultView: React.FC<ResultViewProps> = ({
     assistantHistory,
     setAssistantHistory,
     chatHistory,
-    setChatHistory
+    setChatHistory,
+    storyArchive
 }) => {
     const textareaRef = useRef<HTMLTextAreaElement | null>(null);
     const easyMdeInstance = useRef<EasyMDE | null>(null);
@@ -71,6 +74,7 @@ const ResultView: React.FC<ResultViewProps> = ({
     const selectionPopupRef = useRef<HTMLDivElement>(null);
     const [isAiEditing, setIsAiEditing] = useState(false);
     const [aiEditInstruction, setAiEditInstruction] = useState('');
+    // FIX: Reverted to use `CodeMirror.Position` as the type, as `Position` is not a direct export from the 'codemirror' module.
     const selectionInfoRef = useRef<{ content: string; startLine: number; from: CodeMirror.Position; to: CodeMirror.Position } | null>(null);
     const [isAiEditMentionOpen, setIsAiEditMentionOpen] = useState(false);
     const aiEditMentionMenuRef = useRef<HTMLDivElement | null>(null);
@@ -245,7 +249,8 @@ const ResultView: React.FC<ResultViewProps> = ({
         };
 
         loadModels();
-    }, [config.provider, config.apiKey, config.endpoint]);
+    // FIX: Removed `config.apiKey` from the dependency array as it does not exist on the `AIConfig` type and is handled by `process.env.API_KEY`.
+    }, [config.provider, config.endpoint]);
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -274,9 +279,15 @@ const ResultView: React.FC<ResultViewProps> = ({
         let active = true;
         const generate = async () => {
             try {
+                 // Find character profiles
+                const selectedCharacters = novelInfo.characterProfileIds
+                    ? storyArchive.filter(item => novelInfo.characterProfileIds!.includes(item.id))
+                    : [];
+                const characterProfiles = selectedCharacters.map(item => item.characterProfile).filter((p): p is CharacterProfile => !!p);
+
                 let accumulatedOutline = "";
                 setOutline("");
-                const stream = generateOutline(combinedCards, config, novelInfo);
+                const stream = generateOutline(combinedCards, config, novelInfo, characterProfiles.length > 0 ? characterProfiles : null);
                 for await (const chunk of stream) {
                     if (!active) break;
                     accumulatedOutline += chunk;
@@ -296,7 +307,7 @@ const ResultView: React.FC<ResultViewProps> = ({
         return () => {
             active = false;
         };
-    }, [isGenerating, combinedCards, config, novelInfo, setOutline, setIsGenerating]);
+    }, [isGenerating, combinedCards, config, novelInfo, setOutline, setIsGenerating, storyArchive]);
 
     const groupedAndFilteredCards = useMemo(() => {
         const searchTarget = isAiEditMentionOpen ? aiEditMentionSearch : mentionSearch;
@@ -716,7 +727,7 @@ const ResultView: React.FC<ResultViewProps> = ({
                                                                 </button>
                                                                 {isExpanded && (
                                                                     <ul className="pl-2 pt-1 pb-2">
-                                                                        {cards.map(card => (
+                                                                        {(cards as Card[]).map(card => (
                                                                             <li key={card.id}>
                                                                                 <button
                                                                                     type="button"
@@ -1090,7 +1101,7 @@ const ResultView: React.FC<ResultViewProps> = ({
                                                                 </button>
                                                                 {isExpanded && (
                                                                     <ul className="pl-2 pt-1 pb-2">
-                                                                        {cards.map(card => (
+                                                                        {(cards as Card[]).map(card => (
                                                                             <li key={card.id}>
                                                                                 <button
                                                                                     type="button"
