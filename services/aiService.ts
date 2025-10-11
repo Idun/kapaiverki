@@ -1,4 +1,3 @@
-
 import { GoogleGenAI, Type } from "@google/genai";
 import type { CombinedCards, AIConfig, AIProvider, Card, NovelInfo, ChatMessage, CharacterProfile } from '../types';
 import { CardType } from '../types';
@@ -33,6 +32,7 @@ const createPrompt = (cards: CombinedCards, customPrompt: string, novelInfo: Nov
         return `- ${title}: ${cardStrings.join(' | ')}`;
     };
 
+    // FIX: Handle 'Inspiration' card type separately for better prompt clarity.
     const promptParts = [
         formatCards(CardType.Theme),
         formatCards(CardType.Genre),
@@ -41,9 +41,9 @@ const createPrompt = (cards: CombinedCards, customPrompt: string, novelInfo: Nov
         formatCards(CardType.Structure),
         formatCards(CardType.Technique),
         formatCards(CardType.Ending),
-        formatCards(CardType.Inspiration),
-    ].filter(Boolean); // Filter out empty strings
+    ].filter(Boolean);
     
+    const inspirationCardPart = formatCards(CardType.Inspiration);
 
     const novelInfoParts = [];
     if (novelInfo.name) novelInfoParts.push(`- 小说名称: ${novelInfo.name}`);
@@ -104,7 +104,8 @@ ${novelInfoSection}
 ${characterProfileSection}
 
 请基于以下故事核心要素进行创作：
-${promptParts.join('\n')}
+${promptParts.join('\n')}${inspirationCardPart ? `
+${inspirationCardPart}` : ''}
 `;
 }
 

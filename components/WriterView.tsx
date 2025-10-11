@@ -32,6 +32,7 @@ interface WriterViewProps {
     onLoadCombination: (id: string) => void;
     onDeleteCombination: (id: string) => void;
     storyArchive: StoryArchiveItem[];
+    onClearAll: () => void;
 }
 
 const LENGTH_PRESETS: Record<string, string> = {
@@ -61,7 +62,8 @@ const WriterView: React.FC<WriterViewProps> = ({
     onClearCard, onAddCardSlot, onRemoveCardSlot, novelInfo, setNovelInfo, 
     allCards, onCreateCard, onUpdateCard, onDeleteCard, uiSettings,
     savedCombinations, onSaveCombination, onLoadCombination, onDeleteCombination,
-    storyArchive
+    storyArchive,
+    onClearAll
 }) => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [activeDragType, setActiveDragType] = useState<CardType | null>(null);
@@ -83,6 +85,11 @@ const WriterView: React.FC<WriterViewProps> = ({
     const characterProfiles = useMemo(() => 
         storyArchive.filter(item => item.type === 'character'), 
     [storyArchive]);
+
+    const selectedCharacterCount = useMemo(() => {
+        const existingCharacterIds = new Set(characterProfiles.map(p => p.id));
+        return (novelInfo.characterProfileIds || []).filter(id => id && existingCharacterIds.has(id)).length;
+    }, [novelInfo.characterProfileIds, characterProfiles]);
 
     const groupedCharacters = useMemo(() => {
         const roleOrder: CharacterRole[] = ['男主角', '女主角', '男二', '女二', '反派', '配角', '其他角色'];
@@ -469,6 +476,15 @@ const WriterView: React.FC<WriterViewProps> = ({
                         )}
                     </div>
                 </div>
+                 <button
+                    type="button"
+                    onClick={onClearAll}
+                    className="flex items-center gap-2 px-3 py-2 text-sm bg-red-50 text-red-700 border border-red-200 rounded-lg shadow-sm hover:bg-red-100 transition-all dark:bg-red-900/40 dark:text-red-300 dark:border-red-800 dark:hover:bg-red-900/60"
+                    title="清空所有小说信息和已选卡牌"
+                >
+                    <TrashIcon className="w-4 h-4" />
+                    <span>清空所有</span>
+                </button>
             </header>
 
             <div className="flex-grow flex flex-col min-h-0">
@@ -557,7 +573,7 @@ const WriterView: React.FC<WriterViewProps> = ({
                                                             className="flex items-center gap-2 px-3 py-1.5 text-sm border border-gray-300 rounded-md shadow-sm bg-white hover:bg-gray-50 dark:bg-zinc-700 dark:border-zinc-600 dark:text-white dark:hover:bg-zinc-600"
                                                         >
                                                             <span>
-                                                                可选角色 {novelInfo.characterProfileIds && novelInfo.characterProfileIds.length > 0 ? `(${novelInfo.characterProfileIds.length})` : ''}
+                                                                可选角色 {selectedCharacterCount > 0 ? `(${selectedCharacterCount})` : ''}
                                                             </span>
                                                             <ChevronDownIcon className="w-4 h-4 text-gray-400" />
                                                         </button>

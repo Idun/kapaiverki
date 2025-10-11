@@ -1,5 +1,3 @@
-
-
 import React, { useState, useCallback, useRef, useEffect, useMemo } from 'react';
 import type { AIConfig, ChatMessage, StoryArchiveItem, Topic } from '../types';
 import { AiIcon, ArrowUpIcon, StopIcon, ClipboardDocumentIcon, PencilIcon, ArrowPathIcon, PlusIcon, TrashIcon, UserCircleIcon } from './icons';
@@ -734,7 +732,7 @@ const TipsView: React.FC<TipsViewProps> = ({ topics, setTopics, config, storyArc
                                         }}
                                         disabled={isLoading}
                                         placeholder="输入您的想法..."
-                                        className="w-full pl-12 pr-16 py-4 text-lg rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 custom-scrollbar resize-none bg-white dark:bg-zinc-700 dark:border-zinc-600 dark:text-white dark:placeholder:text-zinc-400 min-h-[64px]"
+                                        className="w-full pl-12 pr-16 py-4 text-lg rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 custom-scrollbar resize-none bg-white dark:bg-zinc-700 dark:border-zinc-600 dark:text-white dark:placeholder:text-zinc-400 min-h-[64px] break-all break-words"
                                     />
                                     <button
                                         type={isLoading ? "button" : "submit"}

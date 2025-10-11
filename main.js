@@ -1074,9 +1074,9 @@ var init_aiService = __esm({
         formatCards("Plot" /* Plot */),
         formatCards("Structure" /* Structure */),
         formatCards("Technique" /* Technique */),
-        formatCards("Ending" /* Ending */),
-        formatCards("Inspiration" /* Inspiration */)
+        formatCards("Ending" /* Ending */)
       ].filter(Boolean);
+      const inspirationCardPart = formatCards("Inspiration" /* Inspiration */);
       const novelInfoParts = [];
       if (novelInfo.name) novelInfoParts.push(`- \u5C0F\u8BF4\u540D\u79F0: ${novelInfo.name}`);
       if (novelInfo.channel) novelInfoParts.push(`- \u4E66\u7C4D\u9891\u9053: ${novelInfo.channel === "male" ? "\u7537\u9891" : "\u5973\u9891"}`);
@@ -1138,7 +1138,8 @@ ${novelInfoSection}
 ${characterProfileSection}
 
 \u8BF7\u57FA\u4E8E\u4EE5\u4E0B\u6545\u4E8B\u6838\u5FC3\u8981\u7D20\u8FDB\u884C\u521B\u4F5C\uFF1A
-${promptParts.join("\n")}
+${promptParts.join("\n")}${inspirationCardPart ? `
+${inspirationCardPart}` : ""}
 `;
     };
     getEndpoint = (url, path) => {
@@ -2211,7 +2212,8 @@ var WriterView = ({
   onSaveCombination,
   onLoadCombination,
   onDeleteCombination,
-  storyArchive
+  storyArchive,
+  onClearAll
 }) => {
   const [isLoading, setIsLoading] = useState4(false);
   const [activeDragType, setActiveDragType] = useState4(null);
@@ -2233,6 +2235,10 @@ var WriterView = ({
     () => storyArchive.filter((item) => item.type === "character"),
     [storyArchive]
   );
+  const selectedCharacterCount = useMemo(() => {
+    const existingCharacterIds = new Set(characterProfiles.map((p) => p.id));
+    return (novelInfo.characterProfileIds || []).filter((id) => id && existingCharacterIds.has(id)).length;
+  }, [novelInfo.characterProfileIds, characterProfiles]);
   const groupedCharacters = useMemo(() => {
     const roleOrder = ["\u7537\u4E3B\u89D2", "\u5973\u4E3B\u89D2", "\u7537\u4E8C", "\u5973\u4E8C", "\u53CD\u6D3E", "\u914D\u89D2", "\u5176\u4ED6\u89D2\u8272"];
     const groups = {};
@@ -2563,7 +2569,20 @@ var WriterView = ({
             ] }, combo.id)) }) : /* @__PURE__ */ jsx9("p", { className: "p-4 text-sm text-gray-500 dark:text-zinc-400 text-center", children: "\u8FD8\u6CA1\u6709\u4FDD\u5B58\u4EFB\u4F55\u7EC4\u5408\u3002" })
           ] })
         ] })
-      ] })
+      ] }),
+      /* @__PURE__ */ jsxs8(
+        "button",
+        {
+          type: "button",
+          onClick: onClearAll,
+          className: "flex items-center gap-2 px-3 py-2 text-sm bg-red-50 text-red-700 border border-red-200 rounded-lg shadow-sm hover:bg-red-100 transition-all dark:bg-red-900/40 dark:text-red-300 dark:border-red-800 dark:hover:bg-red-900/60",
+          title: "\u6E05\u7A7A\u6240\u6709\u5C0F\u8BF4\u4FE1\u606F\u548C\u5DF2\u9009\u5361\u724C",
+          children: [
+            /* @__PURE__ */ jsx9(TrashIcon, { className: "w-4 h-4" }),
+            /* @__PURE__ */ jsx9("span", { children: "\u6E05\u7A7A\u6240\u6709" })
+          ]
+        }
+      )
     ] }),
     /* @__PURE__ */ jsxs8("div", { className: "flex-grow flex flex-col min-h-0", children: [
       /* @__PURE__ */ jsx9("div", { className: "flex-1 overflow-x-hidden overflow-y-visible", children: /* @__PURE__ */ jsxs8(
@@ -2668,7 +2687,7 @@ var WriterView = ({
                               children: [
                                 /* @__PURE__ */ jsxs8("span", { children: [
                                   "\u53EF\u9009\u89D2\u8272 ",
-                                  novelInfo.characterProfileIds && novelInfo.characterProfileIds.length > 0 ? `(${novelInfo.characterProfileIds.length})` : ""
+                                  selectedCharacterCount > 0 ? `(${selectedCharacterCount})` : ""
                                 ] }),
                                 /* @__PURE__ */ jsx9(ChevronDownIcon, { className: "w-4 h-4 text-gray-400" })
                               ]
@@ -3447,7 +3466,6 @@ init_aiService();
 init_icons();
 import React8, { useState as useState6, useEffect as useEffect5, useRef as useRef3, useCallback as useCallback3, useMemo as useMemo2 } from "react";
 import EasyMDE from "easymde";
-import "codemirror";
 import { jsx as jsx11, jsxs as jsxs10 } from "react/jsx-runtime";
 var MAX_ATTACHMENTS = 5;
 var ResultView = ({
@@ -3467,6 +3485,8 @@ var ResultView = ({
   setAssistantHistory,
   chatHistory,
   setChatHistory,
+  chatInput,
+  setChatInput,
   storyArchive
 }) => {
   const textareaRef = useRef3(null);
@@ -3496,7 +3516,6 @@ var ResultView = ({
   const [aiEditMentionSearch, setAiEditMentionSearch] = useState6("");
   const [expandedAiEditMentionCategories, setExpandedAiEditMentionCategories] = useState6([]);
   const [chatMode, setChatMode] = useState6("assistant");
-  const [chatInput, setChatInput] = useState6("");
   const [chatReferences, setChatReferences] = useState6([]);
   const [isChatLoading, setIsChatLoading] = useState6(false);
   const [attachments, setAttachments] = useState6([]);
@@ -3511,6 +3530,19 @@ var ResultView = ({
   useEffect5(() => {
     isAiEditingRef.current = isAiEditing;
   }, [isAiEditing]);
+  const processMentions = useCallback3((text) => {
+    let processedText = text;
+    const sortedCards = [...allCards].sort((a, b) => b.name.length - a.name.length);
+    for (const card of sortedCards) {
+      const mention = `@${card.name}`;
+      const regex = new RegExp(mention, "g");
+      if (processedText.includes(mention)) {
+        const replacement = `[\u5361\u7247: ${card.name} (${card.description})]`;
+        processedText = processedText.replace(regex, replacement);
+      }
+    }
+    return processedText;
+  }, [allCards]);
   const handleAddToChat = useCallback3(() => {
     if (!selectionInfoRef.current) return;
     const { startLine } = selectionInfoRef.current;
@@ -3776,8 +3808,10 @@ var ResultView = ({
     e.preventDefault();
     const message = chatInput.trim();
     const referencesText = chatReferences.join(" ");
-    const finalMessage = `${referencesText} ${message}`.trim();
-    if (!finalMessage && attachments.length === 0 || isChatLoading) return;
+    const rawMessage = `${referencesText} ${message}`.trim();
+    if (!rawMessage && attachments.length === 0 || isChatLoading) return;
+    const messageForHistory = rawMessage;
+    const messageForAI = processMentions(rawMessage);
     setChatInput("");
     setChatReferences([]);
     setAttachments([]);
@@ -3786,7 +3820,7 @@ var ResultView = ({
     }
     const controller = new AbortController();
     abortControllerRef.current = controller;
-    let userMessageContent = finalMessage;
+    let finalMessageForHistory = messageForHistory;
     const userMessageImages = [];
     const textAttachmentsContent = [];
     attachments.forEach((att) => {
@@ -3797,13 +3831,16 @@ var ResultView = ({
 ${att.data}`);
       }
     });
+    const finalMessageForAI = (messageForAI + "\n\n" + textAttachmentsContent.join("\n\n")).trim();
     if (textAttachmentsContent.length > 0) {
-      userMessageContent = (userMessageContent + "\n\n" + textAttachmentsContent.join("\n\n")).trim();
+      finalMessageForHistory = (finalMessageForHistory + `
+
+[\u9644\u5E26 ${textAttachmentsContent.length} \u4E2A\u6587\u672C\u6587\u4EF6]`).trim();
     }
     const newUserMessage = {
       id: `user-${Date.now()}`,
       role: "user",
-      content: userMessageContent,
+      content: finalMessageForHistory,
       images: userMessageImages.length > 0 ? userMessageImages : void 0
     };
     const newHistory = [...currentChatHistory, newUserMessage];
@@ -3814,7 +3851,7 @@ ${att.data}`);
       if (chatMode === "assistant") {
         const currentOutline = easyMdeInstance.current?.value() || outline;
         let finalOutline = "";
-        const stream = polishOutline(currentOutline, userMessageContent, assistantConfig, controller.signal);
+        const stream = polishOutline(currentOutline, finalMessageForAI, assistantConfig, controller.signal);
         for await (const chunk of stream) {
           if (controller.signal.aborted) break;
           finalOutline += chunk;
@@ -3826,7 +3863,10 @@ ${att.data}`);
       } else {
         let accumulatedResponse = "";
         setCurrentChatHistory((prev) => [...prev, { id: `model-streaming-${Date.now()}`, role: "model", content: "" }]);
-        const stream = generateChatResponse(newHistory, assistantConfig, controller.signal);
+        const historyForAI = newHistory.map(
+          (msg) => msg.id === newUserMessage.id ? { ...msg, content: finalMessageForAI } : msg
+        );
+        const stream = generateChatResponse(historyForAI, assistantConfig, controller.signal);
         for await (const chunk of stream) {
           accumulatedResponse += chunk;
           setCurrentChatHistory((prev) => {
@@ -3864,7 +3904,7 @@ ${att.data}`);
       setIsChatLoading(false);
       abortControllerRef.current = null;
     }
-  }, [chatInput, isChatLoading, outline, config, setOutline, chatMode, currentChatHistory, setCurrentChatHistory, attachments, chatReferences]);
+  }, [chatInput, isChatLoading, outline, config, setOutline, chatMode, currentChatHistory, setCurrentChatHistory, attachments, chatReferences, setChatInput, processMentions]);
   const handleChatInputChange = (e) => {
     setChatInput(e.target.value);
     const textarea = e.target;
@@ -3953,6 +3993,7 @@ ${att.data}`);
     const { content, from, to } = selectionInfoRef.current;
     const cm = easyMdeInstance.current?.codemirror;
     if (!cm) return;
+    const processedInstruction = processMentions(aiEditInstruction);
     setSelectionPopup({ visible: false, x: 0, y: 0 });
     setIsAiEditing(false);
     const controller = new AbortController();
@@ -3962,7 +4003,7 @@ ${att.data}`);
     const placeholderEndPos = { line: from.line, ch: from.ch + placeholder.length };
     try {
       const editConfig = { ...config, model: config.assistantModel || config.model };
-      const stream = editText(content, aiEditInstruction, editConfig, controller.signal);
+      const stream = editText(content, processedInstruction, editConfig, controller.signal);
       let fullResponse = "";
       for await (const chunk of stream) {
         if (controller.signal.aborted) throw new DOMException("Aborted by user", "AbortError");
@@ -4170,6 +4211,14 @@ ${att.data}`);
         )
       ] }),
       /* @__PURE__ */ jsxs10("div", { className: "flex-grow relative editor-container min-h-0", children: [
+        isGenerating && !outline && /* @__PURE__ */ jsxs10("div", { className: "absolute inset-0 bg-white/70 dark:bg-zinc-800/70 flex flex-col items-center justify-center z-10 rounded-xl backdrop-blur-sm", "aria-live": "polite", children: [
+          /* @__PURE__ */ jsx11("div", { className: "text-purple-500 w-12 h-12", children: /* @__PURE__ */ jsxs10("svg", { className: "animate-spin h-full w-full", xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", children: [
+            /* @__PURE__ */ jsx11("circle", { className: "opacity-25", cx: "12", cy: "12", r: "10", stroke: "currentColor", strokeWidth: "4" }),
+            /* @__PURE__ */ jsx11("path", { className: "opacity-75", fill: "currentColor", d: "M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" })
+          ] }) }),
+          /* @__PURE__ */ jsx11("p", { className: "mt-4 text-lg text-gray-700 dark:text-zinc-200 font-semibold", children: "AI \u6B63\u5728\u52AA\u529B\u521B\u4F5C\u4E2D\uFF0C\u8BF7\u7A0D\u5019..." }),
+          /* @__PURE__ */ jsx11("p", { className: "mt-2 text-sm text-gray-500 dark:text-zinc-400", children: "\u5927\u7EB2\u5185\u5BB9\u5C06\u5728\u6B64\u5904\u9010\u6B65\u663E\u793A" })
+        ] }),
         renderSelectionPopup(),
         /* @__PURE__ */ jsx11("textarea", { ref: textareaRef, style: { display: "none" } })
       ] })
@@ -4328,7 +4377,7 @@ ${att.data}`);
                     onPaste: handlePaste,
                     disabled: isChatLoading,
                     placeholder: chatMode === "assistant" ? "\u6709\u4EC0\u4E48\u53EF\u4EE5\u5E2E\u60A8\u4FEE\u6539\u5927\u7EB2\uFF1F" : "\u7C98\u8D34\u56FE\u7247\u6216\u8F93\u5165\u6587\u5B57...",
-                    className: "w-full pl-12 pr-36 py-3 text-base rounded-b-xl focus:outline-none custom-scrollbar resize-none bg-transparent placeholder:text-gray-400 transition-all duration-300 dark:text-white dark:placeholder:text-zinc-500 min-h-[56px]"
+                    className: "w-full pl-12 pr-36 py-3 text-base rounded-b-xl focus:outline-none custom-scrollbar resize-none bg-transparent placeholder:text-gray-400 transition-all duration-300 dark:text-white dark:placeholder:text-zinc-500 min-h-[56px] break-all break-words"
                   }
                 ),
                 /* @__PURE__ */ jsxs10("div", { className: "absolute bottom-3 right-3 flex items-center gap-1 z-10", children: [
@@ -5533,7 +5582,7 @@ ${selectedArchive.outline}
               },
               disabled: isLoading,
               placeholder: "\u8F93\u5165\u60A8\u7684\u60F3\u6CD5...",
-              className: "w-full pl-12 pr-16 py-4 text-lg rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 custom-scrollbar resize-none bg-white dark:bg-zinc-700 dark:border-zinc-600 dark:text-white dark:placeholder:text-zinc-400 min-h-[64px]"
+              className: "w-full pl-12 pr-16 py-4 text-lg rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 custom-scrollbar resize-none bg-white dark:bg-zinc-700 dark:border-zinc-600 dark:text-white dark:placeholder:text-zinc-400 min-h-[64px] break-all break-words"
             }
           ),
           /* @__PURE__ */ jsx16(
@@ -6365,6 +6414,7 @@ var App = () => {
   const [chatHistory, setChatHistory] = useState12(
     () => loadAndMigrateChatHistory("chatHistory", { id: `sys-chat-${Date.now()}`, role: "system", content: "\u60A8\u53EF\u4EE5\u50CF\u548C\u670B\u53CB\u4E00\u6837\u4E0E AI \u804A\u5929\u3002" })
   );
+  const [chatInput, setChatInput] = useState12("");
   const [topics, setTopics] = useState12(() => {
     try {
       const savedTopicsRaw = localStorage.getItem("topics");
@@ -6858,6 +6908,22 @@ var App = () => {
       setCharacterProfile(defaultCharacterProfile);
     }
   }, [defaultCharacterProfile]);
+  const handleClearWriterView = useCallback5(() => {
+    if (window.confirm("\u60A8\u786E\u5B9A\u8981\u6E05\u7A7A\u6240\u6709\u5C0F\u8BF4\u4FE1\u606F\u548C\u5DF2\u9009\u5361\u724C\u5417\uFF1F\u6B64\u64CD\u4F5C\u65E0\u6CD5\u64A4\u9500\u3002")) {
+      setNovelInfo({ name: "", wordCount: "", synopsis: "", perspective: "", channel: "", emotion: "\u65E0", characterProfileIds: [] });
+      setSelectedCardIds({
+        ["Theme" /* Theme */]: [null],
+        ["Genre" /* Genre */]: [null],
+        ["Character" /* Character */]: [null],
+        ["Plot" /* Plot */]: [null],
+        ["Structure" /* Structure */]: [null],
+        ["Technique" /* Technique */]: [null],
+        ["Ending" /* Ending */]: [null],
+        ["Inspiration" /* Inspiration */]: [null]
+      });
+      setCurrentStoryId(null);
+    }
+  }, []);
   const renderView = () => {
     switch (view) {
       case "writer":
@@ -6883,7 +6949,8 @@ var App = () => {
             onSaveCombination: handleSaveCombination,
             onLoadCombination: handleLoadCombination,
             onDeleteCombination: handleDeleteCombination,
-            storyArchive
+            storyArchive,
+            onClearAll: handleClearWriterView
           }
         );
       case "result":
@@ -6906,6 +6973,8 @@ var App = () => {
             setAssistantHistory,
             chatHistory,
             setChatHistory,
+            chatInput,
+            setChatInput,
             storyArchive
           }
         );
@@ -6987,7 +7056,8 @@ var App = () => {
             onSaveCombination: handleSaveCombination,
             onLoadCombination: handleLoadCombination,
             onDeleteCombination: handleDeleteCombination,
-            storyArchive
+            storyArchive,
+            onClearAll: handleClearWriterView
           }
         );
     }

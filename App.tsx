@@ -270,6 +270,8 @@ const App: React.FC = () => {
         loadAndMigrateChatHistory('chatHistory', { id: `sys-chat-${Date.now()}`, role: 'system', content: '您可以像和朋友一样与 AI 聊天。' })
     );
     
+    const [chatInput, setChatInput] = useState<string>('');
+
     const [topics, setTopics] = useState<Topic[]>(() => {
         try {
             const savedTopicsRaw = localStorage.getItem('topics');
@@ -842,6 +844,23 @@ const App: React.FC = () => {
         }
     }, [defaultCharacterProfile]);
 
+    const handleClearWriterView = useCallback(() => {
+        if (window.confirm("您确定要清空所有小说信息和已选卡牌吗？此操作无法撤销。")) {
+            setNovelInfo({ name: '', wordCount: '', synopsis: '', perspective: '', channel: '', emotion: '无', characterProfileIds: [] });
+            setSelectedCardIds({
+                [CardTypeEnum.Theme]: [null], 
+                [CardTypeEnum.Genre]: [null], 
+                [CardTypeEnum.Character]: [null], 
+                [CardTypeEnum.Plot]: [null],
+                [CardTypeEnum.Structure]: [null],
+                [CardTypeEnum.Technique]: [null],
+                [CardTypeEnum.Ending]: [null],
+                [CardTypeEnum.Inspiration]: [null],
+            });
+            setCurrentStoryId(null);
+        }
+    }, []);
+
 
     const renderView = () => {
         switch (view) {
@@ -868,6 +887,7 @@ const App: React.FC = () => {
                         onLoadCombination={handleLoadCombination}
                         onDeleteCombination={handleDeleteCombination}
                         storyArchive={storyArchive}
+                        onClearAll={handleClearWriterView}
                     />
                 );
             case 'result':
@@ -888,6 +908,8 @@ const App: React.FC = () => {
                             setAssistantHistory={setAssistantHistory}
                             chatHistory={chatHistory}
                             setChatHistory={setChatHistory}
+                            chatInput={chatInput}
+                            setChatInput={setChatInput}
                             storyArchive={storyArchive}
                         />;
             case 'inspiration':
@@ -953,6 +975,7 @@ const App: React.FC = () => {
                         onLoadCombination={handleLoadCombination}
                         onDeleteCombination={handleDeleteCombination}
                         storyArchive={storyArchive}
+                        onClearAll={handleClearWriterView}
                     />
                 );
         }

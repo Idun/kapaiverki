@@ -1,9 +1,8 @@
 import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import EasyMDE from 'easymde';
-// FIX: The 'CodeMirror' namespace is not exported by 'easymde', so it must be imported from the 'codemirror' package directly to resolve type errors.
-import 'codemirror';
-// FIX: The `Position` type is not a named export from 'codemirror'. It's part of the `CodeMirror` namespace.
-import type * as CodeMirror from 'codemirror';
+// FIX: Use a default import for `codemirror` to correctly load its namespace and types like `Position`. This is the standard approach for modules using `export =` with `esModuleInterop`.
+// FIX: Use a namespace import to correctly resolve types from the 'codemirror' module.
+import * as CodeMirror from 'codemirror';
 import type { AIConfig, NovelInfo, UISettings, CombinedCards, ChatMessage, Card, CardType, StoryArchiveItem, CharacterProfile } from '../types';
 import { CARD_TYPE_NAMES } from '../constants';
 import { polishOutline, fetchModels, generateOutline, generateChatResponse, editText } from '../services/aiService';
@@ -27,6 +26,8 @@ interface ResultViewProps {
     setAssistantHistory: React.Dispatch<React.SetStateAction<ChatMessage[]>>;
     chatHistory: ChatMessage[];
     setChatHistory: React.Dispatch<React.SetStateAction<ChatMessage[]>>;
+    chatInput: string;
+    setChatInput: React.Dispatch<React.SetStateAction<string>>;
     storyArchive: StoryArchiveItem[];
 }
 
@@ -49,6 +50,8 @@ const ResultView: React.FC<ResultViewProps> = ({
     setAssistantHistory,
     chatHistory,
     setChatHistory,
+    chatInput,
+    setChatInput,
     storyArchive
 }) => {
     const textareaRef = useRef<HTMLTextAreaElement | null>(null);
@@ -74,7 +77,6 @@ const ResultView: React.FC<ResultViewProps> = ({
     const selectionPopupRef = useRef<HTMLDivElement>(null);
     const [isAiEditing, setIsAiEditing] = useState(false);
     const [aiEditInstruction, setAiEditInstruction] = useState('');
-    // FIX: Reverted to use `CodeMirror.Position` as the type, as `Position` is not a direct export from the 'codemirror' module.
     const selectionInfoRef = useRef<{ content: string; startLine: number; from: CodeMirror.Position; to: CodeMirror.Position } | null>(null);
     const [isAiEditMentionOpen, setIsAiEditMentionOpen] = useState(false);
     const aiEditMentionMenuRef = useRef<HTMLDivElement | null>(null);
@@ -84,7 +86,6 @@ const ResultView: React.FC<ResultViewProps> = ({
 
     // Chat states
     const [chatMode, setChatMode] = useState<'assistant' | 'chat'>('assistant');
-    const [chatInput, setChatInput] = useState('');
     const [chatReferences, setChatReferences] = useState<string[]>([]);
     const [isChatLoading, setIsChatLoading] = useState(false);
     const [attachments, setAttachments] = useState<Array<{ type: 'image' | 'text'; data: string; name: string }>>([]);
@@ -103,6 +104,21 @@ const ResultView: React.FC<ResultViewProps> = ({
     // Refs to hold the latest state for event handlers, preventing stale closures.
     const isAiEditingRef = useRef(isAiEditing);
     useEffect(() => { isAiEditingRef.current = isAiEditing }, [isAiEditing]);
+
+    const processMentions = useCallback((text: string): string => {
+        let processedText = text;
+        const sortedCards = [...allCards].sort((a, b) => b.name.length - a.name.length);
+
+        for (const card of sortedCards) {
+            const mention = `@${card.name}`;
+            const regex = new RegExp(mention, 'g');
+            if (processedText.includes(mention)) {
+                const replacement = `[卡片: ${card.name} (${card.description})]`;
+                processedText = processedText.replace(regex, replacement);
+            }
+        }
+        return processedText;
+    }, [allCards]);
 
     const handleAddToChat = useCallback(() => {
         if (!selectionInfoRef.current) return;
@@ -249,7 +265,6 @@ const ResultView: React.FC<ResultViewProps> = ({
         };
 
         loadModels();
-    // FIX: Removed `config.apiKey` from the dependency array as it does not exist on the `AIConfig` type and is handled by `process.env.API_KEY`.
     }, [config.provider, config.endpoint]);
 
     useEffect(() => {
@@ -415,9 +430,15 @@ const ResultView: React.FC<ResultViewProps> = ({
         e.preventDefault();
         const message = chatInput.trim();
         const referencesText = chatReferences.join(' ');
-        const finalMessage = `${referencesText} ${message}`.trim();
+        const rawMessage = `${referencesText} ${message}`.trim();
         
-        if ((!finalMessage && attachments.length === 0) || isChatLoading) return;
+        if ((!rawMessage && attachments.length === 0) || isChatLoading) return;
+        
+        // The raw message with @mentions is for the UI.
+        const messageForHistory = rawMessage;
+
+        // The processed message with expanded card details is for the AI.
+        const messageForAI = processMentions(rawMessage);
 
         setChatInput('');
         setChatReferences([]);
@@ -429,7 +450,7 @@ const ResultView: React.FC<ResultViewProps> = ({
         const controller = new AbortController();
         abortControllerRef.current = controller;
 
-        let userMessageContent = finalMessage;
+        let finalMessageForHistory = messageForHistory;
         const userMessageImages: string[] = [];
         const textAttachmentsContent: string[] = [];
 
@@ -440,15 +461,18 @@ const ResultView: React.FC<ResultViewProps> = ({
                 textAttachmentsContent.push(`--- Attached File: ${att.name} ---\n${att.data}`);
             }
         });
+        
+        // Append text attachments to the AI message, but not the UI message
+        const finalMessageForAI = (messageForAI + '\n\n' + textAttachmentsContent.join('\n\n')).trim();
 
         if (textAttachmentsContent.length > 0) {
-            userMessageContent = (userMessageContent + '\n\n' + textAttachmentsContent.join('\n\n')).trim();
+            finalMessageForHistory = (finalMessageForHistory + `\n\n[附带 ${textAttachmentsContent.length} 个文本文件]`).trim();
         }
-        
+
         const newUserMessage: ChatMessage = { 
             id: `user-${Date.now()}`,
             role: 'user', 
-            content: userMessageContent,
+            content: finalMessageForHistory,
             images: userMessageImages.length > 0 ? userMessageImages : undefined,
         };
 
@@ -462,7 +486,7 @@ const ResultView: React.FC<ResultViewProps> = ({
             if (chatMode === 'assistant') {
                 const currentOutline = easyMdeInstance.current?.value() || outline;
                 let finalOutline = "";
-                const stream = polishOutline(currentOutline, userMessageContent, assistantConfig, controller.signal);
+                const stream = polishOutline(currentOutline, finalMessageForAI, assistantConfig, controller.signal);
                 for await (const chunk of stream) {
                     if (controller.signal.aborted) break;
                     finalOutline += chunk;
@@ -474,8 +498,13 @@ const ResultView: React.FC<ResultViewProps> = ({
             } else {
                 let accumulatedResponse = "";
                 setCurrentChatHistory(prev => [...prev, { id: `model-streaming-${Date.now()}`, role: 'model', content: '' }]);
+                
+                // Create a temporary history for the AI that includes the full system prompt and expanded content
+                const historyForAI = newHistory.map(msg => 
+                    msg.id === newUserMessage.id ? { ...msg, content: finalMessageForAI } : msg
+                );
 
-                const stream = generateChatResponse(newHistory, assistantConfig, controller.signal);
+                const stream = generateChatResponse(historyForAI, assistantConfig, controller.signal);
 
                 for await (const chunk of stream) {
                     accumulatedResponse += chunk;
@@ -514,7 +543,7 @@ const ResultView: React.FC<ResultViewProps> = ({
             setIsChatLoading(false);
             abortControllerRef.current = null;
         }
-    }, [chatInput, isChatLoading, outline, config, setOutline, chatMode, currentChatHistory, setCurrentChatHistory, attachments, chatReferences]);
+    }, [chatInput, isChatLoading, outline, config, setOutline, chatMode, currentChatHistory, setCurrentChatHistory, attachments, chatReferences, setChatInput, processMentions]);
 
     const handleChatInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         setChatInput(e.target.value);
@@ -623,6 +652,8 @@ const ResultView: React.FC<ResultViewProps> = ({
         const { content, from, to } = selectionInfoRef.current;
         const cm = easyMdeInstance.current?.codemirror;
         if (!cm) return;
+
+        const processedInstruction = processMentions(aiEditInstruction);
     
         setSelectionPopup({ visible: false, x: 0, y: 0 });
         setIsAiEditing(false);
@@ -636,7 +667,7 @@ const ResultView: React.FC<ResultViewProps> = ({
         
         try {
             const editConfig = { ...config, model: config.assistantModel || config.model };
-            const stream = editText(content, aiEditInstruction, editConfig, controller.signal);
+            const stream = editText(content, processedInstruction, editConfig, controller.signal);
             
             let fullResponse = "";
             for await (const chunk of stream) {
@@ -859,6 +890,18 @@ const ResultView: React.FC<ResultViewProps> = ({
                 </header>
                 
                 <div className="flex-grow relative editor-container min-h-0">
+                    {isGenerating && !outline && (
+                        <div className="absolute inset-0 bg-white/70 dark:bg-zinc-800/70 flex flex-col items-center justify-center z-10 rounded-xl backdrop-blur-sm" aria-live="polite">
+                            <div className="text-purple-500 w-12 h-12">
+                                <svg className="animate-spin h-full w-full" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                </svg>
+                            </div>
+                            <p className="mt-4 text-lg text-gray-700 dark:text-zinc-200 font-semibold">AI 正在努力创作中，请稍候...</p>
+                            <p className="mt-2 text-sm text-gray-500 dark:text-zinc-400">大纲内容将在此处逐步显示</p>
+                        </div>
+                    )}
                     {renderSelectionPopup()}
                     <textarea ref={textareaRef} style={{ display: 'none' }} />
                 </div>
@@ -1057,7 +1100,7 @@ const ResultView: React.FC<ResultViewProps> = ({
                                 onPaste={handlePaste}
                                 disabled={isChatLoading}
                                 placeholder={chatMode === 'assistant' ? "有什么可以帮您修改大纲？" : "粘贴图片或输入文字..."}
-                                className="w-full pl-12 pr-36 py-3 text-base rounded-b-xl focus:outline-none custom-scrollbar resize-none bg-transparent placeholder:text-gray-400 transition-all duration-300 dark:text-white dark:placeholder:text-zinc-500 min-h-[56px]"
+                                className="w-full pl-12 pr-36 py-3 text-base rounded-b-xl focus:outline-none custom-scrollbar resize-none bg-transparent placeholder:text-gray-400 transition-all duration-300 dark:text-white dark:placeholder:text-zinc-500 min-h-[56px] break-all break-words"
                             />
                             <div className="absolute bottom-3 right-3 flex items-center gap-1 z-10">
                                 <div ref={mentionMenuRef} className="relative">
